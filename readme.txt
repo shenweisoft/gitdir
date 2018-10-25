@@ -1,1 +1,4 @@
-git is very good
+git is very
+
+Git is a distributed version control system.
+Git is free software
