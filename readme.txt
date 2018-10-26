@@ -6,3 +6,5 @@ Git is free software distributed under the GPL.
 Git has a mutable index called stage.
 
 shenwei is very good
+
+creating a new branch is quick
