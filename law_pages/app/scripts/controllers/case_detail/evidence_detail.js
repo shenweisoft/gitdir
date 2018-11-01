@@ -24,6 +24,7 @@ angular.module('sbAdminApp').controller('EvidenceDetailCtrl', function($scope, $
     }
 
     //shenwei
+    //shenweifdsafdsa
     //查询费用类型集合
     $scope.feeTypeList = DictionaryConfig.feeTypeList;
     //定义查询证据Service
