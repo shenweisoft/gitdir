@@ -1,0 +1,18 @@
+<view class='detail_bg'></view>
+  <view class="page">
+    <input class="searchInput" placeholder='请输入群聊名称'/>
+  </view>
+  <view class='group'>
+    <view  class="title">选择群成员</view>
+    <view>
+      <view wx:for="{{personArray}}" wx:for-item="person" class="list">
+        <checkbox></checkbox>
+        <image class="image" src="{{person.image}}"/>
+        {{person.type}}: {{person.name}}
+      </view>
+    </view>
+  </view>
+
+
+  <button class="btn">确认新建</button>
+

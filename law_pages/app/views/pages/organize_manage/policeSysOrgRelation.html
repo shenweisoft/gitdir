@@ -1,0 +1,50 @@
+<div class="role_management_d relative_top">
+    <div class="row bg-default">
+        <div class="col-xs-12 role_management_right_d">
+            <div class="role_management_right_t_d">
+                <div class="col-xs-4 role_management_right_t_l_d no-padding">
+                    <span ng-if=" type== '#06'" class="tit_personal">医院机构列表</span>
+                    <span ng-if=" type== '#07'" class="tit_personal">工伤医保列表</span>
+                    <span ng-if=" type== '#03'" class="tit_personal">鉴定机构列表</span>
+                    <i class="iconfont icon-shudao margin-left-5 text-muted"></i>
+                    <span class="font-size13 text-muted">{{orgName}}</span>
+                </div>
+                <div class="col-xs-4" style="line-height: 60px;">
+                </div>
+                <div class="col-xs-3">
+                    <button type="button" class="btn btn-primary pull-right" ng-click="addMechanism()"><i class="iconfont icon-tianjia"></i> 添加</button>
+                </div>
+                <div class="col-xs-1">
+                    <div style="width: 100%; height: 40px; margin-top: 15px; border-left: 1px solid #dddddd; text-align: center;"> <i class="iconfont icon-fanhui" style="cursor: pointer; color: #3f65d6; line-height: 10px; font-size: 40px;"></i></div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th class="col-xs-1">序号</th>
+                            <th class="col-xs-2">机构名称</th>
+                            <th class="col-xs-2">机构代码</th>
+                            <th class="col-xs-2">区域</th>
+                            <th class="col-xs-2">机构类型</th>
+                            <th class="col-xs-1">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="sysOrg in sysOrgList">
+                            <td ng-bind="$index+1"></td>
+                            <td>{{sysOrg.text}}</a></td>
+                            <td>{{sysOrg.orgCode}}</td>
+                            <td>{{sysOrg.extPro.regionName}}</td>
+                            <td>{{sysOrg.category | orgType2Const}}</td>
+                            <td class="cur-pointer"><i class="iconfont icon-iconfont19" ng-click="deletePoliceSysOrg(sysOrg)"></i></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

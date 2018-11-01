@@ -1,0 +1,408 @@
+import * as echarts from '../../../ec-canvas/echarts'; 
+
+const app = getApp();
+
+var chart = {};
+var option = {}
+function initChart(canvas, width, height) {
+  chart = echarts.init(canvas, null, {
+    width: width,
+    height: height
+  });
+  chart.setOption(option);
+  canvas.setChart(chart);
+  return chart;
+}
+
+var personalChart = {};
+var personalOption = {}
+function initPersonalChart(canvas, width, height) {
+  personalChart = echarts.init(canvas, null, {
+    width: width,
+    height: height
+  });
+  personalChart.setOption(personalOption);
+  canvas.setChart(personalChart);
+  return personalChart;
+}
+
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+    currentStep:"5",
+    deathCode: ['08', '09', '12', '13', '14', '17', '15', '16', '19', '10', '11'],
+    ec: {
+      onInit: initChart
+    },
+    ec1:{
+      onInit: initPersonalChart
+    },
+    isStep5: ''
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+    var that = this;
+    
+    if (options.lawCase) {
+      var lawCase = JSON.parse(options.lawCase)
+
+      //计算保险承担费用
+      that.calculateInsuranceFee(lawCase);
+  
+      var deathFeeArray = lawCase.feeDetail.filter((v) =>{
+        return that.data.deathCode.indexOf(v.id) != -1
+      })
+
+      var pieData = [{
+        value: lawCase.compulsoryInsuranceFee.medicalFee,
+        name: '医疗赔偿费用'
+      }, {
+        value: lawCase.compulsoryInsuranceFee.deathFee,
+        name: '死亡伤残赔偿费用'
+      }, {
+        value: lawCase.compulsoryInsuranceFee.propertyFee,
+        name: '财产损失赔偿费用'
+      }]
+
+      var rate = lawCase.applicantArray[0].responsibleRate
+      var personalData = "";
+      if (lawCase.accidentType == '0'){//机动车与行人或非机动车
+        personalData = [
+          {
+            value: lawCase.compulsoryInsuranceOutterAmount * (100 - rate) / 100,
+            name: '伤者(' + (100 - rate) + '%)'
+          }, {
+            value: lawCase.compulsoryInsuranceOutterAmount * rate / 100,
+            name: '车方(' + rate + '%)'
+          }
+        ] 
+      } else if (lawCase.accidentType == '1'){//机动车之间
+        personalData = [
+          {
+            value: lawCase.compulsoryInsuranceOutterAmount * (100 - rate) / 100,
+            name: '己方(' + (100 - rate) + '%)'
+          }, {
+            value: lawCase.compulsoryInsuranceOutterAmount * rate / 100,
+            name: '对方(' + rate + '%)'
+          }
+        ] 
+      } else {//单方事故
+        personalData = [ {
+            value: lawCase.compulsoryInsuranceOutterAmount * rate / 100,
+            name: '己方(100%)'
+          }
+        ] 
+      }
+
+      that.setData({
+        lawCase: lawCase,
+        deathFeeArray: deathFeeArray,
+        pieData: pieData,
+        personalData: personalData,
+        isStep5: options.isStep5 == 'true' ? 'true' : 'false'
+      })
+    }
+    console.log(that.data.lawCase,"!!!!!!!!!!!!")
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+    var that = this
+    setTimeout(function(){
+      that.initPieChart(that.data.pieData)
+      that.initPersonalPieChart(that.data.personalData)
+    }, 200)
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide: function () {
+    
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload: function () {
+    var that = this
+    that.savePreCaculate()
+  },
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh: function () {
+  
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom: function () {
+  
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+    
+  },
+
+  /**
+   * 初始化饼形图
+   */
+  initPieChart: function (pieData){
+    option = {
+      backgroundColor: "#ffffff",
+      color: ["#ff7d77", "#ffd1d0", "#ffa8a6"],
+      tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)",
+        textStyle: {
+          color: '#fff'
+        }
+      },
+      legend: {
+        orient: 'vertical',
+        x: 'left',
+        data: pieData
+      },
+      series: [{
+        label: {
+          normal: {
+            show: true,
+               formatter: function (item) {
+                 console.log("1211111111")
+                 console.log(item)
+                 return item.value;
+            },
+            fontSize: 14
+          }
+        },
+        labelLine: {
+          normal: {
+            show: true
+          }
+        },
+        type: 'pie',
+        center: ['50%', '60%'],
+        radius: ['30%', '50%'],
+        data: pieData,
+        itemStyle: {
+          emphasis: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 2, 2, 0.3)'
+          }
+        }
+      }]
+    };
+
+    chart.setOption(option, true);
+  },
+
+  /**
+   * 初始化饼形图
+   */
+  initPersonalPieChart: function (pieData) {
+    personalOption = {
+      backgroundColor: "#ffffff",
+      color: ["#1aad19", "red"],
+      tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)",
+        textStyle: {
+          color: '#fff'
+        }
+      },
+      legend: {
+        orient: 'vertical',
+        x: 'left',
+        data: pieData
+      },
+      series: [{
+        label: {
+          normal: {
+            show: true,
+            formatter: function (item) {
+              return item.value;
+            },
+            fontSize: 14
+          }
+        },
+        labelLine: {
+          normal: {
+            show: true
+          }
+        },
+        
+        type: 'pie',
+        center: ['50%', '50%'],
+        radius: ['30%', '50%'],
+        data: pieData,
+        itemStyle: {
+          emphasis: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 2, 2, 0.3)'
+          }
+        }
+      }]
+    };
+
+    personalChart.setOption(personalOption, true);
+  },
+
+  /**
+   * 计算保险费用
+   */
+  calculateInsuranceFee: function (lawCase){
+    var that = this
+
+    var result = {
+      medicalFee: 0,//医疗费用
+      deathFee: 0,//死亡伤残费用
+      propertyFee: 0//财产损失
+    }
+
+    var medicalCode = ['03', '04', '06'];//医疗费，后续治疗费，住院伙食补助费
+    //误工费08、护理费09、残疾赔偿金12、残疾辅助器具费13、被抚养人生活费14、精神抚慰金17、死亡赔偿金15、丧葬费16、处理人员误工费19、交通费10、住宿费11；
+    //精神抚慰金：此项费用优先在交强险的死亡伤残中进行赔付，如果此项金额超出交强险死亡伤残限额，
+    //剩下的部分商业险不予赔付，由双方按责任比例进行赔付；
+    var deathCode = ['08', '09', '12', '13', '14', '17', '15', '16', '19','10', '11'];
+    lawCase.feeDetail.forEach((v) =>{
+      if (lawCase.caseType != '3'){//非财产损失
+        //医疗赔偿费用
+        if (medicalCode.indexOf(v.id) > -1) {
+          result.medicalFee += parseFloat(v.applyAmount || 0)
+        }
+
+        //死亡伤残赔偿费用
+        if (deathCode.indexOf(v.id) > -1) {
+          result.deathFee += parseFloat(v.applyAmount || 0)
+        }
+      }
+      
+      //财产损失费用
+      if (v.group == '7'){
+        result.propertyFee += parseFloat(v.applyAmount || 0)
+      }
+    })
+
+    var compulsoryInsurance = {};//交强险
+    if (lawCase.responsibility == '4'){//无责
+      compulsoryInsurance = {
+        medicalFee: 1000,
+        deathFee: 11000,
+        propertyFee: 100
+      }
+    } else {//有责任
+      compulsoryInsurance = {
+        medicalFee: 10000,
+        deathFee: 110000,
+        propertyFee: 2000
+      }
+    }
+
+    result.medicalFee = Math.min(result.medicalFee, compulsoryInsurance.medicalFee)
+    result.deathFee = Math.min(result.deathFee, compulsoryInsurance.deathFee)
+    result.propertyFee = Math.min(result.propertyFee, compulsoryInsurance.propertyFee)
+
+    lawCase.compulsoryInsuranceFee = result
+
+    lawCase.compulsoryInsuranceAmount = (parseFloat(result.medicalFee || 0) + parseFloat(result.deathFee || 0) + parseFloat(result.propertyFee || 0)).toFixed(2)
+    lawCase.compulsoryInsuranceOutterAmount = (parseFloat(lawCase.applyTotal) - parseFloat(lawCase.compulsoryInsuranceAmount)).toFixed(2)
+    lawCase.innerInsuracePrecent = parseInt(lawCase.applyTotal)==0?0:(parseFloat(lawCase.compulsoryInsuranceAmount / lawCase.applyTotal) * 100).toFixed(2)
+    lawCase.outterInsuracePrecent = parseInt(lawCase.applyTotal) == 0 ? 0 :(parseFloat(lawCase.compulsoryInsuranceOutterAmount / lawCase.applyTotal) * 100).toFixed(2)
+  },
+
+  //预约调解
+  reservation: function() {
+    console.log(this.data.lawCase)
+    let that = this
+    //存储到本地
+    wx.setStorage({
+      key: 'appointment-adjust',
+      data: this.data.lawCase,
+      success: function(res) {
+        //判断用户是否登录
+        if(app.globalData.userInfo) {
+          if (that.data.isStep5 == 'true') {
+            //跳转到新建页面第五步
+            wx.reLaunch({
+              url: '/pages/litigants/step5/step5?lawCase='+JSON.stringify(that.data.lawCase)+'&isStep5='+that.data.isStep5
+            })
+          } else {
+            //跳转到新建页面
+            wx.reLaunch({
+              url: '/pages/litigants/step1/step1?isAppointment=' + true
+            })
+          }
+        } else {
+          //跳转到登录页
+          wx.navigateTo({
+            url: '/pages/selectCharacter/selectCharacter?isAppointment='+true,
+          })
+        }
+      }
+    })
+  },
+
+  filterParam: function (lawCase) {
+    lawCase.createDate = lawCase.createDate?lawCase.createDate.indexOf('00:00:00') > -1 ? lawCase.createDate : lawCase.createDate + ' 00:00:00':"";
+    lawCase.deathDate = lawCase.deathDate?lawCase.deathDate.indexOf('00:00:00') > -1 ? lawCase.deathDate : lawCase.deathDate + ' 00:00:00':"";
+    if (lawCase.compensateStandard) lawCase.compensateStandard = JSON.stringify(lawCase.compensateStandard);
+    if (lawCase.compensateTable) lawCase.compensateTable = JSON.stringify(lawCase.compensateTable);
+    if (lawCase.feeDetail) lawCase.feeDetail = JSON.stringify(lawCase.feeDetail);
+
+    lawCase.applicantArray.forEach(function (v) {
+      var birthDay = v.birthDay && v.birthDay.indexOf('00:00:00') > -1 ? v.birthDay : v.birthDay + ' 00:00:00';
+    })
+
+    return lawCase;
+  },
+
+  /**
+   * 保存赔付试算
+   */
+  savePreCaculate: function () {
+    var that = this
+    var lawCase = that.data.lawCase;
+    let url = app.globalData.dataUrl + '/homePage/saveJyPrejudgeInfo';
+    let data = that.filterParam(lawCase);
+    console.log(url,"!!!!!!!!!!!")
+    wx.request({
+      url: url,
+      method: 'post',
+      data: data,
+      header: {},
+      success: res => {
+        if (res.data.code == '0') {
+          console.log("赔付试算历史保存成功！");
+        }else{
+          console.log("赔付试算历史保存失败！");
+        }
+      },
+      fail: function () {
+        console.log("赔付试算历史保存接口出错！");
+      }
+    })
+  }
+})

@@ -1,0 +1,45 @@
+<view class="classname">
+  <view class="litigant_bottom">
+    <view class="section input_box" style="margin-top:20rpx;">
+      <image class="icon_img" src="../../../images/location.png"></image>
+      <picker class="phone width545" mode="region" bindchange="bindRegionChange" value="{{region}}" custom-item="{{customItem}}">
+        <view style="color:#333;font-size:17px;line-height:76rpx;" class="width545">
+          {{region? (region[0]+'，'+region[1]+'，'+region[2]) : '请选择区域'}} 
+        </view>
+      </picker>
+    </view>
+  <view class="input_box" style="margin-top:20rpx;">
+      <image class="icon_img" src="../../../images/idcard.png"></image>
+      <input class="phone"  type="validateCode" data-attribute="idCard" value="{{sysUser.idCard}}" auto-focus='true' bindinput="userBindData" placeholder="请输入身份证号"/>
+      <view class='input_box_r' style='border:0px;'  bindtap='uploadImg'>
+        <icon class='iconfont icon-xiangji'></icon>
+      </view>
+    </view>
+
+     <view class="input_box" style="margin-top:20rpx;">
+      <image class="icon_img" src="../../../images/2r1_c1.png"></image>
+      <input class="phone"  type="validateCode" data-attribute="userName" value="{{sysUser.userName}}" auto-focus='true' bindinput="userBindData" placeholder="请输入姓名"/>
+    </view>
+
+    <view class="input_box" style="margin-top:20rpx;" wx-if="{{isPswShow==true}}">
+      <image class="icon_img" src="../../../images/2r3_c1.png"></image>
+      <input class="phone" password='{{isPassword}}' data-attribute="password" auto-focus='true' bindinput="userBindData" placeholder="请输入密码" />
+      <view class='input_box_r' style='border:0px;' bindtap='isShow'>
+        <icon wx:if="{{isPassword}}" class='iconfont icon-mimaxianshi1'></icon>
+        <icon wx:else class='iconfont icon-mimaxianshi'></icon>
+      </view>
+      
+    </view>
+    <view class="input_box" style="margin-top:20rpx;"  wx-if="{{isPswShow==true}}">
+      <image class="icon_img" src="../../../images/2r3_c1.png"></image>
+      <input class="phone" password='{{isPasswordSure}}' data-attribute="passwordSure" auto-focus='true' bindinput="userBindData" placeholder="请再次输入密码" />
+      <view class='input_box_r' style='border:0px;' bindtap='isShowSure'>
+        <icon wx:if="{{isPasswordSure}}" class='iconfont icon-mimaxianshi1'></icon>
+        <icon wx:else class='iconfont icon-mimaxianshi'></icon>
+      </view>
+    </view>
+    <view class='prompt'><icon class='iconfont icon-tishi'></icon> 我们会对您的信息进行保密，请放心输入</view>
+    <view class="btn" bindtap='ispswShow' wx-if="{{isSureBtn==true}}">确定</view>
+    <view class="btn" bindtap='validateRegister' wx-if="{{isPswShow==true}}">下一步</view>
+  </view>
+</view>

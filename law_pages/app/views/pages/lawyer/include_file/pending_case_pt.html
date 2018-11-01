@@ -1,0 +1,113 @@
+<div class="module-box bg-default">
+	<div class="nav-line-left">
+		<h4>
+			<span class="h1_line"></span>
+			待分案
+		</h4>
+	</div>
+	<div class="module-content font-size13">
+		<form role="form" class="form-horizontal form-input">
+			<div class="row clearfix ">
+				<div class="form-group col-xs-6">
+					<label class="col-lg-3 col-xs-12 control-label "><i>*</i> 立案日期</label>
+					<div class="col-lg-9 col-xs-11">
+						<div class="input-group">
+							<input readonly type="text" class="form-control" name="filingDate" datepicker-popup="yyyy-MM-dd" ng-model="law.filingDate" is-open="law.openedFiling" datepicker-options="{startingDay:1}"  show-weeks="false" show-button-bar="false">
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-default" ng-click="openFiling($event,law)">
+									<i class="glyphicon glyphicon-calendar"></i>
+								</button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="row clearfix " ng-if="law.isAdjust == '1' && law.lawPersonType == '1'">
+				<div class="form-group col-xs-6" >
+					<label class="col-lg-3 col-xs-12 control-label "><i>*</i> 调解点</label>
+					<div class="col-lg-9 col-xs-11">
+						<select class="form-control"  ng-model="law.adjustPointName" ng-change="changeSysUser()" ng-options="x  for x in orgList">
+							<option value="">请选择</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group col-xs-6">
+					<label class="col-lg-3 col-xs-12 control-label"><i>*</i> 调解员</label>
+					<div class="col-lg-9 col-xs-11">
+						<select class="form-control"  ng-model="law.adjustPersonId"  ng-options="x.userId as x.userName for x in sysUserViewList">
+							<option value="" >请选择</option>
+						</select>
+					</div>
+				</div>
+			</div>
+
+
+
+
+
+
+			<div class="row clearfix " ng-if="law.isAdjust != '1' || law.lawPersonType != '1'">
+				<div class="form-group col-xs-6" ng-if="law.applicationProcedure == 1">
+					<label class="col-lg-3 col-xs-12 control-label "><i>*</i> 承办法官</label>
+					<div class="col-lg-9 col-xs-11">
+						<select class="form-control"  name="chiefJudgeId"  ng-model="law.chiefJudgeId" ng-options="x.id as (x.text) for x in chiefJudgeList">
+							<option value="">请选择</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group col-xs-6"  ng-if="law.applicationProcedure == 2">
+					<label class="col-lg-3 col-xs-12 control-label"><i>*</i> 审判长</label>
+					<div class="col-lg-9 col-xs-11">
+						<select class="form-control"  name="chiefJudgeId" ng-change="memberChange()"  ng-model="law.chiefJudgeId" ng-options="x.id as (x.text) for x in chiefJudgeList">
+							<option value="" >请选择</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group col-xs-6">
+					<label class="col-lg-3 col-xs-12 control-label"><i>*</i> 书记员</label>
+					<div class="col-lg-9 col-xs-11">
+						<select class="form-control" name="clerkId" ng-change="memberChange()" ng-model="law.clerkId" ng-options="x.id as (x.text) for x in clerkList">
+							<option value="">请选择</option>
+						</select>
+					</div>
+				</div>
+				<div ng-if="law.applicationProcedure == 2">
+					<div class="form-group col-xs-6">
+						<label class="col-lg-3 col-xs-12 control-label"><i>*</i> 合议庭成员1</label>
+						<div class="col-lg-9 col-xs-11">
+							<select class="form-control" name="memberOneId"  ng-change="memberChange()" ng-model="law.memberOneId" ng-options="x.id as (x.text) for x in memberList">
+								<option value="">请选择</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group col-xs-6">
+						<label class="col-lg-3 col-xs-12 control-label"><i>*</i> 合议庭成员2</label>
+						<div class="col-lg-9 col-xs-11">
+							<select class="form-control" name="memberTwoId"  ng-change="memberChange()"  ng-model="law.memberTwoId" ng-options="x.id as (x.text) for x in memberList">
+								<option value="">请选择</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group col-xs-6">
+						<label class="col-lg-3 col-xs-12 control-label "><i>*</i> 承办人</label>
+						<div class="col-lg-9 col-xs-11">
+							<select class="form-control" name="undertakerId" ng-model="law.undertakerId" ng-options="x.id as (x.text) for x in undertakerList">
+								<option value="">请选择</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group col-xs-6">
+						<label class="col-lg-3 col-xs-12 control-label "><i>*</i> 联系电话</label>
+						<div class="col-lg-9 col-xs-11">
+							<input type="text" class="form-control" name="undertakerPhone" ng-model="law.undertakerPhone" placeholder="请输入">
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</form>
+	</div>
+</div>

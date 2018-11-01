@@ -1,0 +1,25 @@
+<view class='addGroup_bg'>
+  <view class='input_box'>
+    <input placeholder='请输入调解室名称' data-attribute="name" bindinput='bindInput'></input>
+  </view>
+  <view class='addGroup_cont'>
+    <view class='addGroup_cont_e_bt'>选择群成员</view>
+    <!-- 群成员 -->
+    <view class='addGroup_cont_e clearfix' wx:for="{{personArray}}" wx:for-item="person" wx:if="{{person.id != userInfo.id}}">
+      <checkbox-group data-attribute="check" data-id="{{person.id}}" bindchange="bindInput">
+        <label class="checkbox">
+            <checkbox/> 
+            <image class='checkbox_img' wx:if="{{person.userType =='申请人'}}" src='../../../images/index_header_sqr.png'></image>
+            <image class='checkbox_img' wx:if="{{person.userType =='调解员'}}" src='../../../images/index_header_tjy.png'></image>
+            <image class='checkbox_img' wx:if="{{person.userType =='承办法官'}}" src='../../../images/index_header_fg.png'></image>
+            <image class='checkbox_img' wx:if="{{person.userType =='审判员'}}" src='../../../images/index_header_fg.png'></image>
+            <image class='checkbox_img' wx:if="{{person.userType =='被申请人'}}" src='../../../images/index_header_bsqr.png'></image>
+            <image class='checkbox_img' wx:if="{{person.userType =='代理人'}}" src='../../../images/index_header_tjy.png'></image>
+        </label>
+        <view class="people-msg class='{{person.text.length>17?'lineheight65':''}}'">{{person.userType}}:<text class="all-text">{{person.text}}</text></view>
+      </checkbox-group>
+    </view>
+  </view>
+  <view class='addbtn' bindtap="createNewRoom">确认新建</view>
+</view>
+

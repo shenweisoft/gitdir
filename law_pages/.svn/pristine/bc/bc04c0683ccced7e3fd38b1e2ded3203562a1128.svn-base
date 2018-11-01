@@ -1,0 +1,51 @@
+<div class="modal-header">
+	新建文件
+	<i class="iconfont pull-right icon-guanbi close" ng-click="cancel()"></i>
+</div>
+<div class="modal-body">
+	<div class="form_box">
+		<form class="form-horizontal" >
+			<div class="scroll-form-box">
+				<div class="form-group margin_top_popup">
+					<label  class="col-xs-offset-1 col-xs-2"><i>*</i> 文件名称</label>
+					<div class="col-xs-6" ng-class="{'has-error':nameErrorMessage}">
+						<input name="name" ng-model="file.name" type="text" class="form-control input-sm" >
+					</div>
+					<div class="error-message"  ng-bind="nameErrorMessage"></div>
+				</div>
+
+				<div class="form-group">
+					<label  class="col-xs-offset-1 col-xs-2"><i>*</i> 文件类型</label>
+					<div class="col-xs-6" ng-class="{'has-error':typeErrorMessage}">
+						<select name="type" ng-model="file.type" class="form-control input-sm" ng-options="x.id as x.value for x in fileType" ng-change="selectType(x)" placeholder="请选择接口类型">
+							<option value="">请选择</option>
+						</select>
+
+					</div>
+					<div class="error-message"  ng-bind="typeErrorMessage"></div>
+				</div>
+
+				<div class="form-group">
+					<label  class="col-xs-offset-1 col-xs-2"><i>*</i> 选择文件</label>
+					<div class="col-xs-6" >
+						<input name="url" ng-model="file.choose" ngf-select="upFile($files)" type="file" class="form-control input-sm" >
+
+					</div>
+					<div class="error-message" ng-bind="urlErrorMessage"></div>
+				</div>
+
+			</div>
+
+		</form>
+	</div>
+</div>
+<div class="modal-footer">
+	<div class="form-group">
+		<div class="col-xs-offset-4 col-xs-1">
+			<button type="submit" class="btn btn-default " ng-click="cancel()">取消</button>
+		</div>
+		<div class=" col-xs-1">
+			<button type="submit" class="btn btn-brand bg-brand-color" ng-click="save()" >保存</button>
+		</div>
+	</div>
+</div>

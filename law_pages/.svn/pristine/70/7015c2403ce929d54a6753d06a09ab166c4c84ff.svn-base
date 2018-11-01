@@ -1,0 +1,23 @@
+<div>
+	<div class="panel panel-default panel-bg-color no-margin no-border"  >
+		<div class="panel-heading">
+			<h3 class="panel-title"><i class="iconfont icon-lishi brand-color mar-ri-8"></i>历史记录</h3>
+		</div>
+		<div class="panel-body no-padding">
+			<div class="ft12 " ng-repeat="v in jyWorkFlowVOList">
+				<div class="col-xs-12 border-bottom padding_top_bottom">
+					<div class="col-xs-3 line-height2">
+						<b class="ft14">{{v.resultName}}</b>
+					</div>
+					<div class="col-xs-3 line-height2">办理人：{{v.operatorName}}</div>
+					<div class="col-xs-3 line-height2">时间：{{v.createDate}} </div>
+					<div class="col-xs-3 line-height2" ng-show="v.orgName">所属机构：{{v.orgName}}</div>
+					<div class="col-xs-12 line-height" ng-if="v.remark" style="word-wrap: break-word;">{{v.remark}}</div>
+				</div>
+			</div>
+			<div ng-if="jyWorkFlowVOList.length == 0" class="text-center" style="padding: 10px 0px;">
+				<img src="views/images/no_content1.png" >
+			</div>
+		</div>
+	</div>
+</div>

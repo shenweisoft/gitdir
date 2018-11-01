@@ -1,0 +1,179 @@
+<div style="padding-top: 10px; margin-bottom: 62px;">
+    <div class="row serial_number_box line-height2-0">
+        <div class="col-xs-12">
+            <h4 class="font-weight-bold">流水号：<span>{{appraisalInfo.serialNo}}</span></h4>
+        </div>
+			<div class="second-color">
+				<div class="col-xs-4">委托主体：<span>{{appraisalInfo.principalAgent | id2Text:principalAgentList}}</span></div>
+				<div class="col-xs-4">鉴定用途：<span>{{appraisalInfo.identificationPurpose | id2Text:identificationPurposeList}}</span></div>
+				<div class="col-xs-4">委托单位：<span>{{appraisalInfo.createOrgName| orgNull }}</span></div>
+				<div class="col-xs-4">申请日期：<span>{{appraisalInfo.appalyDate | stringDate|date: 'yyyy-MM-dd'}}</span></div>
+				<div class="col-xs-12 serial_number_box_cont">
+					<div class="col-xs-6">鉴定机构：<span>{{appraisalInfo.appraisalOrgName}}</span></div>
+					<div class="col-xs-6">许可证号：<span>{{appraisalInfo.extPro.licence}}</span></div>
+					<div class="col-xs-6">法人：<span>{{appraisalInfo.extPro.legalPerson}}</span></div>
+					<div class="col-xs-6">负责人：<span>{{appraisalInfo.extPro.personLiable}}</span></div>
+					<div class="col-xs-6">联系电话：<span>{{appraisalInfo.extPro.telephone}}</span></div>
+					<div class="col-xs-6">传真：<span>{{appraisalInfo.extPro.fax}}</span></div>
+					<div class="col-xs-6">邮箱：<span>{{appraisalInfo.extPro.email}}</span></div>
+					<div class="col-xs-12">鉴定类型：<span>{{appraisalInfo.extPro.appraisalItem | id2AppraisalItem:appraisalTypeList}}</span></div>
+					<div class="col-xs-12">业务范围：<span>{{appraisalInfo.extPro.range}}</span></div>
+					<div class="col-xs-12">机构地址：<span>{{appraisalInfo.extPro.address}}</span></div>
+				</div>
+			</div>
+    </div>
+    <div class="row identificationOfPeople" ng-repeat="appraisalDetail in appraisalInfo.appraisalDetailList">
+        <div class="col-xs-12" >
+            <h4 class="pull-left">
+                <span class="pull-left font-weight-bold">被鉴定人：</span>
+                <span class="pull-left font-weight-bold people_information_icon_box" style="position: relative;">{{appraisalDetail.jyAppraisalApplyerInfo.personName}}
+                    <i class="iconfont icon-zhengjian margin-left-5 margin-bottom-0 " style="color: #264cb8; cursor: pointer;"></i>
+                    <div class="people_information">
+                        <i class="iconfont icon-sanjiaoxian"></i>
+                        <p>姓名：<span>{{appraisalDetail.jyAppraisalApplyerInfo.personName}}</span></p>
+                        <p>姓别：<span>{{appraisalDetail.jyAppraisalApplyerInfo.sex | id2Text:sexList}}</span></p>
+                        <p>证件类型：<span>{{appraisalDetail.jyAppraisalApplyerInfo.certificatesType | id2Text:certificateTypeList}}</span></p>
+                        <p>证件号码：<span>{{appraisalDetail.jyAppraisalApplyerInfo.idNo}}</span></p>
+                        <p>出生日期：<span>{{appraisalDetail.jyAppraisalApplyerInfo.birthDay | stringDate|date: 'yyyy-MM-dd'}}</span></p>
+                        <p>手机号码：<span>{{appraisalDetail.jyAppraisalApplyerInfo.telephone}}</span></p>
+                        <p>居住地：<span>{{appraisalDetail.jyAppraisalApplyerInfo.residence}}</span></p>
+                    </div>
+                </span>
+                <span class="pull-left prompt_box" ng-class="{'dange_color':appraisalDetail.state== appraisalDetailState.returnState || appraisalDetail.state== appraisalDetailState.cancelState,'warning_color':appraisalDetail.state ==appraisalDetailState.launchState || appraisalDetail.state ==appraisalDetailState.supplementState || appraisalDetail.state ==appraisalDetailState.receiveState,'success_color':appraisalDetail.state ==appraisalDetailState.finishState || appraisalDetail.state== appraisalDetailState.confirmReturnState}">
+                    <i class="iconfont icon-sanjiaoxiangzuo"></i> {{appraisalDetail.state | id2Text:appraisalDetailStateValue }}
+                </span>
+            </h4>
+            <button ng-show="personType == 1 && appraisalDetail.isAdminicle == true" type="button" class="btn btn-brand pull-right" ng-click="supplementEvidence(appraisalDetail);">补充证据</button>
+        </div>
+        <div class="col-xs-4 line-height-30">申请人：<span>{{appraisalDetail.applyName}}</span></div>
+        <div class="col-xs-4 line-height-30">鉴定申请号：<span>{{appraisalDetail.appraisalNo}}</span></div>
+        <div class="col-xs-4 line-height-30">鉴定类型：<span>{{appraisalDetail.appraisalType | id2Text:appraisalTypeList}}</span></div>
+        <div ng-show="appraisalDetail.state == appraisalDetailState.receiveState || appraisalDetail.state == appraisalDetailState.finishState">
+            <div class="col-xs-4 line-height-30">鉴定费用：<span>{{appraisalDetail.appraisalFee}}</span></div>
+            <div class="col-xs-4 line-height-30">预计完成日期：<span>{{appraisalDetail.estimateDate | stringDate|date: 'yyyy-MM-dd'}}</span></div>
+        </div>
+				<div class="col-xs-12 line-height-30">鉴定项目：<span>{{appraisalDetail.appraisalItem | id2AppraisalItem:appraisalItemList}}</span></div>
+        <div class="col-xs-12 line-height-30" style="border-bottom: 1px solid #dddddd; margin-top: 10px; margin-bottom: 10px;"></div>
+        <div class="col-xs-12 identificationOfPeople_button">
+            <span ng-click="queryEvidence(appraisalDetail)"><i class="iconfont icon-zheng" ></i> 查看证据</span>
+            <span ng-click="queryPersonDetail()"><i class="iconfont icon-staff-copy margin-left-30"></i> 当事人信息</span>
+						<a class="brand-color no-underline" ng-href="{{downloadReportFile(appraisalDetail)}}" ng-show="appraisalDetail.downloadReportShow"><i class="iconfont icon-baogao1 margin-left-30" ></i> 下载鉴定报告</a>
+						<span ng-click="downloadSignFile(appraisalDetail)" ng-show="appraisalDetail.downloadSignShow"><i class="iconfont icon-icon35 margin-left-30"></i> 签字页</span>
+
+				</div>
+
+        <!--历史记录-->
+        <div class="col-xs-12 no-padding mar-top-10" ng-hide="evaluateShow">
+            <div class="panel panel-default panel-bg-color no-margin no-border"  >
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="iconfont icon-lishi brand-color mar-ri-8"></i>历史记录</h3>
+                </div>
+                <div class="panel-body no-padding">
+                    <div class="ft12 " ng-repeat="jyWorkFlowVO in appraisalDetail.jyWorkFlowVOList">
+                        <div class="col-xs-12 border-bottom padding_top_bottom">
+                            <div class="col-xs-3 line-height2">
+                                <b class="ft14">{{jyWorkFlowVO.resultName}}</b>
+                            </div>
+                            <div class="col-xs-3 line-height2">办理人：{{jyWorkFlowVO.operatorName}}</div>
+                            <div class="col-xs-3 line-height2">时间：{{jyWorkFlowVO.createDate}} </div>
+                            <div class="col-xs-3 line-height2">所属机构：{{jyWorkFlowVO.orgName}}</div>
+                            <div class="col-xs-12 line-height">{{jyWorkFlowVO.remark}}</div>
+                        </div>
+                    </div>
+                    <div ng-if="appraisalDetail.jyWorkFlowVOList.length == 0" class="text-center" style="line-height: 80px;">
+                        <img src="views/images/no_content1.png" >
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 identificationOfPeople_bottom" ng-show="(sysUser.userType == '0' || sysUser.userType == '2' ) &&  appraisalDetail.state == appraisalDetailState.launchState && historyUrl">
+            <div class="pull-right" ng-click="handleAppraisal(appraisalDetail,3)">取消鉴定</div>
+        </div>
+    </div>
+	<!--鉴定评价-->
+	<div class="row" ng-show="evaluateShow">
+		<div class="module-box bg-default">
+			<div class="nav-line-left">
+				<h4>
+					<span class="h1_line"></span>鉴定评价
+					<span class="pull-right ft14 brand-color cur-pointer" ng-click="historyComment();" >历史评价</span>
+				</h4>
+			</div>
+			<div class="module-content line-height2 no-padding-h">
+				<div class="row clearfix">
+					<div class="col-xs-12">
+						<div class="col-lg-2 col-xs-3 text-right no-padding"><i class="Required">*</i>鉴定意见是否采信:</div>
+						<div class="col-xs-2">
+							<input class="mar-ri-8" type="radio" name="isBelieve" ng-value="3" ng-model="evaluateVO.isBelieve">全部
+						</div>
+						<div class="col-xs-2">
+							<input class="mar-ri-8" type="radio" name="isBelieve" ng-value="2" ng-model="evaluateVO.isBelieve">部分
+						</div>
+						<div class="col-xs-2">
+							<input class="mar-ri-8" type="radio" name="isBelieve" ng-value="1" ng-model="evaluateVO.isBelieve">未采信
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<div class="col-lg-2 col-xs-3 text-right no-padding"><i class="Required">*</i>鉴定意见是否说明充分:</div>
+						<div class="col-xs-2">
+							<input class="mar-ri-8" type="radio" name="isFully" ng-value="4" ng-model="evaluateVO.isFully">充分
+						</div>
+						<div class="col-xs-2 no-padding-r">
+							<input class="mar-ri-8" type="radio" name="isFully" ng-value="3" ng-model="evaluateVO.isFully">比较充分
+						</div>
+						<div class="col-xs-2">
+							<input class="mar-ri-8" type="radio" name="isFully" ng-value="2" ng-model="evaluateVO.isFully">简单说理
+						</div>
+						<div class="col-xs-2">
+							<input class="mar-ri-8" type="radio" name="isFully" ng-value="1" ng-model="evaluateVO.isFully">没说道理
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<div class="col-lg-2 col-xs-3 text-right no-padding"><i class="Required">*</i>鉴定人员配合程度:</div>
+						<div class="col-xs-2">
+							<input class="mar-ri-8" type="radio" name="cooperate"  ng-value="5" ng-model="evaluateVO.cooperate">好
+						</div>
+						<div class="col-xs-2">
+							<input class="mar-ri-8" type="radio" name="cooperate"  ng-value="4" ng-model="evaluateVO.cooperate">较好
+						</div>
+						<div class="col-xs-2">
+							<input class="mar-ri-8"type="radio" name="cooperate"  ng-value="3" ng-model="evaluateVO.cooperate">可以
+						</div>
+						<div class="col-xs-2">
+							<input class="mar-ri-8" type="radio" name="cooperate"  ng-value="2" ng-model="evaluateVO.cooperate">较差
+						</div>
+						<div class="col-xs-1">
+							<input class="mar-ri-8" type="radio" name="cooperate"  ng-value="1" ng-model="evaluateVO.cooperate">差
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<div class="col-lg-2 col-xs-3 text-right no-padding"><i class="Required">*</i>鉴定效率:</div>
+						<div class="col-xs-2">
+							<input class="mar-ri-8" type="radio" name="efficiency"  ng-value="3" ng-model="evaluateVO.efficiency">按期
+						</div>
+						<div class="col-xs-2">
+							<input class="mar-ri-8" type="radio" name="efficiency"  ng-value="1" ng-model="evaluateVO.efficiency">超期
+						</div>
+						<div class="col-xs-2">
+							<input class="mar-ri-8" type="radio" name="efficiency" ng-value="2" ng-model="evaluateVO.efficiency">延期
+						</div>
+					</div>
+
+					<div class="col-xs-12">
+						<div class="col-lg-2 col-xs-3 text-right no-padding">其他意见:</div>
+						<div class="col-lg-10 col-xs-9">
+							<textarea class="col-xs-12"  placeholder="请输入意见（非必填）" ng-model="evaluateVO.remark" style="max-width: 100%;"></textarea>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 底部按钮 -->
+<div class="appraisal_footer" style="border-top: 1px solid #f8f8f8; z-index: 999;" >
+	<button type="button" class="btn btn-brand pull-right" ng-click="insertAppraisalEvaluate()" ng-show="evaluateShow">提交</button>
+	<button type="button" class="btn btn-brand pull-right" onclick="javascript:history.go(-1)">返回</button>
+
+</div>

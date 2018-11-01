@@ -1,0 +1,44 @@
+<div class="role_management_d relative_top">
+  <div class="row bg-default">
+    <div class="col-xs-3 role_management_left_d">
+      <div  class="role_management_left_t_d"><div></div>角色管理</div>
+      <ul class="management_level_one_d">
+        <li class="management_li_d" ng-class="{activeBg: collapseVar==x.id}" ng-repeat="x in roleList" ng-click="queryRoleList(x.id)"><i class="iconfont icon-jiaose"></i>  {{x.value}}<i class="iconfont left icon-xiangyou"></i></li>
+      </ul>
+    </div>
+    <div class="col-xs-9 role_management_right_d">
+      <div class="role_management_right_t_d">
+        <div class="role_management_right_t_l_d">法院角色</div>
+        <div class="role_management_right_t_r_d" ng-click="queryRole()"  ><i class="iconfont icon-tianjia"></i>  新建角色</div>
+      </div>
+      <div class="clear"></div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th class="col-xs-2">序号</th>
+                <th class="col-xs-2">角色名称</th>
+                <th class="col-xs-5">角色描述</th>
+                <th class="col-xs-3">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="sysRole in sysViewRoleList">
+                <td ng-bind="$index+1"></td>
+                <td>{{sysRole.name}}</td>
+                <td>{{sysRole.description}}</td>
+                <td class="action_bar">
+                  <i class="iconfont icon-bianji" ng-click="queryRole(sysRole)"></i>
+                  <i class="iconfont icon-quanxian5" ng-click="queryJurisdiction(sysRole)"></i>
+                  <i class="iconfont icon-iconfont19" ng-click="delRole(sysRole)"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- /.table-responsive -->
+      </div>
+    </div>
+  </div>
+</div>

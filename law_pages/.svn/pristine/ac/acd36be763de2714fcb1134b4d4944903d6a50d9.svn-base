@@ -1,0 +1,37 @@
+<div style="padding:35px 25px 25px 25px">
+    <table class="table table-striped-info table-hover table-fixed">
+        <thead>
+            <tr>
+                <th width="10%">姓名</th>
+                <th width="10%">性别</th>
+                <th width="20%">身份证号</th>
+                <th width="10%">年龄</th>
+                <th width="15%">登记单位</th>
+                <th width="15%">登记类型</th>
+                <th width="10%">登记时间</th>
+                <th width="10%">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="info in relPerList">
+                <td>
+                    <label class="cur-pointer">
+                        <a ng-click="handleUserInfo(info)" title="点击查询详细" class="ng-binding">{{info.userName}}</a>
+                    </label>
+                </td>
+                <td>{{info.sex=='0'? '女': '男'}}</td>
+                <td>{{info.personCard}}</td>
+                <td>{{info.age}}</td>
+                <td>{{info.registerUnit}}</td>
+                <td>{{info.registerType}}</td>
+                <td>{{info.registerDate | stringDate | date:'yyyy-MM-dd'}}</td>
+                <td>
+                    <button type="button" class="btn btn-brand" ng-click="correlation(info)">关联</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div style="text-align: center">
+        <button type="button" class="btn btn-brand" ng-click="closeModal()">关闭</button>
+    </div>
+</div>

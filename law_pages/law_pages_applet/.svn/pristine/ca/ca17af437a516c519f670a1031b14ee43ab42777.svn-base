@@ -1,0 +1,15 @@
+<view class='bg'></view>
+<view style='width:750rpx; height:15px;'></view>
+<!-- 每条信息 -->
+<view class='service_e' wx:for="{{noticeList}}" wx:for-item="notice" wx:if="{{notice.type == '0'}}">
+  <view class='service_e_cont' data-value="{{notice}}" bindtap='viewDetail'>
+    <view class='service_e_cont_l'>
+      <view class='bottom'>{{notice.title}}</view>
+      <view style='color:#999999;font-size:15px;'>{{notice.createDate}}</view>
+    </view>
+    <view class='img_box'>
+      <image src="{{notice.imgSrc || '../../images/_r2_c21.png'}}"></image>
+    </view>
+    <view class='clear'></view>
+  </view>
+</view>

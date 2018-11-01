@@ -1,0 +1,10 @@
+<view class='detailOfTheArticle'>
+  <view class='detailOfTheArticle_bt'>
+    <image class='detailOfTheArticle_bt_icon' src='../../images/pic41.png'></image>{{notice.title}}
+  </view>
+  <view class='detailOfTheArticle_time'>{{notice.createDate}}</view>
+  <view class='bottom_solid'></view>
+  <view class='text'>
+    {{notice.content}}
+  </view>
+</view>

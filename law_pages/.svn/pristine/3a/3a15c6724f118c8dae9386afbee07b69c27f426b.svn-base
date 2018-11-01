@@ -1,0 +1,129 @@
+<div class="homePage_banner" style="height: 360px;">
+
+	<div class=" slider" style="width: 960px;height: 360px;">
+		<div>
+			<img  ng-repeat="slide in slides" class="slide slide-animation nonDraggableImage" ng-swipe-right="nextSlide()" ng-swipe-left="prevSlide()" ng-hide="!isCurrentSlideIndex($index)" ng-src="{{slide.image}}">
+		</div>
+		<span class="slide-arrow prev"  ng-click="nextSlide()"><i class="iconfont icon-zuoyoujiantou-copy-copy-copy"></i></span>
+		<span class="slide-arrow next"  ng-click="prevSlide()"><i class="iconfont icon-zuoyoujiantou-copy-copy"></i></span>
+		<nav class="slide-nav">
+			<div class="wrapper">
+				<ul class="slide-dots">
+					<li class="dot" ng-repeat="slide in slides">
+						<a href="javascript:void(0)" ng-class="{'active':isCurrentSlideIndex($index)}" ng-click="setCurrentSlideIndex($index);">{{slide.description}}</a></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+ </div>
+<div class="homePage_cont">
+	<div class="homePage_cont_left">
+		<div class="pull-left cont_left_btn cont_left_btn1" ng-click="$parent.headerActive='prejudge'" ui-sref="home_page.prejudge_new.AIOCourtSetp1"><a></a></div>
+		<!-- <a href="http://124.42.1.7:8001/court_dg/calc/lossCalcStep1.do"><div class="pull-left cont_left_btn cont_left_btn1"></div></a> -->
+		<div class="pull-left cont_left_btn cont_left_btn2" style="margin: 0 11px;" ng-click="login(0)"><a></a></div>
+		<div class="pull-left cont_left_btn cont_left_btn3" ng-click="login(1)"><a ></a></div>
+		<div class="clearfix"></div>
+		<div class="homePage_cont_left_e"><img src="views/images/1-_03.png"></div>
+		<div class="homePage_cont_left_e"><img src="views/images/1-03.png"></div>
+		<div class="homePage_cont_left_e">
+			<div class="homePage_cont_left_e_bt"><i class="iconfont icon-shudao" style="font-size: 28px; color: #3F65D6; position: relative; bottom: -5px;"></i><span style="font-size: 16px;">常见问题</span><a class="pull-right" style="color: #3F65D6; margin-right: 20px; cursor: pointer;" ng-click="more()" ui-sref="home_page.litigationGuide({flag : 2})">更多</a></div>
+		</div>
+		<div class="homePage_cont_left_e_box" >
+			<!--<h4><a>什么是起诉？</a></h4>-->
+			<!--<p>起诉，就是俗称的“打官司”、“告状”。当您合法的人身或财产权利受到侵害，或者与他人发生争议时，到法院通过诉讼解决纠纷的一种方式。起诉分为民事起诉、刑事自诉和行政起诉。</p>-->
+			<!--<p>小案例1（民事起诉）：乙向甲借钱后不还，甲多次催讨，仍然没有结果。甲到法院起诉乙归还借款。</p>-->
+			<!--<div class="border_b_das"></div>-->
+			<!--<h4><a>民事官司、刑事自诉官司、行政官司有什么区别？</a>></h4>-->
+			<!--<p>民事官司俗称“民告民”，是发生在平等主体（包括老百姓、公司和其他组织等）之间的人身或财产关系方面的民事纠纷。</p>-->
+			<!--<p>刑事自诉也是“民告民”，指他人侵害您合法的人身或财产权利已构成某些犯罪，根据法律规定，可以不经公安机关或者检察机关处理，直接向法院起诉，要求追究他人的刑事责任。</p>-->
+			<!--<div class="border_b_das"></div>-->
+			<!--<h4><a>一般的立案流程是怎样的？</a></h4>-->
+			<!--<p>经法院审查认为起诉符合受理条件的，由负责审查的立案工作人员决定立案，并将案件当事人姓名、案由等情况输入电脑后自动生成案号。</p>-->
+			<!--<p>法院将向您发送案件的受理通知书、送达地址确认书、诉讼费缴纳通知书等。</p>-->
+			<!--<div class="border_b_das"></div>-->
+            <div ng-if="data.problemList.length != 0" ng-repeat="commonProblem in data.problemList">
+                <h4><a>{{commonProblem.title}}</a></h4>
+                <p>{{commonProblem.content}}</p>
+                <div class="border_b_das"></div>
+            </div>
+		</div>
+	</div>
+	<div class="homePage_cont_right">
+		<div class="homePage_cont_left_e_bt"><i class="iconfont icon-shudao" style="font-size: 28px; color: #3f65d6; position: relative; bottom: -5px;"></i><span style="font-size: 16px;">常用工具</span></div>
+		<div class="homePage_cont_right_box">
+			<dl ng-click="goEmail()">
+				<dt class="text-center"><span class="home-tool home-tool1"></span></dt>
+				<dd class="text-center margin-top-6">司法邮箱</dd>
+			</dl>
+			<!-- <a style="text-decoration:none; color: #333;" href="http://124.42.1.7:8001/court_dg/calc/lossCalcStep1.do">
+				<dl>
+					<dt class="text-center"><span class="home-tool home-tool2"></span></dt>
+					<dd class="text-center margin-top-6">赔付试算</dd>
+				</dl>
+			</a> -->
+			<dl ng-click="$parent.headerActive='prejudge'" ui-sref="home_page.prejudge_new.AIOCourtSetp1" >
+				<dt class="text-center"><span class="home-tool home-tool2"></span></dt>
+				<dd class="text-center margin-top-6">赔付试算</dd>
+			</dl>
+			<dl ng-click="online()">
+				<dt class="text-center"><span class="home-tool home-tool3"></span></dt>
+				<dd class="text-center margin-top-6" >在线庭审</dd>
+			</dl>
+			<dl ng-click="instrumentList()" >
+				<dt class="text-center"><span class="home-tool home-tool4"></span></dt>
+				<dd class="text-center margin-top-6">文书模板</dd>
+			</dl>
+			<dl ui-sref="home_page.litigationGuide({flag : 0})" ng-click="more()">
+				<dt class="text-center"><span class="home-tool home-tool5"></span></dt>
+				<dd class="text-center margin-top-6">诉讼指南</dd>
+			</dl>
+			<div class="clearfix"></div>
+		</div>
+		<div class="homePage_cont_left_e_bt margin-top-6"><i class="iconfont icon-shudao" style="font-size: 28px; color: #3f65d6; position: relative; bottom: -5px;"></i><span style="font-size: 16px;">法律法规</span><a class="pull-right" style="color: #3F65D6; margin-right: 20px; cursor: pointer;" ng-click="more()"  ui-sref="home_page.litigationGuide({flag : 3})">更多</a></div>
+		<div class="homePage_cont_left_e_box">
+            <div ng-if="data.statuteList.length != 0" ng-repeat="statute in data.statuteList">
+                <div><a href="{{statute.linkUrl}}" target="_blank">{{statute.title}}</a></div>
+            </div>
+			<!--<div><a>中华人民共和国侵权责任法</a></div>-->
+			<!--<div><a>中华人民共和国道路交通安全法</a></div>-->
+		</div>
+		<div class="homePage_cont_left_e_bt margin-top-6"><i class="iconfont icon-shudao" style="font-size: 28px; color: #3f65d6; position: relative; bottom: -5px;"></i><span style="font-size: 16px;">司法解释</span><a class="pull-right" style="color: #3F65D6; margin-right: 20px; cursor: pointer;" ng-click="more()" ui-sref="home_page.litigationGuide({flag : 4})">更多</a></div>
+		<div class="homePage_cont_left_e_box">
+            <div ng-if="data.judicialList.length != 0" ng-repeat="judicial in data.judicialList">
+                <div><a href="{{judicial.linkUrl}}" target="_blank">{{judicial.title}}</a></div>
+                <div class="border_b_das"></div>
+            </div>
+			<!--<div><a href="http://www.court.gov.cn/fabu-xiangqing-36562.html">最高人民法院关于人民法院庭审录音录像的若干规定 </a></div>-->
+			<!--<div class="border_b_das"></div>-->
+			<!--<div><a href="http://www.court.gov.cn/fabu-xiangqing-30091.html">最高人民法院关于民事执行中变更、追加当事人若干问题的规定</a></div>-->
+			<!--<div class="border_b_das"></div>-->
+			<!--<div><a href="http://www.court.gov.cn/fabu-xiangqing-25751.html">最高人民法院关于审理民事、行政诉讼中司法赔偿案件适用法律若干问题的解释</a></div>-->
+			<!--<div class="border_b_das"></div>-->
+			<!--<div><a href="http://www.court.gov.cn/fabu-xiangqing-25321.html">关于人民法院在互联网公布裁判文书的规定</a></div>-->
+			<!--<div class="border_b_das"></div>-->
+			<!--<div><a href="http://www.court.gov.cn/fabu-xiangqing-13241.html">最高人民法院关于适用《中华人民共和国民事诉讼法》的解释</a></div>-->
+			<!--<div class="border_b_das"></div>-->
+			<!--<div><a href="http://www.court.gov.cn/fabu-xiangqing-5867.html ">最高人民法院关于人民法院在互联网公布裁判文书的规定</a></div>-->
+			<!--<div class="border_b_das"></div>-->
+			<!--<div><a href="http://www.court.gov.cn/fabu-xiangqing-4817.html">最高人民法院关于审理道路交通事故损害赔偿案件适用法律若干问题的解释 </a></div>-->
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</div>
+<div class="tel-mg-box">
+	<div class="tel-img">
+		<div class="tel-img-big" >
+			<div style="line-height: 47px; border-bottom: 1px solid rgba(255, 255, 255, 0.67);"> 道交一体化客服</div>
+			<div style="font-size: 26px; margin-bottom: -10px; line-height: 63px; color: #fff;">400-618-0508</div>
+			<div style="font-size: 14px;">工作日 9:00-18:00</div>
+			<b></b>
+		</div>
+	</div>
+	<div class="ma-img">
+		<div class="ma-img-wx">
+			<p>道交小程序</p>
+			<div></div>
+		</div>
+		<div class="ma-img-big"></div>
+	</div>
+</div>

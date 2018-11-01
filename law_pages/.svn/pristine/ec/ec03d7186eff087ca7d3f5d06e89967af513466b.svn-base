@@ -1,0 +1,33 @@
+<div>
+    <img src="../../../views/images/AIO_bg.jpg" style="position: fixed;z-index: -5" alt="">
+    <aio-header></aio-header>
+    <div class="col-xs-12 AIOHomeBody">
+        <!-- <span class="AIOHomeText">
+            <div class="home-page-img img1 btnPress" ng-click="methodScanIdNo()"></div>
+            <p>扫描身份证查询</p>
+        </span>
+        <span class="AIOHomeText">
+            <div class="home-page-img img2 btnPress" ng-click="methodIdNo()"></div>
+            <p>输入身份证号码查询</p>
+        </span> -->
+        <div class="AIOHomeBodyCont">
+            <div class="AIOHomeBodyCont_l">
+                <div class="AIOHomeBodyCont_time">{{dateH+':'+dateF+':'+dateS}}</div>
+                <div class="AIOHomeBodyCont_day">{{dateY+'-'+dateM+'-'+dateD}}</div>
+                <div class="AIOHomeBodyCont_Wednesday">{{dateW}}</div>
+            </div>
+            <div class="AIOHomeBodyCont_r">
+                <div class="AIOHomeBodyCont_r_e E1" ng-click="methodScanIdNo('accident')">事故查询</div>
+                <div class="AIOHomeBodyCont_r_e E2" ng-click="methodScanIdNo('identify')">检验鉴定查询</div>
+                <div class="AIOHomeBodyCont_r_e E3" ng-click="methodScanIdNo('duty')">事故责任认定查询</div>
+                <div class="AIOHomeBodyCont_r_e E4" ng-click="methodScanIdNo('person')">人员信息查询</div>
+                <div class="AIOHomeBodyCont_r_e E5" ng-click="methodScanIdNo('vehicle')">机动车及保单查询</div>
+                <div ng-click="showWx = !showWx" class="AIOHomeBodyCont_r_e E6" ng-show="!showWx"><p class="p1">微信小程序</p></div>
+                <div ng-click="showWx = !showWx" class="AIOHomeBodyCont_r_e E7" ng-show="showWx"><p class="p2">扫码体验微信小程序</p></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+

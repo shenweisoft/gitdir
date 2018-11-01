@@ -1,0 +1,534 @@
+// pages/prejudge/step2/step2.js
+const util = require('../../../utils/util.js')
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+    lawCase: {
+      treatmentType:""
+    },
+
+    disabledLevelArray: [
+      ['一级', '二级', '三级', '四级', '五级', '六级', '七级', '八级', '九级', '十级'], 
+      ['1处', '2处', '3处', '4处', '5处', '6处', '7处', '8处', '9处', '10处']
+    ],
+    currentDate: util.formatDate(new Date()),
+    currentStep: 2,
+    isStep5: ''
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+    var that = this;
+    if (options.lawCase){
+      var lawCase = JSON.parse(options.lawCase)
+      that.setData({
+        lawCase: lawCase
+      })
+    }
+    that.setData({
+      isStep5: options.isStep5 == 'true'? 'true':'false'
+    })
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload: function () {
+  
+  },
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh: function () {
+  
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom: function () {
+  
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+  
+  },
+
+  // 提示
+  opentitle: function (e) {
+    var title = e.currentTarget.dataset.title;
+    wx.showModal({
+      title: '提示',
+      content: title,
+      showCancel: false,
+      confirmText: "知道了"
+    })
+  },
+ 
+  /**
+   * 选择治疗方式
+   */
+  selectTreatmentType: function(e){
+    var that = this;
+    var lawCase = that.data.lawCase;
+    var mode = e.currentTarget.dataset.mode;
+    lawCase.treatmentType = mode;
+
+    switch (mode){
+      case '1': lawCase.applicantArray[0].hospitalizationArray = [];break;
+      case '2': 
+        lawCase.applicantArray[0].outPatientTimes = "";
+        lawCase.applicantArray[0].restDaysOfOutPatient = "";
+        lawCase.applicantArray[0].hospitalizationArray = [new that.Hospitalization()]; break;
+      case '3': lawCase.applicantArray[0].hospitalizationArray = [new that.Hospitalization()]; break;
+    }
+
+    that.setData({
+      lawCase: lawCase
+    })
+  },
+
+  /**
+   * 治疗情况数据绑定
+   */
+  lawCaseDataChange: function(e){
+    var that = this;
+    var lawCase = that.data.lawCase
+    var applicant = lawCase.applicantArray[0]
+
+    var attribute = e.currentTarget.dataset.attribute
+    var currentVal = e.detail.value;
+    if (attribute == 'hospitalizedDate'){//入院时间
+      var index = e.currentTarget.dataset.index
+      var hospitalization = applicant.hospitalizationArray[index];
+      hospitalization[attribute] = currentVal
+    } else if (attribute == 'leaveHospitalDate') {//出院时间
+      var index = e.currentTarget.dataset.index
+      var hospitalization = applicant.hospitalizationArray[index];
+      hospitalization[attribute] = currentVal
+    } else if (attribute == 'restDaysOfHospitalization') {//医嘱休息天数(住院治疗)
+      var index = e.currentTarget.dataset.index
+      var hospitalization = applicant.hospitalizationArray[index];
+      hospitalization[attribute] = currentVal
+    } else if (attribute == 'deathDate') {//伤残评定时间
+      lawCase[attribute] = currentVal
+    } else 
+      applicant[attribute] = currentVal
+
+    that.setData({
+      lawCase: lawCase
+    })
+  },
+
+  /**
+   * 伤残等级的选择
+   */
+  doublePickerChange: function(e){
+    var that = this
+    var lawCase = that.data.lawCase
+    var lcoalLevelArray = that.data.disabledLevelArray
+    var disabledLevelIndex = e.detail.value
+    var index = e.currentTarget.dataset.index
+    
+    lawCase.disabledLevelArray[index].index = e.detail.value
+    lawCase.disabledLevelArray[index].level = lcoalLevelArray[0][disabledLevelIndex[0]]
+    lawCase.disabledLevelArray[index].rate = that.reverseLevel(lcoalLevelArray[0][disabledLevelIndex[0]])
+    lawCase.disabledLevelArray[index].times = lcoalLevelArray[1][disabledLevelIndex[1]]
+
+    that.setData({
+      lawCase: lawCase
+    })
+
+    that.calculateCompensateRate()
+  },
+
+  columnChange: function (e) {
+    console.log(e)
+  },
+
+  /**
+   * 伤残等级
+   */
+  DisabledLevel: function () {
+    this.level = "九级";
+    this.times = "1处";
+    this.rate = 10
+    this.index = [9,0]
+  },
+
+  /**
+   * 添加伤残等级
+   */
+  addDisabledLevel: function () {
+    var that = this
+    var lawCase = that.data.lawCase
+    var levelArray = lawCase.disabledLevelArray
+
+    levelArray.push(new that.DisabledLevel())
+    that.setData({
+      lawCase: lawCase
+    })
+
+    that.calculateCompensateRate();
+  },
+
+  /**
+   * 删除伤残信息
+   */
+  removeDisabledLevel: function(e){
+    var that = this
+    var lawCase = that.data.lawCase
+    var levelArray = lawCase.disabledLevelArray
+
+    var index = e.currentTarget.dataset.index
+    levelArray.splice(index, 1)
+
+    that.setData({
+      lawCase: lawCase
+    })
+
+    that.calculateCompensateRate();
+  },
+
+  /**
+   * 住院信息
+   */
+  Hospitalization: function(){
+    this.hospitalizedDate = util.formatDate(new Date())
+    this.leaveHospitalDate = util.formatDate(new Date())
+    this.restDaysOfHospitalization = ""
+  },
+
+  /**
+   * 添加住院治疗信息
+   */
+  addHospitalization: function(){
+    var that = this
+    var lawCase = that.data.lawCase
+
+    lawCase.applicantArray[0].hospitalizationArray.push(new that.Hospitalization())
+
+    that.setData({
+      lawCase: lawCase
+    })
+  },
+
+  /**
+   * 删除住院治疗信息
+   */
+  removeHospitalized: function(e){
+    var that = this
+
+    var lawCase = that.data.lawCase
+    var index = e.currentTarget.dataset.index
+    lawCase.applicantArray[0].hospitalizationArray.splice(index, 1)
+
+    that.setData({
+      lawCase: lawCase
+    })
+    
+    // wx.showModal({
+    //   title: '提示',
+    //   content: '确认删除么？',
+    //   success: function (res) {
+    //     if (res.confirm) {
+            // var lawCase = that.data.lawCase
+            // var index = e.currentTarget.dataset.index
+            // lawCase.applicantArray[0].hospitalizationArray.splice(index, 1)
+
+            // that.setData({
+            //   lawCase: lawCase
+            // })
+    //     } else if (res.cancel) {
+    //       console.log('用户点击取消')
+    //     }
+    //   }
+    // })
+  },
+
+  /**
+   * 表单验证
+   */
+  validateForm: function(){
+    var that = this
+    var lawCase = that.data.lawCase
+    var applicant = lawCase.applicantArray[0]
+
+    var treatmentType = lawCase.treatmentType;
+    if (treatmentType == '1'){//门诊治疗
+      //门诊次数
+      if (!applicant.outPatientTimes){
+        wx.showToast({
+          title: '请填写门诊次数',
+        })
+
+        return false
+      }
+
+      //医嘱休息天数
+      if (!applicant.restDaysOfOutPatient) {
+        wx.showToast({
+          title: '请填写休息天数',
+        })
+
+        return false
+      }
+    } else if (treatmentType == '2') {//住院治疗
+      var hospitalizationArray = applicant.hospitalizationArray
+
+      for (var i = 0; i < hospitalizationArray.length; i++){
+        var hospitalization = hospitalizationArray[i];
+
+        //入院时间
+        if (!hospitalization.hospitalizedDate) {
+          wx.showToast({
+            title: '请选择入院时间',
+          })
+
+          return false
+        }
+
+        //出院时间
+        if (!hospitalization.leaveHospitalDate) {
+          wx.showToast({
+            title: '请选择出院时间',
+          })
+
+          return false
+        }
+
+        //医嘱休息天数
+        if (!hospitalization.restDaysOfHospitalization) {
+          wx.showToast({
+            title: '请填写休息天数',
+          })
+
+          return false
+        }
+      }
+    } else if (treatmentType == '3'){//门诊+住院
+      //门诊次数
+      if (!applicant.outPatientTimes) {
+        wx.showToast({
+          title: '请填写门诊次数',
+        })
+
+        return false
+      }
+
+      //医嘱休息天数
+      if (!applicant.restDaysOfOutPatient) {
+        wx.showToast({
+          title: '请填写休息天数',
+        })
+
+        return false
+      }
+
+      var hospitalizationArray = applicant.hospitalizationArray
+      for (var i = 0; i < hospitalizationArray.length; i++) {
+        var hospitalization = hospitalizationArray[i];
+
+        //入院时间
+        if (!hospitalization.hospitalizedDate) {
+          wx.showToast({
+            title: '请选择入院时间',
+          })
+
+          return false
+        }
+
+        //出院时间
+        if (!hospitalization.leaveHospitalDate) {
+          wx.showToast({
+            title: '请选择出院时间',
+          })
+
+          return false
+        }
+
+        //医嘱休息天数
+        if (!hospitalization.restDaysOfHospitalization) {
+          wx.showToast({
+            title: '请填写休息天数',
+          })
+
+          return false
+        }
+      }
+    }
+    
+    if(lawCase.caseType == '1'){//伤残
+      //伤残评定时间
+      if(!lawCase.deathDate){
+        wx.showToast({
+          title: '请选择伤残时间',
+        })
+
+        return false;
+      }
+
+      //伤残等级
+      if (!lawCase.disabledLevelArray || lawCase.disabledLevelArray.length == 0) {
+        wx.showToast({
+          title: '请选择伤残等级',
+        })
+
+        return false;
+      }
+    }
+
+    return true;
+  },
+
+  /**
+   * 计算伤残赔偿系数
+   */
+  calculateCompensateRate: function(){
+    var that = this
+    var lawCase = that.data.lawCase
+
+    if (lawCase.disabledLevelArray && lawCase.disabledLevelArray.length > 0){
+      var rateArray = lawCase.disabledLevelArray.map((v) => {
+        return v.rate;
+      }).sort(function (a, b) {
+        return b - a;
+      });
+
+      var tensDigit = rateArray[0]
+      var singleDigit = 0
+      if (rateArray.length > 1) {
+        rateArray.forEach((v, index) => {
+          if (index > 0) {
+            singleDigit += parseInt(v) / 10
+          }
+        })
+
+        singleDigit = singleDigit > 9 ? 9 : singleDigit
+      }
+
+      lawCase.compensateRate = (tensDigit + singleDigit) > 100 ? 100 : tensDigit + singleDigit
+      that.setData({
+        lawCase: lawCase
+      })
+    }
+    
+  },
+
+  /**
+   * 通过伤残等级查找赔偿系数(单个)
+   */
+  reverseLevel: function(level){
+    var rate = ""
+    switch (level){
+      case '一级': rate = 100; break;
+      case '二级': rate = 90; break;
+      case '三级': rate = 80; break;
+      case '四级': rate = 70; break;
+      case '五级': rate = 60; break;
+      case '六级': rate = 50; break;
+      case '七级': rate = 40; break;
+      case '八级': rate = 30; break;
+      case '九级': rate = 20; break;
+      case '十级': rate = 10; break;
+    }
+
+    return rate;
+  },
+
+  /**
+   * 计算赔偿天数
+   */
+  calculateDaysOfHospital: function(){
+    var that = this
+    var lawCase = that.data.lawCase
+    var applicant = lawCase.applicantArray[0]
+
+    lawCase.compensateDays = 0
+    lawCase.hospitalDays = 0
+    if (lawCase.treatmentType == '1'){//门诊治疗
+      lawCase.compensateDays = parseInt(applicant.restDaysOfOutPatient);
+    }else if (lawCase.treatmentType == '2'){//住院治疗
+      applicant.hospitalizationArray.forEach((v) => {
+        lawCase.compensateDays += parseInt(util.getDays(v.leaveHospitalDate, v.hospitalizedDate)) + 1 + parseInt(v.restDaysOfHospitalization)
+        lawCase.hospitalDays += parseInt(util.getDays(v.leaveHospitalDate, v.hospitalizedDate)) + 1
+      })
+    } else if (lawCase.treatmentType == '3'){//门诊+住院 
+      lawCase.compensateDays += parseInt(applicant.restDaysOfOutPatient);
+      applicant.hospitalizationArray.forEach((v) => {
+        lawCase.compensateDays += parseInt(util.getDays(v.leaveHospitalDate, v.hospitalizedDate)) + 1 + parseInt(v.restDaysOfHospitalization)
+        lawCase.hospitalDays += parseInt(util.getDays(v.leaveHospitalDate, v.hospitalizedDate)) + 1
+      })
+    }
+
+    that.setData({
+      lawCase: lawCase
+    })
+  },
+
+  /**
+   * 上一步
+   */
+  preStep: function(){
+    var pages = getCurrentPages();
+    var currPage = pages[pages.length - 1];   //当前页面
+    var prevPage = pages[pages.length - 2];  //上一个页面
+    var lawCase = this.data.lawCase;
+    prevPage.setData({
+      lawCase: lawCase
+    })
+    wx.navigateBack({
+      delta: 1
+    })
+  },
+
+  /**
+   * 下一步
+   */
+  nextStep: function(){
+    console.log(this.data.lawCase,"!!!!!!!!");
+    var that = this;
+    if (that.validateForm()){
+      //计算天数
+      that.calculateDaysOfHospital();
+
+      that.calculateCompensateRate();
+
+      var lawCase = that.data.lawCase;
+      var nextStep = parseInt(that.data.currentStep) + 1
+      wx.navigateTo({
+        url: '../step' + nextStep + '/step' + nextStep + "?lawCase=" + JSON.stringify(lawCase)+'&isStep5='+that.data.isStep5,
+      })
+    }
+  }
+})

@@ -1,0 +1,233 @@
+ <div class="party_page">
+ 	<img class="party_page_bg" src="views/images/_r1_c1_r1.jpg">
+	 <nav class="navbar navbar-default navbar-static-top head-bg-color height-70" role="navigation" style="margin-bottom: 0">
+		 <div class="logo-content">
+			 <img class="logo-content-img" src="views/images/qweasd.png">
+			 <span class="logo-content-text">{{domainName}}</span>
+		 </div>
+		 <!--<div class="navbar-header col-xs-6">
+			 <a class="navbar-brand"><img src="views/images/logo.png"></a>
+		 </div>-->
+		 <header-right></header-right>
+	 </nav>
+ 	<div class="party_page_cont">
+ 		<div class="party_page_cont_nav center-block">
+ 			<div class="img6 margin-right-6" ui-sref="dashboard.readNotice"></div>
+ 			<div class="img1 margin-right-6" ui-sref="dashboard.sue_input({'type':'0'})"></div>
+ 			<div class="img2 margin-right-6" ui-sref="dashboard.sue_input({'type':'1'})"></div>
+ 			<div class="img5 margin-right-6" ng-click="queryPersonalCenter()"></div>
+ 			<div class="img4 " ng-click="loginMail()"></div>
+ 			
+ 			<div class="clearfix"></div>
+ 		</div>
+ 		<div class="case_box_bg center-block">
+ 			<i class="iconfont icon-zuoyoujiantou-copy-copy-copy"  ng-show="lawInfoList.length >=2"  ng-click="prev();"></i>
+ 			<i class="iconfont icon-zuoyoujiantou-copy-copy" ng-show="lawInfoList.length >=2" ng-click="next();"></i>
+ 		</div>
+ 		<div class="party_page_case_box center-block">
+ 			<!-- 没有案件 -->
+			<div class="party_page_case_e" ng-show="lawInfoList.length == 0">
+				<img src="views/images/1ds-11_032_02.png">
+			</div>
+			<!-- 第一个案件 -->
+			<div class="party_page_case_e" ng-repeat="law in lawInfoList" ng-show="caseNum == $index">
+				<div class="page_case_e_bt">
+					<i class="iconfont icon-shudao"></i>
+					案件流水号：<span>{{law.serialNo}}</span>
+				</div>
+				<div class="btn_box">
+					<div class="btn_e pull-left" ng-click="adjustInfoDetail(law)"><i class="iconfont icon-yulan"></i>查看卷宗</div>
+					<div class="btn_e pull-left" ng-click="queryEvidence(law)"><i class="iconfont icon-zheng"></i>查看证据</div>
+					<div class="btn_e pull-left" ng-click="queryDetail(law)"><i class="iconfont icon-liucheng"></i>案件流程</div>
+					<!--<div class="btn_e pull-left"><i class="iconfont icon&#45;&#45;sifajianding1"></i> 司法鉴定</div>-->
+					<div class="btn_e_r pull-right" ng-click="certificate(law,0)">我要质证</div>
+					<div class="btn_e_r pull-right" ng-click="certificate(law,1)">我要举证</div>
+				</div>
+				<div class="party_page_case_e_cont">
+					<!-- 调解 --> <!-- complete完成环节 --> <!-- active当前环节 -->
+					<!-- <div class="solid_cont"></div> -->
+					<div class="party_page_case_e_cont_e complete">
+						<div class="status_two">
+							<i class="iconfont icon--suqiantiaojie"></i>
+							<div>调解</div>
+						</div>
+					</div>
+					<div class="" style=" width: 5%; float: left; height: 270px; line-height: 270px; text-align: center; "><i style="font-size: 24px; color: #fff;" class="iconfont icon-1-copy-copy opacity_4"></i></div>
+					<!-- 诉讼 -->
+					<div class="party_page_case_e_cont_e  complete" ng-class="{'active': (law.personType== '0' && (law.state == lawState.prosecutionState || law.state == lawState.prosecutionFinishState || law.state == lawState.approvalState)) || (law.personType== '1' &&(law.state == lawState.prosecutionState || law.state == lawState.prosecutionFinishState || law.state == lawState.approvalState || law.state == lawState.filingState)) || (law.state=='1000' || law.state == '2001' ||law.state == '2000')}">
+						<div class="status_one">
+
+							<span ng-show="law.state == '2000' && law.adjustReturn == '2'">
+								<p>状态：
+									<span class="status_title_red">
+										<i class="iconfont icon-sanjiaoxiangzuo"></i>
+										调解机构退回
+									</span>
+								</p>
+								<p>调解组织：<span>{{law.adjustOrgName}}</span></p>
+								<p>调解地点：<span>{{law.adjustPointName}}</span></p>
+								<p>申请金额：<span>{{law.applyTotal}}</span></p>
+								<p>退回原因：<span>{{law.adjustReturnRemark}}</span></p>
+								<div class="status_one_btn cur-pointer" ng-click="queryDetail(law)">查看详情</div>
+							</span>
+
+
+							<span ng-show="law.state == '2001'">
+								<p>状态：
+									<span class="status_title_green">
+										<i class="iconfont icon-sanjiaoxiangzuo"></i>
+										调解机构审核
+									</span>
+								</p>
+								<p>调解组织：<span>{{law.adjustOrgName}}</span></p>
+								<p>调解地点：<span>{{law.adjustPointName}}</span></p>
+								<p>申请金额：<span>{{law.applyTotal}}</span></p>
+								<div class="status_one_btn cur-pointer" ng-click="queryDetail(law)">查看详情</div>
+							</span>
+							<span ng-show="law.state == '1000'">
+								<p>状态：
+									<span class="status_title_green">
+										<i class="iconfont icon-sanjiaoxiangzuo"></i>
+										调解案件办理
+									</span>
+								</p>
+								<p>调解组织：<span>{{law.adjustOrgName}}</span></p>
+								<p>调解地点：<span>{{law.adjustPointName}}</span></p>
+								<p>调解人：<span>{{law.adjustName}}</span></p>
+								<p>申请金额：<span>{{law.applyTotal}}</span></p>
+								<div class="status_one_btn cur-pointer" ng-click="queryDetail(law)">查看详情</div>
+							</span>
+								<!--起诉中状态 未驳回-->
+							<span ng-show="law.state == lawState.prosecutionState && law.isReturn != '1'">
+								<p>状态：
+									<span class="status_title_red" ng-show="law.adjustResult == '2'">
+										<i class="iconfont icon-sanjiaoxiangzuo"></i>
+										未达成调解并线上开庭
+									</span>
+									<span class="status_title_red" ng-show="law.adjustResult == '3'">
+										<i class="iconfont icon-sanjiaoxiangzuo"></i>
+										未达成调解
+									</span>
+								</p>
+								<p>调解员：<span>{{law.adjustName}}</span></p>
+								<p>调解时间：<span>{{law.adjustDate | stringDate | date: 'yyyy-MM-dd'}}</span></p>
+								<p>申请人：<span>{{law.applicant}}</span></p>
+								<p>被申请人：<span>{{law.respondent}}</span></p>
+							</span>
+							<!--起诉中状态 已驳回-->
+							<span ng-show="law.state == lawState.prosecutionState && law.isReturn == '1'">
+								<p>状态：
+									<span class="status_title_red" >
+										<i class="iconfont icon-sanjiaoxiangzuo"></i>
+										审批驳回
+									</span>
+								</p>
+								<p>驳回时间：{{law.returnDate | stringDate | date: 'yyyy-MM-dd'}}</span></p>
+								<p>审批意见：<span>{{law.returnRemark}}</span></p>
+							</span>
+							<!--待审批到待立案环节-->
+							<span ng-show="law.state != lawState.prosecutionState && law.state != '2000'  && law.state != '2001' && law.state != '1000'">
+								<p>状态：
+									<span class="status_title_green">
+										<i class="iconfont icon-sanjiaoxiangzuo"></i>
+										已提交诉讼
+									</span>
+								</p>
+								<p>原告：<span>{{law.applicant}}</span></p>
+								<p>被告：<span>{{law.respondent}}</span></p>
+								<p>诉请金额：<span>{{law.applyTotal}}</span></p>
+								<p>起诉时间：<span>{{law.adjustDate | stringDate | date: 'yyyy-MM-dd'}}</span></p>
+							</span>
+							<div class="status_one_btn cur-pointer" ng-show="law.state == lawState.prosecutionState && law.personType=='0'" ng-click="readingNotes(law)">我要起诉</div>
+						</div>
+						<div class="status_two ">
+							<i class="iconfont icon--faqisusong1"></i>
+							<div>诉讼</div>
+						</div>
+					</div>
+					<div class="" style=" width: 5%; float: left; height: 270px; line-height: 270px; text-align: center;"  ng-show="law.personType == '0'"><i style="font-size: 24px; color: #fff;" class="iconfont icon-1-copy-copy opacity_4"></i></div>
+					<!-- 在线缴费 -->
+					<div class="party_page_case_e_cont_e " ng-show="law.personType == '0'" ng-class="{'active': law.state == lawState.filingState,'complete':law.state == lawState.adjustState || law.state == lawState.notHearingState}">
+						<div class="status_one">
+							<p>状态：<span class="status_title_green"><i class="iconfont icon-sanjiaoxiangzuo"></i>已立案</span></p>
+							<p>诉讼费：<span>{{law.acceptanceFee}}</span></p>
+							<p>缴费状态：
+								<span ng-if="law.payState == '1'">已缴费</span>
+								<span ng-if="law.payState != '1'">未缴费</span>
+							</p>
+							<div class="status_one_btn cur-pointer" ng-click="payMoney(law)" ng-if="law.payState != '1'">我要缴费</div>
+						</div>
+						<div class="status_two">
+							<i class="iconfont icon-qian-copy" style="margin-left: -10px;"></i>
+							<div>在线缴费</div>
+						</div>
+					</div>
+					<div class="" style=" width: 5%; float: left; height: 270px; line-height: 270px; text-align: center;"><i style="font-size: 24px; color: #fff;" class="iconfont icon-1-copy-copy opacity_4"></i></div>
+					<!-- 庭前调解 -->
+					<div class="party_page_case_e_cont_e " ng-class="{'active': law.state == lawState.adjustState,'complete':law.state == lawState.notHearingState}">
+						<div class="status_one">
+							<p>状态：<span class="status_title_yellow"><i class="iconfont icon-sanjiaoxiangzuo"></i>庭前调解中</span></p>
+							<p>原告：
+								<span ng-if="law.applyAgree=='1'">已同意</span>
+								<span ng-if="!law.applyAgree">未响应</span>
+								<span ng-if="law.applyAgree=='2'">不同意</span>
+							</p>
+							<p>被告：
+								<span ng-if="law.respondentAgree== '1'">已同意</span>
+								<span ng-if="!law.respondentAgree">未响应</span>
+								<span ng-if="law.respondentAgree== '2'">不同意</span>
+							</p>
+							<p>是否邀请法官介入：
+								<span ng-if="law.applyJudge">已介入</span>
+								<span ng-if="!law.applyJudge">未介入</span>
+							</p>
+							<p>是否缴费：
+								<span ng-if="law.payState != '1'">未缴费</span>
+								<span ng-if="law.payState == '1'">已缴费</span>
+							</p>
+							<div ng-if="law.payState != '1'">
+								<div class="status_one_btn_right cur-pointer margin-top-20" ng-click="courtAdjust(law)">庭前调解</div>
+								<div class="status_one_btn_left cur-pointer margin-top-20" ng-click="payMoney(law)" ng-if="law.payState != '1'">我要缴费</div>
+							</div>
+							<div ng-if="law.payState == '1'">
+								<div class="status_one_btn cur-pointer" ng-click="courtAdjust(law)">庭前调解</div>
+							</div>
+						</div>
+						<div class="status_two">
+							<i class="iconfont icon-tiaojie"></i>
+							<div>庭前调解</div>
+						</div>
+					</div>
+					<div class="" style=" width: 5%; float: left; height: 270px; line-height: 270px; text-align: center;"><i style="font-size: 24px; color: #fff;" class="iconfont icon-1-copy-copy opacity_4"></i></div>
+					<!-- 办案 -->
+					<div class="party_page_case_e_cont_e" ng-class="{'active': law.state == lawState.notHearingState}">
+						<div class="status_one">
+							<p>状态：<span class="status_title_yellow"><i class="iconfont icon-sanjiaoxiangzuo"></i>在线开庭</span></p>
+							<p>开庭时间：
+								<span ng-if="law.nextCourtDate">{{law.nextCourtDate}}</span>
+								<span ng-if="!law.nextCourtDate">{{law.courtDate}}</span>
+							</p>
+							<p>是否缴费：
+								<span ng-if="law.payState != '1'">未缴费</span>
+								<span ng-if="law.payState == '1'">已缴费</span>
+							</p>
+							<div ng-if="law.payState != '1'">
+								<div class="status_one_btn_left cur-pointer margin-top-20" ng-click="payMoney(law)">我要缴费</div>
+								<div class="status_one_btn_right cur-pointer margin-top-20" ng-if="law.isShowFlag" ng-click="goOnlineSession(law)">进入庭审</div>
+								<div class="status_one_btn_right cur-pointer margin-top-20 btn_disable" ng-if="!law.isShowFlag">进入庭审</div>
+							</div>
+							<div ng-if="law.payState == '1'">
+								<div class="status_one_btn cur-pointer" ng-if="law.isShowFlag" ng-click="goOnlineSession(law)">进入庭审</div>
+								<div class="status_one_btn cur-pointer btn_disable" ng-if="!law.isShowFlag">进入庭审</div>
+							</div>
+						</div>
+						<div class="status_two">
+							<i class="iconfont icon--banan"></i>
+							<div>办案</div>
+						</div>
+					</div>
+				</div>
+			</div>
+ 		</div>
+ 	</div>
+ </div>

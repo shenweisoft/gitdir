@@ -1,0 +1,412 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <title>CameraService</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf8" />
+    <link rel="stylesheet" href="js/camera/chromcamera/Video/style.css" type="text/css" />
+    <script type="text/javascript" src="js/camera/chromcamera/Video/jquery.js"></script>    
+    <script type="text/javascript" src="js/camera/chromcamera/Video/jquery.rotate.js"></script>
+    <!--[if IE 6]>
+    <link rel="stylesheet" href="fix.css" type="text/css" />
+    <![endif]-->
+    <script  type="text/javascript">
+    
+    function toBase64(){
+        //#target是目标图标,我们需要将其转换为base64格式
+        var c=document.createElement("canvas");
+        //设置canvas宽高为图片宽高
+        c.width=$('#snapshot').width;
+        c.height=$('#snapshot').width;
+        //将图片绘制到canvas
+        var cxt=c.getContext("2d");
+        var img=new Image();
+        img.src=$('#snapshot').attr('src');
+        cxt.drawImage(img,0,0);
+        //得到图片的base64编码数据
+        var dd=c.toDataURL('image/jpeg');
+        //log出图片base64数据
+        return dd;
+    }
+    function dataURItoBlob() {
+    	var byteString;
+    	var base64Data= toBase64();
+    	if (base64Data.split(',')[0].indexOf('base64') >= 0)
+    	byteString = atob(base64Data.split(',')[1]);
+    	else
+    	byteString = unescape(base64Data.split(',')[1]);
+    	var mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
+    	var ia = new Uint8Array(byteString.length);
+    	for (var i = 0; i < byteString.length; i++) {
+    	ia[i] = byteString.charCodeAt(i);
+    	}
+    	return new Blob([ia], {type:mimeString});
+    	}
+    function uploadpic(){
+    	
+    	var imgaeBlob =  dataURItoBlob();
+    	var formData = new FormData();
+    	//formData.apppend('file',imgaeBlob);
+    	formData.append('file',imgaeBlob, Date.now() + '.jpg');
+    	/* images.each(function () {
+    	   
+    	}); */
+    	
+    	// 而外的参数数据
+    	//formData.append("titleKey", titleKey);
+    	//formData.append("type", "jpg");
+    	
+    	
+    
+    	$.ajax({ url:'/lawProject/common/uploadImage',
+    		method:'POST',
+    		data:{file:formData,type:'applicant'},
+    		// 默认为true，设为false后直到ajax请求结束(调完回掉函数)后才会执行$.ajax(...)后面的代码
+    		async: false, 
+    		// 下面三个，因为直接使用FormData作为数据，contentType会自动设置，也不需要jquery做进一步的数据处理(序列化)。 
+    		cache: false, 
+    		contentType: false, 
+    		processData: false, 
+    		 contentType: 'enctype="multipart/form-data',
+    		success:function(data){
+    			console.log(data); 
+    			}, 
+    			error:function(error){
+    				console.log(error.message); 
+    				} 
+    			});
+    }
+    </script>
+  </head>
+
+  <body onLoad="Init()">
+
+
+    <div id="content">
+    
+
+	<p id="xform">
+		<button id="rotate"><div class="btnface"></div></button>
+	</p>
+
+	<p>
+	<input type="radio" name="camidx" value="0" onclick="SelectCamera()" checked="checked"/>文档头&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio" name="camidx" value="1" onclick="SelectCamera()"/>人像头
+	<input type="checkbox" name="cutpage" value="cutpage" checked="checked" />Cut Page
+
+	<input type="radio" name="provideo" value="true" onclick="ProcessVideoData()" checked="checked"/>视频处理<input type="radio" name="provideo" value="false"
+	onclick="ProcessVideoData()"/>不处理
+
+	</p>
+	<p class="xform-p"></p>
+	<p id="streamwrap" class="xform-p">
+		<img id="streamimage" class="xform" src="http://127.0.0.1:38088/video=stream&camidx=0" onerror="onerror=null;src='app_stop.jpg'"/>
+	</p>		
+	
+	</br>
+	<input type="button" onclick="GrabImage()" value="GrabImage" style="width:140px" />  	
+	<input type="button" onclick="AddToPDF()" value="AddToPDF" style="width:140px" />  	
+	<input type="button" onclick="CreatePDF()" value="CreatePDF" style="width:140px" />  	
+	</br>
+	<input type="button" onclick="GrabImageBase64()" value="GrabImage(Base64)"  style="width:140px"/>  	
+	<input type="button" onclick="SetFrameRate()" value="SetFrameRate" style="width:140px"/>  
+	FrameRate:<input type="text" id="framerate" value="5" style="width:30px" />	
+		
+	</br>
+	
+	分辨率：<select id="resolution" />
+	<input type="button" onclick="GetResolution()" value="GetResolution"/> 	
+	<input type="button" onclick="SetResolution()" value="SetResolution"/>  		
+	<input type="button" onclick="GetVideoStatus()" value="GetVideoStatus"/>  
+	<input type="button" value="完成" onclick="uploadpic()"></input>
+	</br>	
+	</br>
+	<div id="result"></div>
+	</br>
+	<div id="fileLink"></div>
+	</br>
+    <img id="snapshot" src="" alt="This is a static snapshot" width="520px"/>	
+	
+	</div>	
+	
+	
+	
+  </body>
+</html>
+<script type="text/javascript">
+    
+    var phi = 0;
+	var camidx = 0; 
+	var uuid = "";
+	var filepath = "";
+	var filelist = "";
+
+	function setXformClass () {
+		$('.xform').each(function(idx,el) {
+			el.className = "xform x" + "-rotated-" + phi;
+		});
+	}
+    $(document).ready(function() {
+		// set rotation angle phi and toggle rotate class
+		$('#rotate').click(function() {
+			phi = (phi + 90) % 360;
+			setXformClass();
+			if (phi % 180) {
+				$('.xform-p').addClass('rotated');
+			} else {
+				$('.xform-p').removeClass('rotated');
+			}
+		});
+	});
+	
+	
+		//初始化
+	function Init(){
+		GetResolution();
+	}
+
+
+	function AppendLink(filePath, type) {
+		var div = document.getElementById("fileLink");
+		var linkTmp = document.createElement("a");
+		linkTmp.href = "file:\/\/\/" + filePath.toString();
+		if(type == 0)
+			linkTmp.innerText = "图像 "; 
+		else
+			linkTmp.innerText = "PDF "; 
+		linkTmp.target = "_blank"
+		div.appendChild(linkTmp);
+	}	
+	
+	function AddToPDF() {
+		if (uuid == "")
+		{
+			document.getElementById("result").innerHTML = "请先拍摄图像文件";
+			return;
+		}	
+		if (filelist == "")
+			filelist = "{\"uuid\":\"" + uuid.toString() + "\"}";
+		else
+			filelist = filelist + ",{\"uuid\":\"" + uuid.toString() + "\"}";			
+		document.getElementById("result").innerHTML = filelist;
+	}	
+	
+	function CreatePDF() {
+		document.getElementById("result").innerHTML = "";
+		
+		if (filelist == "")
+		{
+			document.getElementById("result").innerHTML = "请拍摄图像文件后，将文件添加到要生成PDF文件的队列";
+			return;
+		}
+		
+		var params = "[" + filelist + "]";//
+		var url = "http://127.0.0.1:38088/imagepro=merge2pdf";  	
+		filelist = "";
+
+		$.ajax({  
+			type: "post",  
+			url: url,  
+			dataType: "json", 
+			data: params,
+			success: function(data)
+			{				
+				if(data.code != 0)
+				{
+					document.getElementById("result").innerHTML = "CreatePDF 失败<br />返回代码 = " + data.code + "<br />  返回信息 = " + data.message; 	
+				}
+				else
+				{
+					AppendLink(data.filepath, 1);
+				}  
+			}
+		});  					
+	}	
+	
+	function GetVideoStatus() {
+		document.getElementById("result").innerHTML = "";
+				
+		var params = "";
+		var url = "http://127.0.0.1:38088/video=status";  	
+
+		$.ajax({  
+			type: "post",  
+			url: url,  
+			dataType: "json", 
+			data: params,
+			success: function(data)
+			{				
+				if(data.code == 0)
+				{
+					document.getElementById("result").innerHTML = "VideoStatus <br /> video0 : " + data.video0 + "<br />  video1 : " + data.video1; 	
+				} 
+			}
+		});  				
+	}	
+	
+	
+	function GrabImage() {
+	
+		document.getElementById("result").innerHTML = "";
+		
+		var cutpage = document.getElementsByName("cutpage");  
+		var params = "{\"filepath\":\"\",\"rotate\":\"" + phi.toString() + "\",\"camidx\":\"" + camidx.toString() + "\",\"cutpage\":\"" + (cutpage[0].checked ? "1" : "0") + "\"}";//
+		var url = "http://127.0.0.1:38088/video=grabimage";  	
+		alert(params);    
+		$.ajax({  
+			type: "post",  
+			url: url,  
+			dataType: "json", 
+			data: params,
+			success: function(data)
+			{				
+				if(data.code != 0)
+				{
+					document.getElementById("result").innerHTML = "GrabImage 失败<br />返回代码 = " + data.code + "<br />  返回信息 = " + data.message; 	
+				}
+				else
+				{
+					document.getElementById("snapshot").src="http://127.0.0.1:38088/video=snapshot&id=" + data.uuid;
+					alert( data.filepath);
+					AppendLink(data.filepath, 0);
+					uuid = data.uuid;
+					alert( data.filepath);
+					filepath = data.filepath;
+				}  
+			}
+		});  
+	}	
+	
+	function SetFrameRate() {
+		var framerate = document.getElementById("framerate").value;  								 
+		var params = "{\"framerate\":\"" + framerate.toString() + "\",\"camidx\":\"" + camidx.toString() + "\"}";//
+		var url = "http://127.0.0.1:38088/param=set";  
+
+		$.ajax({  
+			type: "post",  
+			url: url,  
+			dataType: "json", 
+			data: params,
+			success: function(data)
+			{				
+				document.getElementById("result").innerHTML = "SetFrameRate <br />返回代码 = " + data.code + "<br />  返回信息 = " + data.message; 	
+			}
+		});  
+	}	
+	
+	function SetResolution() {
+	
+		var select = document.getElementById("resolution");
+		var index = select.selectedIndex;		
+		var text = select.options[index].text
+		var splits = text.split("x");
+		
+		var params = "{\"resolution\": {\"width\":\"" + splits[0] + "\",\"height\":\"" + splits[1] + "\"},\"camidx\":\"" + camidx.toString() + "\"}";//
+		var url = "http://127.0.0.1:38088/param=set";  
+
+		$.ajax({  
+			type: "post",  
+			url: url,  
+			dataType: "json", 
+			data: params,
+			success: function(data)
+			{				
+				document.getElementById("result").innerHTML = "SetResolution<br />返回代码 = " + data.code + "<br />  返回信息 = " + data.message; 	
+			}
+		});  
+	}	
+	
+	function GetResolution() {
+		var params = "{\"type\": \"resolution\",\"camidx\":\"" + camidx.toString() + "\"}";//
+		var url = "http://127.0.0.1:38088/param=get";  
+
+		$.ajax({  
+			type: "post",  
+			url: url,  
+			dataType: "json", 
+			data: params,
+			success: function(data)
+			{
+				if(data.code != 0)
+				{
+					document.getElementById("result").innerHTML = "GetResolution 失败<br />返回代码 = " + data.code + "<br />  返回信息 = " + data.message; 	
+				}
+				else
+				{
+					var select = document.getElementById("resolution");
+					//获取select下拉框下所有的选项
+					while(select.options.length > 0)
+					{
+						select.remove(i);
+					}
+					
+					var arrays = data.resolution.split("|");
+					for(var i=0; i<arrays.length; i++)
+					{
+						select.options.add(new Option(arrays[i], arrays[i])); 
+					}
+										
+					document.getElementById("result").innerHTML = "GetResolution 成功<br />返回代码 = " + data.code; 	
+				}  				
+			}
+		});  
+	}	
+	
+	
+	function GrabImageBase64() {
+		
+		var cutpage = document.getElementsByName("cutpage");  
+		var params = "{\"filepath\":\"base64\",\"rotate\":\"" + phi.toString() + "\",\"camidx\":\"" + camidx.toString() + "\",\"cutpage\":\"" + (cutpage[0].checked ? "1" : "0") + "\"}";//
+		var url = "http://127.0.0.1:38088/video=grabimage";  	
+
+		$.ajax({  
+			type: "post",  
+			url: url,  
+			dataType: "json", 
+			data: params,
+			success: function(data)
+			{			
+				document.getElementById("snapshot").src= "data:image/jpg;base64," + data.photoBase64;
+				document.getElementById("result").innerHTML = "";
+			}  
+			});  
+	}	
+	
+	
+	function SelectCamera() {
+		var camradio = document.getElementsByName("camidx");
+		for(i=0;i<camradio.length;i++)
+		{
+			if(camradio[i].checked)
+				camidx = camradio[i].value;
+		}
+		
+		document.getElementById("streamimage").src="http://127.0.0.1:38088/video=stream&camidx=" + camidx.toString();
+		GetResolution();
+	
+	}	
+	
+	function ProcessVideoData() {
+		var radio = document.getElementsByName("provideo");
+		var provideo;
+		for(i=0;i<radio.length;i++)
+		{
+			if(radio[i].checked)
+				provideo = radio[i].value;
+		}
+		
+		var params = "{\"provideo\":\"" + provideo.toString() + "\",\"camidx\":\"" + camidx.toString() + "\"}";//
+		var url = "http://127.0.0.1:38088/param=set";  
+
+		$.ajax({  
+			type: "post",  
+			url: url,  
+			dataType: "json", 
+			data: params,
+			success: function(data)
+			{				
+				document.getElementById("result").innerHTML = "ProcessVideoData <br />返回代码 = " + data.code + "<br />  返回信息 = " + data.message; 	
+			}
+		});  
+	}	
+		
+	</script>

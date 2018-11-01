@@ -1,0 +1,17 @@
+<!-- 签字 -->
+<view class='signature content'>
+  <canvas class='signature firstCanvas'
+    id="canvas" 
+    canvas-id="firstCanvas"
+    id='canvasWarp'
+    bindtouchmove='move'
+    bindtouchstart='start'
+    bindtouchend='end'
+    bindtouchcancel='cancel'
+    bindlongtap='tap'
+    disable-scroll='true'
+    binderror='error'>
+  </canvas>
+  <button class="clearClick" bindtap='clearClick'>清除</button>
+  <button class='saveClick' bindtap='saveClick' >确认</button>
+</view>

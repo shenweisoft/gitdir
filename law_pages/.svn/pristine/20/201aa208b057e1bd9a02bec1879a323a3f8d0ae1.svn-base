@@ -1,0 +1,130 @@
+<div class="panel panel-default no-border">
+	<div class="panel-heading border-no-bottom">赔偿项目</div>
+	<div class="panel-body no-padding ">
+		<table class="table table-bordered text-center">
+			<thead>
+			<tr>
+				<th class="text-center col-xs-1">是否赔偿</th>
+				<th class="text-center col-xs-2">费用名称</th>
+				<th class="text-center col-xs-2">诉请金额</th>
+				<th class="text-center col-xs-1" style="background:#EEFFE8">赔偿标准</th>
+				<th class="text-center col-xs-4" style="background:#EEFFE8">经证据认定金额</th>
+				<th class="text-center col-xs-1">法条</th>
+				<th class="text-center col-xs-1">说明</th>
+			</tr>
+			</thead>
+        <tbody>
+          <tr ng-repeat="fee in law.feeDetail">
+            <td><input type="checkbox" name="feeRow" ng-change="feeCheckChanged(fee, fee.id)" ng-model="fee.isChecked" ng-checked="fee.isChecked"></td>
+            <td class="line-height-34">{{fee.value}}</td>
+            <td>
+              <div ng-show="fee.isChecked">
+                <div class="col-xs-11 no-padding">
+                  <input type="text" ng-model="fee.applyAmount" class="form-control col-xs-3 paddingLr" ng-change="refreshTotal();" placeholder="元" float-only>
+                </div>
+              </div>
+            </td>
+            <td class="line-height-34" style="background:#EEFFE8">
+              <div ng-show="fee.id=='06' && fee.isChecked">
+                <input type="text" ng-model="law.compensateStandard.hospitalFoodSubsidies" ng-change="computeChange(fee, true)" class="form-control col-xs-3 paddingLr" placeholder="元/天" float-only>
+              </div>
+              <div ng-show="fee.id=='07' && fee.isChecked">
+                <input type="text" ng-model="law.compensateStandard.thesePayments" ng-change="computeChange(fee, true)" class="form-control col-xs-3 paddingLr" placeholder="元/天" float-only>
+              </div>
+              <div ng-show="fee.id=='11' && fee.isChecked">
+                <input type="text" ng-model="law.compensateStandard.accommodationFee" ng-change="computeChange(fee, true)" class="form-control col-xs-3 paddingLr" placeholder="元/天" float-only>
+              </div>
+              <div ng-show="fee.id=='12' && fee.isChecked">
+                <input type="text" ng-model="law.compensateStandard[feeHousehold].income" ng-change="computeChange(fee, true)" class="form-control col-xs-3 paddingLr" placeholder="元/年" float-only>
+              </div>
+              <div ng-show="fee.id=='15' && fee.isChecked">
+                <input type="text" ng-model="law.compensateStandard[feeHousehold].income" ng-change="computeChange(fee, true)" class="form-control col-xs-3 paddingLr" placeholder="元/年" float-only>
+              </div>
+              <div ng-show="fee.id=='16' && fee.isChecked">
+                <input type="text" ng-model="law.compensateStandard.funeralFeeStandard" ng-change="computeChange(fee, true)" class="form-control col-xs-3 paddingLr" placeholder="元/月" float-only>
+              </div>
+              <div ng-show="fee.id=='17' && fee.isChecked">
+                {{law.compensateStandard.spiritualConsolationFee}}元
+              </div>
+            </td>
+            <td style="background:#EEFFE8">
+              <div ng-show="fee.template=='0' && fee.isChecked">
+                <div class="col-xs-11 no-padding">
+                  <input type="text" ng-model="fee.claimAmount" class="form-control paddingLr" ng-change="refreshTotal();" placeholder="元" float-only>
+                </div>
+              </div>
+              <div ng-show="fee.template=='1' && fee.isChecked">
+                <div class="col-xs-7 no-padding margin-top-6">医疗费（不含非医保）</div>
+                <div class="col-xs-4 no-padding">
+                  <input type="text" ng-model="fee.claimAmount" class="form-control paddingLr" ng-change="refreshTotal();" placeholder="元" float-only>
+                </div>
+                <div class="col-xs-7 no-padding text-center line-height2 margin-top-6">非医保</div>
+                <div class="col-xs-4 no-padding margin-top-6">
+                  <input type="text" ng-model="fee.claimNonMed" class="form-control paddingLr" ng-change="refreshTotal();" placeholder="元" float-only>
+                </div>
+              </div>
+              <div ng-show="fee.template=='2' && fee.isChecked">
+                <div class="col-xs-9 no-padding" ng-show="false">
+                  <input type="text" ng-model="fee.claimPerUnit" class="form-control paddingLr" ng-change="computeChange(fee, true)"  placeholder="元/天" float-only>
+                </div>
+                <div class=" col-xs-1 no-padding line-height2 text-center">×</div>
+                <div class=" col-xs-5 no-padding">
+                  <input type="text" ng-model="fee.claimUnit" class="form-control paddingLr" ng-change="computeChange(fee, true)"  placeholder="天" int-only>
+                </div>
+                <div class=" col-xs-1  no-padding line-height2 text-center">=</div>
+                <div class=" col-xs-5 no-padding">
+                  <input type="text" ng-model="fee.claimAmount" class="form-control paddingLr" placeholder="元" readonly float-only>
+                </div>
+              </div>
+              <div ng-show="fee.template=='3' && fee.isChecked">
+                <div class=" col-xs-5 no-padding" ng-show="false">
+                  <input type="text" ng-model="fee.claimPerUnit" class="form-control paddingLr" ng-change="computeChange(fee, true)" placeholder="元/年" float-only>
+                </div>
+                <div class=" col-xs-1 no-padding line-height2 text-center">×</div>
+                <div class=" col-xs-1 no-padding">
+                  <input type="text" ng-model="fee.claimUnit" class="form-control paddingLr" ng-change="computeChange(fee, true)" placeholder="年" int-only>
+                </div>
+                <div class=" col-xs-1 no-padding line-height2 text-center">×</div>
+                <div class=" col-xs-2 no-padding">
+                  <input type="text" ng-model="law.compensateRate" class="form-control paddingLr" ng-change="computeChange(fee, true)" placeholder="%" readonly="readonly">
+                </div>
+                <div class=" col-xs-1 no-padding line-height2 text-center">%</div>
+                <div class=" col-xs-1 no-padding line-height2 text-center">=</div>
+                <div class=" col-xs-5 no-padding ">
+                  <input type="text" ng-model="fee.claimAmount" class="form-control paddingLr" readonly placeholder="元" float-only>
+                </div>
+              </div>
+              <div ng-show="fee.template=='4' && fee.isChecked">
+                <div class=" col-xs-5 no-padding" ng-show="false">
+                  <input type="text" ng-model="fee.claimPerUnit" class="form-control paddingLr" ng-change="computeChange(fee, true)" placeholder="元/月" float-only>
+                </div>
+                <div class=" col-xs-1 no-padding line-height2 text-center">×</div>
+                <div class=" col-xs-5 no-padding">
+                  <input type="text" ng-model="fee.claimUnit" class="form-control paddingLr" ng-change="computeChange(fee, true)" placeholder="月" int-only>
+                </div>
+                <div class=" col-xs-1 text-center line-height2 no-padding text-center">=</div>
+                <div class=" col-xs-5 no-padding">
+                  <input type="text" ng-model="fee.claimAmount" class="form-control paddingLr" readonly placeholder="元" float-only>
+                </div>
+              </div>
+              <div ng-show="fee.template=='5' && fee.isChecked">
+                <div class="col-xs-9 no-padding">
+                  <input type="text" ng-model="fee.claimAmount" class="form-control paddingLr" ng-change="refreshTotal();co.calculate();" placeholder="元" float-only>
+                </div>
+                <div class="col-xs-3 no-padding text-center">
+                  <i class="iconfont icon-jisuanqi brand-color font20 cur-pointer" ng-show="fee.id == '14'" ng-click="addDependent('claim')"></i>
+                  <i class="iconfont icon-jisuanqi brand-color font20 cur-pointer" ng-show="fee.id == '08' || fee.id == '09' || fee.id == '80'" ng-click="addNursingFee('claim',fee)"></i>
+                </div>
+              </div>
+            </td>
+            <td class="line-height-34"><a class="cur-pointer" ng-click="openCriteria('lg', fee)">查看</a></td>
+            <td><input type="text" class="form-control cur-pointer" value="{{fee.remark}}" title="{{fee.remark}}"></td>
+          </tr>
+        </tbody>
+			</table>
+		<div class="col-xs-9 text-right">
+			<span class="col-xs-6 ">案件诉请合计:  <b class="error-color">￥{{law.applyTotal}}</b></span>
+			<span class="col-xs-6">经证据认定金额合计：<b class="error-color">￥{{law.lawMoney}}</b></span>
+		</div>
+	</div>
+</div>

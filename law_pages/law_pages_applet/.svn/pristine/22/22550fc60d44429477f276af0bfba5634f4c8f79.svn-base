@@ -1,0 +1,40 @@
+<import src="/pages/template/template.wxml" />
+<view class='bg'></view>
+<!-- 提示信息 -->
+<template is="wetoast" data="{{content, toastType}}" wx:if="{{showToast}}"></template>
+<!-- 头部步骤 -->
+<template is="lawCaseHeader" data="{{stepArray, step}}"></template>
+<!-- 标题 -->
+<view class='step1_cont'>
+  <view class='step1_cont_list'>
+    <textarea class='textarea' bindinput='setFactReason' value='{{lawCase.factReason}}' placeholder='请输入或语音录入事实理由'>
+    
+    </textarea>
+    <view class='voiceEntry'>
+      <button button-disabled="{{bottomButtonDisabled}}" catchtouchend="streamRecordEnd" catchtouchstart="streamRecord" catchtouchmove="streamRecordMove">
+        <icon class='iconfont icon--yuyin'></icon>语音录入
+      </button>
+    </view>
+  </view>
+</view>
+<loading hidden="{{hidden}}">
+  加载中...
+</loading>
+
+<!-- 语音图片 -->
+<view class='audio_mask' hidden='{{voiceShow}}'>
+   <view class='loading2'>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+   </view>
+   <image src='../../../images/chat_pic4.png'></image> 
+   <view class='audio_mask_text'>手指上滑  取消发送</view>
+</view>
+
+<view class='bottom_box_btn'>
+  <view class='bottom_box_btn_e'><view class='bottom_box_btn_e_l' bindtap='prev'>上一步</view></view>
+  <view class='bottom_box_btn_e'><view class='bottom_box_btn_e_r' bindtap='next'>下一步</view></view>
+</view>

@@ -1,0 +1,211 @@
+// pages/step4/step4.js
+Page({
+  /**
+   * 页面的初始数据
+   */
+  data: {
+    currentStep:4,
+    isStep5: ''
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+    var that = this;
+    if (options.lawCase) {
+      var lawCase = JSON.parse(options.lawCase)
+      that.setData({
+        lawCase: lawCase
+      })
+    }
+    that.setData({
+      isStep5: options.isStep5 == 'true' ? 'true' : 'false'
+    })
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload: function () {
+  
+  },
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh: function () {
+  
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom: function () {
+  
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+  
+  },
+
+  // 提示
+  opentitle: function (e) {
+    var title = e.currentTarget.dataset.title;
+    wx.showModal({
+      title: '提示',
+      content: title,
+      showCancel: false,
+      confirmText: "知道了"
+    })
+  },
+
+  /**
+   * 数据改变事件
+   */
+  dataChange: function(e){
+    var that = this
+    var attribute = e.currentTarget.dataset.attribute
+    var id = e.currentTarget.dataset.id
+
+    var lawCase = that.data.lawCase
+    var fee = lawCase.feeDetail.filter((v) =>{
+      return v.id == id
+    })[0]
+
+    fee[attribute] = e.detail.value
+
+    that.setData({
+      lawCase: lawCase
+    })
+  },
+
+  /**
+   * 计算总损失
+   */
+  calculateTotalLoss: function(){
+    var that = this
+    var lawCase = that.data.lawCase
+    
+    var applyTotal = 0
+    lawCase.feeDetail.forEach((v) =>{
+      if(v.id == '19'){//处理事故人员误工费
+        v.personArray.forEach((m) =>{
+          applyTotal += parseFloat(m.applyAmount || 0)
+        })
+      } else if (v.id == '09'){//护理费
+        v.nursingArray.forEach((m) =>{
+          applyTotal += parseFloat(m.applyAmount || 0)
+        })
+      } else if (v.id == '14'){//被扶养人生活费
+        if (v.dependents.apply){
+          if (v.dependents.apply.length == 1) {//单个抚养人
+            var dependent = v.dependents.apply[0]
+            var standardFee = lawCase.compensateStandard[dependent.household].expense
+            //抚养年限x上一年度城镇居民人均年消费性支出额或者农村居民人均年生活消费支出额/共同抚养人数×伤残系数
+            dependent.applyAmount = parseFloat(dependent.fyAge || 0) * parseFloat(standardFee || 0) / parseFloat(dependent.count || 0) * (parseFloat(lawCase.compensateRate) / 100)
+            applyTotal += dependent.applyAmount
+          } else {//多个被扶养人
+            // a、计算每个抚养人还需要多少年的抚养时间
+            // b、确定每个人的每年的抚养费（上一年度城镇居民人均年消费性支出额或者农村居民人均年生活消费支出额 / 共同抚养人数）
+            // c、将所有人的抚养费相加与当地标准比较：判断结果是否大于上一年度人居生活消费支出，结果小于支出数额的按照实际数额，结果大于支出数额的按照标准支出。
+            // d、依次计算各抚养时间段内人员的抚养费，年数 * 费用。依次循环，直至无抚养人需要负担。
+            // e、最终将多个结果相加为总费用 * 伤残系数。
+            
+            v.dependents.apply.sort(function (a, b) {//根据抚养年限排序，由大到小
+              return a.fyAge - b.fyAge;
+            });
+
+            var countFee = 0
+            var dependentStandard = lawCase.compensateStandard[lawCase.household].expense
+            v.dependents.apply.forEach((m, i, arr) =>{
+              var tmpFee = 0;
+              var preYear = 0;
+
+              if (i != 0) {
+                preYear = arr[i - 1].fyAge;
+              }
+              
+              arr.forEach((j) =>{
+                tmpFee += (dependentStandard * lawCase.compensateRate / 100 / j.count);
+              })
+              
+              //取标准和计算值中小的
+              tmpFee = Math.min(tmpFee, dependentStandard);
+
+              countFee += (tmpFee * (m.fyAge - preYear));
+
+              m.applyAmount = countFee
+            })
+
+            applyTotal += parseFloat(countFee)
+          }
+        }
+      } else {//其他类型的费用
+        applyTotal += parseFloat(v.applyAmount||0)
+      }
+    })
+
+    lawCase.applyTotal = applyTotal.toFixed(2)
+    lawCase.applyTotal = applyTotal.toFixed(2)
+
+    that.setData({
+      lawCase: lawCase
+    })
+  },
+
+  /**
+  * 上一步
+  */
+  preStep: function () {
+    var pages = getCurrentPages();
+    var currPage = pages[pages.length - 1];   //当前页面
+    var prevPage = pages[pages.length - 2];  //上一个页面
+    var lawCase = this.data.lawCase;
+    prevPage.setData({
+      lawCase: lawCase
+    })
+    wx.navigateBack({
+      delta: 1
+    })
+  },
+
+  /**
+   * 下一步
+   */
+  nextStep: function () {
+    var that = this;
+    var nextStep = parseInt(that.data.currentStep) + 1
+    
+    //计算事故总损失
+    that.calculateTotalLoss();
+
+    wx.navigateTo({
+      url: '../step' + nextStep + '/step' + nextStep + "?lawCase=" + JSON.stringify(that.data.lawCase)+'&isStep5='+that.data.isStep5,
+    })
+  }
+})

@@ -1,0 +1,13 @@
+<view class="classname">
+  <view class="litigant_bottom">
+    <view class="input_box" style="margin-top:20rpx;">
+      <image class="icon_img" src="../../../images/2r3_c1.png"></image>
+      <input class="phone" data-attribute="idCard" auto-focus='true' type="validateCode" bindinput="userBindData" placeholder="请输入身份证号" value="{{applicant.idNo}}"/>
+      <view class='input_box_r' style='border:0px;'  bindtap='uploadImg'>
+        <icon class='iconfont icon-xiangji'></icon>
+      </view>
+    </view>
+    <view class='prompt'><icon class='iconfont icon-tishi'></icon> 我们会对您的信息进行保密，请放心输入</view>
+    <view class="btn" bindtap='nextStep'>下一步</view>
+  </view>
+</view>

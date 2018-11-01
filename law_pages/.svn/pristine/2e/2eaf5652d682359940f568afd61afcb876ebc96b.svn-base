@@ -1,0 +1,160 @@
+<div class="panel row" style="border-radius: 0px; font-size: 14px;">
+	<div ng-repeat="algorithmApplyerInfo in algorithmInfo.jyAlgorithmApplyerInfoVOList | filter:{isOwner:0}">
+		<div style="margin: 15px; padding: 0 20px;">
+			<div class="row" style="margin-top: 40px;">
+				<div class="col-xs-6">
+					<div class="form-group form-group-sm">
+						<label class="col-lg-3 col-xs-11 control-label">申请人姓名或名称</label>
+						<div class="col-lg-8 col-xs-11">
+							<input style="background: #fff;" ng-model="algorithmApplyerInfo.personName" type="text"
+								class="form-control" placeholder="" readonly>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="form-group form-group-sm">
+						<label class="col-lg-3 col-xs-11 control-label">车牌号</label>
+						<div class="col-lg-8 col-xs-11">
+							<div class="input-group">
+								<input style="background: #fff;" ng-model="algorithmApplyerInfo.plateNo" type="text"
+									class="form-control" placeholder=""  readonly
+									ng-change="responsibleRateChanged(algorithmApplyerInfo)"
+									int-only> 
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row" style="margin-top: 20px;">
+				<div class="col-xs-6">
+					<div class="form-group form-group-sm">
+						<label class="col-lg-3 col-xs-11 control-label">投保险种</label>
+						<div class="col-lg-8 col-xs-11">
+							<label class="checkbox-inline" ng-repeat="riskType in riskTypeList">
+								<input type="checkbox" name="{{algorithmApplyerInfo.id + 'checkbox'}}"
+								ng-change="riskTypeChanged(algorithmApplyerInfo, riskType.id)"
+								ng-model="algorithmApplyerInfo.riskkinds[riskType.id]"
+								ng-checked="algorithmApplyerInfo.riskkinds[riskType.id]"> {{riskType.value}}
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="form-group form-group-sm">
+						<label class="col-lg-3 col-xs-11 control-label">绝对免赔率</label>
+						<div class="col-lg-8 col-xs-11">
+							<div class="input-group">
+								<label ng-repeat="absDeductible in algorithmApplyerInfo.absDeductibleList"
+									style="margin-right: 30px;"> <input style="position: relative;top: 2px;" 
+									ng-change="changeAbsDeductible(algorithmApplyerInfo)" type="checkbox"
+									name="absDeductibleList" ng-model="absDeductible.selected"
+									ng-checked="absDeductible.selected"> {{absDeductible.value}}
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row no-margin"
+			ng-show="(algorithmApplyerInfo.riskkinds['0']||algorithmApplyerInfo.riskkinds['1']) && algorithmApplyerInfo.isOwner=='0'">
+			<div class="col-xs-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th colspan="2" class="text-center">险种名称</th>
+							<th class="text-center">保额</th>
+							<th class="text-center">承保公司</th>
+							<th class="text-center">免赔率%</th>
+							<th class="text-center">赔偿比例%</th>
+							<th class="text-center">绝对免赔率比例%</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-show="algorithmApplyerInfo.riskkinds['0']">
+							<td rowspan="3" style="vertical-align: middle;">交强险</td>
+							<td>医疗费</td>
+							<td><input type="text" class="form-control" ng-model="algorithmApplyerInfo.medicalFee"
+								ng-value="algorithmApplyerInfo.responsibleRate>0?10000:1000"
+								readonly="readonly"></td>
+							<td rowspan="3"
+								style="vertical-align: middle; position: relative">
+								<!--   <select class="form-control" ng-model="insurance.text" id = "insurance.text" ng-options="insurance.text  for insurance  in insuranceList">
+                </select> --> <input type="text" class="form-control"
+								ng-focus="algorithmApplyerInfo.insuranceShow = true"
+								ng-blur="blurInsurance(algorithmApplyerInfo,1)"
+								ng-model="algorithmApplyerInfo.insuranceForceCompany"
+								placeholder="请填写保险公司" readonly maxlength="50">
+								<ul class="select_border position_ul"
+									style="position: absolute; top: 93px; left: 9px; width: 94%;"
+									ng-show="algorithmApplyerInfo.insuranceShow">
+									<li class="cursor_pointer"
+										ng-repeat="insurance in insuranceList" id="insurance.id"
+										ng-click="selectInsuranceItem(algorithmApplyerInfo, insurance,1)">{{insurance.text}}</li>
+								</ul>
+
+							</td>
+
+
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr ng-show="algorithmApplyerInfo.riskkinds['0']">
+							<td>死亡伤残</td>
+							<td><input type="text" class="form-control" ng-model="algorithmApplyerInfo.disabilityFee"
+								ng-value="algorithmApplyerInfo.responsibleRate>0?110000:11000"
+								readonly="readonly"></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr ng-show="algorithmApplyerInfo.riskkinds['0']">
+							<td>财产损失</td>
+							<td><input type="text" class="form-control"  ng-model="algorithmApplyerInfo.propertyLossFee"
+								ng-value="algorithmApplyerInfo.responsibleRate>0?2000:100"
+								readonly="readonly"></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr ng-show="algorithmApplyerInfo.riskkinds['1']">
+							<td>商业险</td>
+							<td>三者险</td>
+							<td><input type="text" ng-model="algorithmApplyerInfo.thirdParty"
+								class="form-control" ng-change="thirdPartyChanged(algorithmApplyerInfo)"
+								ng-blur="co.calculate()" float-only></td>
+							<td rowspan="3"
+								style="vertical-align: middle; position: relative"><input
+								type="text" class="form-control"
+								ng-focus="algorithmApplyerInfo.businessInsuranceShow = true"
+								ng-blur="blurInsurance(algorithmApplyerInfo,2)"
+								ng-model="algorithmApplyerInfo.insuranceBusinessCompany"
+								placeholder="请填写保险公司" readonly maxlength="50"> <!--   <select class="form-control" ng-model="respondent.insuranceBusinessCompany" ng-options="insurance.id as insurance.text  for insurance  in insuranceList">
+                </select> -->
+								<ul class="select_border position_ul"
+									style="position: absolute; top: 42px; left: 9px; width: 94%;"
+									ng-show="algorithmApplyerInfo.businessInsuranceShow">
+									<li class="cursor_pointer"
+										ng-repeat="insurance in insuranceList" id="insurance.id"
+										ng-click="selectInsuranceItem(algorithmApplyerInfo, insurance,2)">{{insurance.text}}</li>
+								</ul></td>
+							<td><input ng-disabled="algorithmApplyerInfo.riskkinds['2']"
+								type="text" ng-model="algorithmApplyerInfo.thirdPartyFranchise"
+								class="form-control"
+								ng-change="thirdPartyFranchiseChanged(algorithmApplyerInfo)"></td>
+							<td><input ng-disabled="algorithmApplyerInfo.riskkinds['2']"
+								type="text" ng-model="algorithmApplyerInfo.thirdPartyRate"
+								class="form-control"
+								ng-change="thirdPartyRateChanged(algorithmApplyerInfo)"></td>
+							<td><input ng-disabled="algorithmApplyerInfo.riskkinds['2']"
+								type="text" ng-model="algorithmApplyerInfo.absDeductible"
+								class="form-control" readonly="readonly"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="solide10"></div>
+	</div>
+</div>

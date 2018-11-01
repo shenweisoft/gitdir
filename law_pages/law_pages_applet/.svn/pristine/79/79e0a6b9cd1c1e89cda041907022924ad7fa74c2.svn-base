@@ -1,0 +1,830 @@
+<!-- wetoast.wxml -->
+<template name="wetoast">
+  <view wx:if="{{toastType == 'error'}}" class='top_title1'>{{content}}</view>
+  <view wx:if="{{toastType == 'success'}}" class='top_title2'>{{content}}</view>
+</template>
+<!-- 底部菜单 -->
+<template name="footInfo">
+  <view class='bottom_btn_box'>
+    <!-- 步数提示框 -->
+    <!-- <view class='progress_title'style='left:{{currentStep/5 * 100}}%;'>
+      {{currentStep}}/5
+      <view class='progress_title_b'></view>
+    </view> -->
+    <progress percent="{{currentStep/5 * 100}}" />
+     <!-- <view class='nextBtn' wx:if="{{currentStep==1}}" data-step="{{currentStep}}" bindtap='nextStep'><view class='nextBtn_c'>下一步</view></view>  -->
+    <view class='nextBtn' wx:if="{{currentStep != '5'}}">
+      <view class='left_btn' bindtap='preStep'>上一步</view>
+      <view class='right_btn' bindtap='nextStep'>下一步</view>
+      <view class='clear'></view>
+    </view>
+    <view class='nextBtn' wx:if="{{currentStep=='5'}}">
+      <view class='left_btn' bindtap='reservation'><icon class='iconfont icon--yuyuetiaojie' style='font-size:20px; position: relative; top: 1px;'></icon> 预约调解</view>
+      <!-- <view class='right_btn'><icon class='iconfont icon--fenxiang' style='font-size:20px; position: relative; top: 1px;'></icon> 分享</view> -->
+      <button class='right_btn' open-type="share">
+        <icon class='iconfont icon--fenxiang' style='font-size:20px; position: relative; top: 1px;'></icon> 分享
+      </button>
+      <view class='clear'></view>
+    </view>
+  </view>
+</template>
+<template name='lawCaseHeader'>
+  <view class='top_step_list'>
+    <view class='top_step_list_e' wx:for="{{stepArray}}" wx:for-item="x" wx:key="{{x.id}}">
+      <view class="{{step >= x.id? ((step == x.id)? 'step active' : 'step active2'): 'step'}}">{{x.id}}<icon class='iconfont icon-dui'></icon></view>
+      {{x.name}}
+    </view>
+  </view>
+</template>
+
+<template name='adjustAgreement'>
+  <view class="b1 b2 wxParse-body wxParse-p">
+    <view class="wxParse-p" style="text-align:center; width:100%;font-family:'宋体'; font-size: 34px;font-weight: bold;">
+      <view class="WxEmojiView wxParse-inline" style='font-size:45rpx'>人 民 调 解 协 议 书</view>
+    </view>
+    <view class="wxParse-p" style="width: 100%; text-align: right; font-family: '仿宋_GB2312'; font-size: 20px; margin-bottom: 25px;">
+      <view class="ng-binding wxParse-span wxParse-inline">
+        <view class="WxEmojiView wxParse-inline"> {{lawCase.regulationNo}}号</view>
+      </view>
+    </view>
+    <!-- 当事人数据 -->
+    <view class="ng-scope wxParse-div" wx:for="{{lawCase.applicantArray}}">
+      <view class="wxParse-p" style="text-indent: 40px; font-size: 20px; font-family: '仿宋_GB2312';line-height:125%;">
+        <view class="ng-scope ng-binding wxParse-span wxParse-inline">
+          <view class="WxEmojiView wxParse-inline">当事人：
+          <view class="wxParse-span wxParse-inline">{{item.idType == 0? item.personName : item.legalName}}，</view>
+          <view class="wxParse-span wxParse-inline" wx:if='{{item.sex || item.sex == "0"}}'>{{item.sex == 0? '男':'女'}}，</view>
+          
+          <view class="wxParse-span wxParse-inline" wx:if='{{item.birthDay}}'>{{item.birthDayStr}}出生，</view>
+          <view class="wxParse-span wxParse-inline" wx:if='{{item.nation}}'>{{item.nation}}，</view>
+          <view class="wxParse-span wxParse-inline" wx:if='{{item.idNo && (item.certificatesType || item.certificatesType == "0") && item.certificatesType != 5}}'>{{item.certificatesStr}}号码：{{item.idNo}}，</view>
+          住{{item.domicile}}
+          </view>
+
+              <view wx:if="{{i.agentArray}}">
+                  <view  wx:for="{{i.agentArray}}" wx:for-item="m">
+                    <view wx:if="{{m.agentType == '0'}}"><!--委托-->
+                      <view class="WxEmojiView" style="text-indent:30px;" wx:if="{{m.agentIdentity == '1'}} || {{m.agentIdentity == '0'}} || {{m.agentIdentity == '2'}}">
+                        委托代理人：{{m.agentName}},
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.sex}}">{{m.sex=='1'? '女':'男，'}}</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.birthDay}}">{{m.birthDay}}日出生,</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.nation}}">{{m.nation}}，</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.idNo}}">身份证号码：{{m.idNo}}</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '1'}}">驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '2'}}">外籍在华驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '3'}}">军队驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '4'}}">律师证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '5'}}">暂未获取</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.companyName}}">{{m.companyName}}职员</view>
+                        ，住{{i.sendAddress}}
+                      </view>
+                    </view>
+                    <view class="WxEmojiView" wx:if="{{m.agentType != '0'}}" style="text-indent:30px;">法定代理人：
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.sex}}">{{m.sex=='1'? '女':'男，'}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.birthDay}}">{{m.birthDay}}日出生,</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.nation}}">{{m.nation}}，</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.idNo}}">身份证号码：{{m.idNo}},住</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.isLive==true}}">{{m.residence}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.isLive==false}}">{{m.domicile}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{i.idType == '0'}}">（系申请人{{i.personName}}的</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{i.idType != '0'}}">（系申请人{{i.legalName}}的</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '1'}}">父亲</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '2'}}">母亲</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '3'}}">儿子</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '4'}}">女儿</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '5'}}">配偶</view>)
+                    </view>
+                  </view>
+               </view>
+
+        </view>
+      </view>
+    </view>
+    <!-- 纠纷类别 -->
+    <view class="wxParse-p" wx:if='{{lawCase.reason || lawCase.reason == 0}}' style="text-indent: 40px; font-size: 20px; font-family: '仿宋_GB2312';line-height:125%;">
+      <view class="ng-scope ng-binding wxParse-span wxParse-inline">
+        <view class="WxEmojiView wxParse-inline">纠纷类别：{{lawCase.reasonStr}}</view>
+      </view>
+    </view>
+    <!-- 纠纷事实 -->
+    <view wx:if='{{lawCase.factReason}}' class="ng-binding wxParse-p" style="text-indent: 40px; font-size: 20px; font-family: '仿宋_GB2312';line-height:125%;">
+      <view class="WxEmojiView wxParse-inline"> 纠纷主要事实，争议事项：{{lawCase.factReason}}</view>
+    </view>
+    <!-- 赔偿明细 -->
+    <view class="ng-binding wxParse-p" style="text-indent: 40px; font-size: 20px; font-family: '仿宋_GB2312';line-height:125%;">
+      <view class="WxEmojiView wxParse-inline"> 当事人{{lawCase.applicant}}因交通事故损失的<view class="wxParse-span wxParse-inline" wx:for='{{lawCase.feeDetail}}' wx:if='{{item.claimAmount}}'>{{item.value}}{{item.claimAmount}}元，</view>合计{{lawCase.lawMoney}}元，要求当事人{{lawCase.respondent}} 赔偿。</view>
+    </view>
+
+    <view class="wxParse-p" style="text-indent: 40px; font-size: 20px; font-family: '仿宋_GB2312';line-height:125%;">
+      <view class="WxEmojiView wxParse-inline"> 经调解，自愿达成如下协议：</view>
+    </view>
+    <view class="ng-scope ng-binding wxParse-p" style="text-indent: 40px; font-size: 20px; font-family: '仿宋_GB2312';">
+      <view wx:for='{{lawCase.adjustResultRemarkStr}}' class="wxParse-p" style="font-family: '仿宋_GB2312';">{{item}}</view>
+    </view>
+    
+    <view class="wxParse-p" style="text-indent: 40px; font-size: 20px; font-family: '仿宋_GB2312';margin-bottom:40rpx;"
+>
+      <view class="WxEmojiView wxParse-inline"> 本协议一式_____份，当事人、人民调解委员会各持一份。</view>
+    </view>
+    
+    <view wx:for='{{lawCase.applicantArray}}' style='height:151rpx' wx:for-item='applicant' wx:for-index='index' wx:if='{{applicant.personType == "0"}}'>
+      <view class='clear sign-wp'>
+        <view data-index='{{index}}' class='signImage' wx:if="{{!applicant.isSignature && ((!isLocalSignature && document.remoteSign != 1) || (isLocalSignature && userInfo.userType != 2) || (document.remoteSign == 1 && userInfoType != '0') || lawCase.state != '1000')}}"></view>
+        <view data-index='{{index}}' bindtap='handleSignature' class='signImage' wx:if="{{!applicant.isSignature && lawCase.state == '1000' && ((isLocalSignature && userInfo.userType == 2) || (document.remoteSign == 1 && userInfoType == '0'))}}">点我签字</view>
+        <image class='signImage' wx:for='{{document.signatureList}}' src='{{imageAddress+item.signature}}' wx:if='{{applicant.id == item.applicantId}}'></image>
+        <view class='signName'>申请人签字：</view>
+      </view>
+    </view>
+    <view wx:for='{{lawCase.applicantArray}}' style='height:151rpx' wx:for-item='respondent' wx:for-index='index' wx:if='{{respondent.personType == 1}}'>
+      <view class='clear sign-wp'>
+        <view data-index='{{index}}' class='signImage' wx:if="{{!respondent.isSignature && ((!isLocalSignature && document.remoteSign != 1) || (isLocalSignature && userInfo.userType != 2) || (document.remoteSign == 1 && userInfoType != 1) || lawCase.state != '1000')}}"></view>
+        <view data-index='{{index}}' bindtap='handleSignature' class='signImage' wx:if="{{!respondent.isSignature && lawCase.state == '1000' && ((isLocalSignature && userInfo.userType == 2) || (document.remoteSign == 1 && userInfoType == 1))}}">点我签字</view>
+        <image class='signImage' wx:for='{{document.signatureList}}' src='{{imageAddress+item.signature}}' wx:if='{{respondent.id == item.applicantId}}'></image>
+        <view class='signName'>被申请人签字：</view>
+      </view>
+    </view>
+    <view style='height:151rpx'>
+      <view class='clear sign-wp'>
+        <view data-index='{{index}}' class='signImage' wx:if="{{(!isAdjustSignature && userInfo.userType != 2) || (lawCase.state != '1000' && !isAdjustSignature && userInfo.userType == 2)}}"></view>
+        <view bindtap='handleSignature' class='signImage' data-index='{{index}}' wx:if="{{!userInfo.isSignature && userInfo.userType == 2 && lawCase.state == '1000'}}">点我签字</view>
+        <image class='signImage' wx:for='{{document.signatureList}}' wx:if='{{lawCase.adjustPersonId == item.applicantId}}' src='{{imageAddress+item.signature}}'></image>
+        <view class='signName'>调解员签字：</view>
+      </view>
+    </view>
+    
+    <!-- <view class="wxParse-p" style=" font-size: 20px; font-family: '仿宋_GB2312';line-height:125%;">
+      <view class="wxParse-span wxParse-inline">
+        <view class="WxEmojiView wxParse-inline">当事人（签名盖章或按指印）:_______人民调解员（签名）_____</view>
+      </view>
+    </view>
+    
+    <view class="wxParse-p" style=" font-size: 20px; font-family: '仿宋_GB2312';line-height:125%;">
+      <view class="wxParse-span wxParse-inline">
+        <view class="WxEmojiView wxParse-inline">当事人（签名盖章或按指印）:_______记录人（签名）______</view>
+      </view>
+    </view> -->
+    
+    <view class="wxParse-p" style="text-align: right; padding-right: 50px; font-size: 20px; font-family: '仿宋_GB2312';line-height:125%; width: 100%;">
+      <view class="wxParse-span wxParse-inline">
+        <view class="WxEmojiView wxParse-inline">杭州市余杭区保险行业人民调解委员会</view>
+      </view>
+    </view>
+    <view class="wxParse-p" style="text-align: right; padding-right: 50px; font-size: 20px; font-family: '仿宋_GB2312';line-height:125%; width: 100%;">
+      <view class="ng-binding wxParse-span wxParse-inline">
+        <view class="WxEmojiView wxParse-inline">{{lawCase.upperTodata}}</view>
+      </view>
+    </view>
+    
+    <view class="wxParse-p" style="text-align:center; width:100%;font-family:'仿宋_GB2312'; font-size: 34px;font-weight: bold;">
+      <view class="WxEmojiView wxParse-inline">调 解 说 明</view>
+    </view>
+    <view class="ng-binding wxParse-p" style="text-indent: 28px; font-size: 20px; font-family: '仿宋_GB2312';line-height:125%;">
+      <view class="WxEmojiView wxParse-inline">{{lawCase.factReason}}</view>
+    </view>
+    <view class="ng-binding wxParse-p" style="text-indent: 28px; font-size: 20px; font-family: '仿宋_GB2312';line-height:125%;">
+      <view class="WxEmojiView wxParse-inline">当事人{{lawCase.applicant}}与当事人{{lawCase.respondent}}是{{lawCase.reasonStr}}一案，该纠纷于{{lawCase.today}}{{lawCase.adjustOrgName}}调解，当事人之间达成协议如下：</view>
+    </view>
+    <view class="wxParse-p" style="text-indent: 28px; font-size: 20px; font-family: '仿宋_GB2312';line-height:125%;margin-top:40rpx;"
+>
+      <view class="wxParse-span wxParse-inline">
+        <view class="WxEmojiView wxParse-inline">费用明细：</view>
+      </view>  
+    </view>
+
+    <view class="t1 wxParse-table" style="position: relative; left: 28px; width: 100%;border-collapse:collapse;">
+      <view class="wxParse-tbody">
+        <view class="r1 wxParse-tr" style="border-collapse: collapse; ">
+          <view class="wxParse-td" style="border:1px solid #333; text-align: center; width: 8%;overflow:hidden;">
+            <view class="WxEmojiView wxParse-inline">序号</view>
+          </view>
+          <view class="wxParse-td" style="border:1px solid #333; text-align: center; width: 8%">
+            <view class="WxEmojiView wxParse-inline">费用名称</view>
+          </view>
+          <view class="wxParse-td" style="border:1px solid #333; text-align: center; width: 8%">
+            <view class="WxEmojiView wxParse-inline">申请金额</view>
+          </view>
+          <view class="wxParse-td" style="border:1px solid #333; text-align: center; width: 8%">
+            <view class="WxEmojiView wxParse-inline">调解金额</view>
+          </view>
+          <view class="wxParse-td" style="border:1px solid #333; text-align: center; width: 8%">
+            <view class="WxEmojiView wxParse-inline">备注说明</view>
+          </view>
+        </view>
+        <view class="ng-scope wxParse-tr" style='margin-top:-3px;' wx:for='{{lawCase.feeDetail}}' wx:if='{{item.claimAmount}}' wx:for-index='index'>
+          <view class="wxParse-td" style="border:1px solid #333; text-align: center; width: 8%">
+            <view class="WxEmojiView wxParse-inline">{{index+1}}</view>
+          </view>
+          <view class="wxParse-td" style="border:1px solid #333; text-align: center; width: 8%">
+            <view class="WxEmojiView wxParse-inline">{{item.value}}</view>
+          </view>
+          <view class="wxParse-td" style="border:1px solid #333; text-align: center; width: 8%">
+            <view class="WxEmojiView wxParse-inline">{{item.applyAmount}}</view>
+          </view>
+          <view class="wxParse-td" style="border:1px solid #333; text-align: center; width: 8%">
+            <view class="WxEmojiView wxParse-inline">{{item.claimAmount}}</view>
+          </view>
+          <view class="wxParse-td" style="border:1px solid #333; text-align: center; width: 8%">
+            <view class="WxEmojiView wxParse-inline">{{item.remark}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <text></text>
+    <text></text>
+    <view class="wxParse-p" style=" font-size: 20px; font-family: '仿宋_GB2312';line-height:125%;margin-top:40rpx;">
+      <view class="WxEmojiView wxParse-inline" style='width:100%;overflow:hidden;'> 备注：_____________________________________________</view>
+    </view>
+    <view class="wxParse-p" style=" font-size: 20px; font-family: '仿宋_GB2312';line-height:125%;">
+      <view class="WxEmojiView wxParse-inline" style='width:100%;overflow:hidden;'>  ___________________________________________________</view>
+    </view>
+    <view class="wxParse-p" style=" font-size: 20px; font-family: '仿宋_GB2312';line-height:125%;">
+      <view class="WxEmojiView wxParse-inline" style='width:100%;overflow:hidden;'>  ___________________________________________________</view>
+    </view>
+    <text></text>
+    <view class="wxParse-p" style=" font-size: 20px; font-family: '仿宋_GB2312';line-height:400%; width: 100%; text-align: right; ">
+      <view class="wxParse-span wxParse-inline" style='position:relative;top:-9rpx;'>
+        <view class="WxEmojiView wxParse-inline">调解员（签名）:</view>
+      </view>
+      <view class="wxParse-span wxParse-inline">
+        <view class="WxEmojiView wxParse-inline">
+          <view bindtap='handleSignature' class='signImage' data-index='{{index}}' wx:if="{{!userInfo.isSignature && userInfo.userType == 2 && lawCase.state == '1000'}}">点我签字</view>
+          <image class='signImage' wx:for='{{document.signatureList}}' wx:if='{{lawCase.adjustPersonId == item.applicantId}}' src='{{imageAddress+item.signature}}'></image>
+        </view>
+      </view>
+      <view class="wxParse-span wxParse-inline" wx:if="{{(!isAdjustSignature && userInfo.userType != 2) || (lawCase.state != '1000' && !isAdjustSignature && userInfo.userType == 2)}}">
+        <view data-index='{{index}}' class='signImage'></view>
+      </view>
+
+    </view>
+    <view class="wxParse-p" style="text-align: right; padding-right: 50px; font-size: 20px; font-family: '仿宋_GB2312';line-height:125%; width: 100%;">
+      <view class="ng-binding wxParse-span wxParse-inline">
+        <view class="WxEmojiView wxParse-inline">{{lawCase.today}}</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<!--调解笔录-->
+<template name='mediationRecord'>
+  <view class="wxParse">
+        <view class="wxParse-body wxParse-"style="tab-interval:21.0pt">
+            <view class="Section1 wxParse-div">
+                <view class="p1 wxParse-p" style="font-size:16.0pt;text-align:center;font-weight:blod;">调解笔录</view>
+                <view class="p2 wxParse-p">
+                    <view class="WxEmojiView wxParse-inline">时间：{{lawCase.adjustDate}}日</view></view>
+                <view class="p2 wxParse-p">
+                    <view class="WxEmojiView wxParse-inline">地点：{{lawCase.adjustPointName}}</view>
+                </view>
+                <view class="p2 wxParse-p">
+                    <view class="WxEmojiView wxParse-inline">调解员：{{lawCase.adjustName}}</view>
+                </view>
+                <view class="wxParse-p" wx:for="{{lawCase.applicantArray}}" wx:for-item="i" >
+                   <view style="text-indent:30px;" wx:if="{{i.idType=='0'}}">{{i.personType=='0'? '申请人':'被申请人'}}{{i.no}}：{{i.personName}},{{i.sex=='1'? '女':'男，'}}{{i.birthDay}}日出生,{{i.nation}}，身份证号码：{{i.idNo}}，住
+                  {{i.domicile}}</view>
+                  <view style="text-indent:30px;" wx:if="{{i.idType != '0'}}">{{i.personType=='0'? '申请人':'被申请人'}}{{i.no}}：{{i.orgName}},住所地：{{i.residence}}
+                </view>
+
+              
+                <view style="text-indent:30px;" wx:if="{{i.idType != '0'}}">{{i.legalType=='1'? '主要负责人':'法定代表人'}}{{i.no}}：{{i.legalName}},{{i.orgName}}{{i.job}}
+                </view>
+                <view wx:if="{{i.agentArray}}">
+                  <view wx:for="{{i.agentArray}}" wx:for-item="m">
+                    <view wx:if="{{m.agentType == '0'}}"><!--委托-->
+                      <view class="WxEmojiView" style="text-indent:30px;" wx:if="{{m.agentIdentity == '1'}} || {{m.agentIdentity == '0'}} || {{m.agentIdentity == '2'}}">
+                        委托代理人{{m.no}}：{{m.agentName}},
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.sex}}">{{m.sex=='1'? '女':'男，'}}</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.birthDay}}">{{m.birthDay}}日出生,</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.nation}}">{{m.nation}}，</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.idNo}}">身份证号码：{{m.idNo}}</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '1'}}">驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '2'}}">外籍在华驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '3'}}">军队驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '4'}}">律师证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '5'}}">暂未获取</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.companyName}}">{{m.companyName}}职员</view>
+                        ，住{{i.sendAddress}}
+                      </view>
+                    </view>
+                    <view class="WxEmojiView" wx:if="{{m.agentType != '0'}}" style="text-indent:30px;">法定代理人{{m.no}}：
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.sex}}">{{m.sex=='1'? '女':'男，'}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.birthDay}}">{{m.birthDay}}日出生,</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.nation}}">{{m.nation}}，</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.idNo}}">身份证号码：{{m.idNo}},住</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.isLive==true}}">{{m.residence}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.isLive==false}}">{{m.domicile}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{i.idType == '0'}}">（系申请人{{i.no}}{{i.personName}}的</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{i.idType != '0'}}">（系申请人{{i.no}}{{i.legalName}}的</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '1'}}">父亲</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '2'}}">母亲</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '3'}}">儿子</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '4'}}">女儿</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '5'}}">配偶</view>)
+                    </view>
+                  </view>
+               </view>
+               
+
+
+              </view>
+                <view class="p3 wxParse-p">
+                    <view class="WxEmojiView wxParse-inline">调解员：今天召集双方就申请人{{lawCase.applicant}}与被申请人{{lawCase.respondent}}机动车交通事故责任纠纷案进行调解，希望双方心平气和的进行协商。先由申请人谈谈调解方案？</view>
+                </view>
+                <view class="p3 wxParse-p">
+                    <view class="WxEmojiView wxParse-inline">申请人： 请求支付申请人</view>
+                    <view class="wxParse-span wxParse-inline" wx:for="{{lawCase.feeDetail}}" wx:for-item="i">
+                        <view class="WxEmojiView wxParse-inline" wx-if="{{i.claimAmount>0}}">{{i.value}}{{i.claimAmount}}元</view>
+                    </view>
+                    <view class="WxEmojiView wxParse-inline">合计{{lawCase.lawMoney}}元,{{lawCase.respondent}}在保险责任内承担赔偿责任。</view>
+                </view>
+                <view class="p3 wxParse-p">
+                    <view class="WxEmojiView wxParse-inline">调解员：被申请人有何方案？</view>
+                </view>
+                <view class="p3 wxParse-p">
+                    <view class="WxEmojiView wxParse-inline">被申请人代理人二：
+                    被申请人在我保险公司投保了交强险和责任限额为100万元的商业三者险及不计免赔险，如果调解的话，我们认可申请人的<view class="wxParse-span wxParse-inline" wx:for="{{lawCase.feeDetail}}" wx:for-item="i">
+                        <view class="WxEmojiView wxParse-inline" wx-if="{{i.claimAmount>0}}">{{i.value}}{{i.claimAmount}}元</view>
+                    </view>
+                    <view class="WxEmojiView wxParse-inline">合计{{lawCase.lawMoney}}元，我公司愿意一次性赔偿申请人上述的费用。</view></view>
+                 
+                    
+                   <view class="WxEmojiView">被申请人一：同意保险公司的意见，因赔偿的金额较少，我愿意一次性将上述款项先行给付申请人，赔偿后我自行向保险公司理赔。</view>     
+                </view>
+                <view class="p3 wxParse-p">
+                    <view class="WxEmojiView wxParse-inline">申请人：同意。</view>
+                </view>
+                <view class="p3 wxParse-p">
+                    <view class="WxEmojiView wxParse-inline">调解员：经本调解室主持调解，双方达成一致协议如下：</view>
+                </view>
+                <view class="p3 wxParse-p">
+                    <view class="WxEmojiView wxParse-inline">{{lawCase.adjustResultRemark}}</view>
+                </view>
+                <view class="p3 wxParse-p">
+                    <view class="WxEmojiView wxParse-inline">调解员：双方对上述调解协议有无异议？</view>
+                </view>
+                <view class="p3 wxParse-p">申请人：没有。 </view>
+                <view class="p3 wxParse-p">被申请人（均）：没有。 </view>
+                <view class="p3 wxParse-p">
+                    <view class="WxEmojiView wxParse-inline">调解员：今天调解到此结束，双方看笔录签字。本调解协议自双方签字之日起生效。</view>
+                </view>
+                <view class="p5 wxParse-p">
+                  <!-- <view class="WxEmojiView wxParse-inline fl">原告签字：<text></text></view>
+                  <view class="WxEmojiView wxParse-inline fl">被告签字：<text></text></view> -->
+                  
+                  <view wx:for='{{lawCase.applicantArray}}' style='height:151rpx' wx:for-item='applicant' wx:for-index='index' wx:if='{{applicant.personType == "0"}}'>
+                    <view class='clear sign-wp'>
+                      <view data-index='{{index}}' class='signImage' wx:if="{{!applicant.isSignature && ((!isLocalSignature && document.remoteSign != 1) || (isLocalSignature && userInfo.userType != 2) || (document.remoteSign == 1 && userInfoType != '0') || lawCase.state != '1000')}}"></view>
+                      <view data-index='{{index}}' bindtap='handleSignature' class='signImage' wx:if="{{!applicant.isSignature && lawCase.state == '1000' && ((isLocalSignature && userInfo.userType == 2) || (document.remoteSign == 1 && userInfoType == '0'))}}">点我签字</view>
+                      <image class='signImage' wx:for='{{document.signatureList}}' src='{{imageAddress+item.signature}}' wx:if='{{applicant.id == item.applicantId}}'></image>
+                      <view class='signName'>申请人{{applicant.no}}签字：</view>
+                    </view>
+                  </view>
+                  <view wx:for='{{lawCase.applicantArray}}' style='height:151rpx' wx:for-item='respondent' wx:for-index='index' wx:if='{{respondent.personType == 1}}'>
+                    <view class='clear sign-wp'>
+                      <view data-index='{{index}}' class='signImage' wx:if="{{!respondent.isSignature && ((!isLocalSignature && document.remoteSign != 1) || (isLocalSignature && userInfo.userType != 2) || (document.remoteSign == 1 && userInfoType != 1) || lawCase.state != '1000')}}"></view>
+                      <view data-index='{{index}}' bindtap='handleSignature' class='signImage' wx:if="{{!respondent.isSignature && lawCase.state == '1000' && ((isLocalSignature && userInfo.userType == 2) || (document.remoteSign == 1 && userInfoType == 1))}}">点我签字</view>
+                      <image class='signImage' wx:for='{{document.signatureList}}' src='{{imageAddress+item.signature}}' wx:if='{{respondent.id == item.applicantId}}'></image>
+                      <view class='signName'>被申请人{{respondent.no}}签字：</view>
+                    </view>
+                  </view>
+                  <view style='height:151rpx'>
+                    <view class='clear sign-wp'>
+                      <view data-index='{{index}}' class='signImage' wx:if="{{(!isAdjustSignature && userInfo.userType != 2) || (lawCase.state != '1000' && !isAdjustSignature && userInfo.userType == 2)}}"></view>
+                      <view bindtap='handleSignature' class='signImage' data-index='{{index}}' wx:if="{{!userInfo.isSignature && userInfo.userType == 2 && lawCase.state == '1000'}}">点我签字</view>
+                      <image class='signImage' wx:for='{{document.signatureList}}' wx:if='{{lawCase.adjustPersonId == item.applicantId}}' src='{{imageAddress+item.signature}}'></image>
+                      <view class='signName'>调解员签字：</view>
+                    </view>
+                  </view>
+                  
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<!--司法确认-->
+<template name='lawSure'>
+  <view class="wxParse">
+      <view class="Section1 wxParse-div" style="layout-grid:15.6pt">
+          <view class="MsoNormal wxParse-p"
+                style="margin-right:7.35pt;mso-para-margin-right:.7gd;text-align:center;line-height:45.0pt;mso-line-height-rule:exactly"></view>
+          <view class="MsoNormal wxParse-p" style="margin-top:15.6pt;mso-para-margin-top:1.0gd;text-align:center">
+              <view class="wxParse-b wxParse-inline" style="mso-bidi-font-weight:normal;">
+                  <view class="WxEmojiView wxParse-inline">
+                      <text style='font-size:16.0pt;mso-bidi-font-size:10.0pt;font-family:宋体;mso-ascii-font-family:"Times New Roman";mso-hansi-font-family:"Times New Roman"'>{{lawCase.lawOrgName}}
+                      </text><text style='font-size:16.0pt;mso-bidi-font-size:10.0pt;font-family:宋体;mso-ascii-font-family:"Times New Roman";mso-hansi-font-family:"Times New Roman"'>民事裁定书
+                  </text>
+                  </view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p"
+                style="margin-top:0cm;margin-right:.3pt;margin-bottom:0cm;margin-bottom:.0001pt;text-align:right;line-height:125%">
+              <view class="wxParse-text wxParse-inline"
+                    style="font-size:14.0pt;line-height:30px;font-family:仿宋_GB2312;mso-bidi-font-family:仿宋_GB2312">
+                  <view class="WxEmojiView wxParse-inline">{{lawCase.regulationNo}}号</view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p" wx:for='{{lawCase.applicantArray}}'  wx:for-item="i">
+              <view class="wxParse-text"  wx-if="{{i.idType==0}}">
+                  <view class="WxEmojiView" style="text-indent:32px;">申请人：{{i.personName}}，
+                    <text wx-if="{{i.sex=='1'}}">女</text>
+                    <text wx-if="{{i.sex=='0'}}">男</text>，{{i.nation}}，住{{i.domicile}}。公民身份号码：{{i.idNo}}                    </view>
+              </view>
+
+              <view class="wxParse-text"  wx-if="{{i.idType==1}}">
+                  <view class="WxEmojiView" style="text-indent:32px;">申请人：{{i.orgName}}，住所地{{i.domicile}}{{i.idNo}}</view>
+              </view>
+              <view style="text-indent:30px;" wx:if="{{i.idType != '0'}}">{{i.legalType=='1'? '主要负责人':'法定代表人'}}：{{i.legalName}},{{i.orgName}}{{i.job}}
+                </view>
+
+                <view wx:if="{{i.agentArray}}">
+                  <view  wx:for="{{i.agentArray}}" wx:for-item="m">
+                    <view wx:if="{{m.agentType == '0'}}"><!--委托-->
+                      <view class="WxEmojiView" style="text-indent:30px;" wx:if="{{m.agentIdentity == '1'}} || {{m.agentIdentity == '0'}} || {{m.agentIdentity == '2'}}">
+                        委托代理人：{{m.agentName}},
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.sex}}">{{m.sex=='1'? '女':'男，'}}</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.birthDay}}">{{m.birthDay}}日出生,</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.nation}}">{{m.nation}}，</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.idNo}}">身份证号码：{{m.idNo}}</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '1'}}">驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '2'}}">外籍在华驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '3'}}">军队驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '4'}}">律师证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '5'}}">暂未获取</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.companyName}}">{{m.companyName}}职员</view>
+                        ，住{{i.sendAddress}}
+                      </view>
+                    </view>
+                    <view class="WxEmojiView" wx:if="{{m.agentType != '0'}}" style="text-indent:30px;">法定代理人：
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.sex}}">{{m.sex=='1'? '女':'男，'}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.birthDay}}">{{m.birthDay}}日出生,</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.nation}}">{{m.nation}}，</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.idNo}}">身份证号码：{{m.idNo}},住</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.isLive==true}}">{{m.residence}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.isLive==false}}">{{m.domicile}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{i.idType == '0'}}">（系申请人{{i.personName}}的</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{i.idType != '0'}}">（系申请人{{i.legalName}}的</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '1'}}">父亲</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '2'}}">母亲</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '3'}}">儿子</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '4'}}">女儿</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '5'}}">配偶</view>)
+                    </view>
+                  </view>
+               </view>
+              
+          </view>
+          <view class="MsoNormal wxParse-p"
+                style="text-align:left;text-indent:32.0pt;mso-char-indent-count:2.0;line-height:30px;mso-pagination:widow-orphan;mso-layout-grid-align:none">
+              <view class="wxParse-text wxParse-inline"
+                    style="font-size:14.0pt;line-height:30px;font-family:仿宋_GB2312;mso-bidi-font-family:仿宋_GB2312">
+                  <view class="WxEmojiView wxParse-inline">本院于{{lawCase.createDate}}日立案受理了申请人{{lawCase.applicant}}与{{lawCase.respondent}}的申请，现已审查终结。</view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p"
+                style="text-align:left;text-indent:32.0pt;mso-char-indent-count:2.0;line-height:30px;mso-pagination:widow-orphan;mso-layout-grid-align:none">
+              <view class="wxParse-text wxParse-inline"
+                    style="font-size:14.0pt;line-height:30px;font-family:仿宋_GB2312;mso-bidi-font-family:仿宋_GB2312">
+                  <view class="WxEmojiView wxParse-inline">申请人{{lawCase.applicant}}与{{lawCase.respondent}}因机动车交通事故责任纠纷，于{{lawCase.adjustDate}}日{{lawCase.adjustOrgName }}{{lawCase.adjustPointName}}主持  调解，达成调解协议如下：</view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p"
+                style="text-align:left;text-indent:32.0pt;mso-char-indent-count:2.0;line-height:30px;mso-pagination:widow-orphan;mso-layout-grid-align:none">
+              <view class="wxParse-text wxParse-inline"
+                    style="font-size:14.0pt;line-height:30px;font-family:仿宋_GB2312;mso-bidi-font-family:仿宋_GB2312">
+                  <view class="WxEmojiView wxParse-inline">{{lawCase.adjustResultRemark}}</view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p">
+              <view class="wxParse-text wxParse-inline">
+                  <view class="WxEmojiView wxParse-inline">本院经审查认为，申请人达成的调解协议，符合司法确认调解协议的法定条件。</view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p">
+              <view class="wxParse-text wxParse-inline">
+                  <view class="WxEmojiView wxParse-inline">依照《中华人民共和国民事诉讼法》第一百九十五条规定，裁定如下：</view> 
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p"
+                style="text-align:left;text-indent:32.0pt;mso-char-indent-count:2.0;line-height:30px;mso-pagination:widow-orphan;mso-layout-grid-align:none">
+              <view class="wxParse-text wxParse-inline"
+                    style="font-size:14.0pt;line-height:30px;font-family:仿宋_GB2312;mso-bidi-font-family:仿宋_GB2312">
+                  <view class="WxEmojiView wxParse-inline">申请人{{lawCase.applicant}}与{{lawCase.respondent}}{{lawCase.adjustDate}}日经{{lawCase.adjustOrgName }}{{lawCase.adjustPointName}}主持调解达成的调解协议有效</view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p">
+              <view class="wxParse-text wxParse-inline">
+                  <view class="WxEmojiView wxParse-inline">当事人应当按照调解协议的约定自觉履行义务，一方当事人拒绝履行或者未全部履行的，对方当事人可以向人民法院申请强制执行。</view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p">
+              <view class="wxParse-text wxParse-inline">
+                  <view class="WxEmojiView wxParse-inline">审判员{{lawCase.chiefName}}</view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p">
+              <view class="wxParse-text wxParse-inline">
+                  <view class="WxEmojiView wxParse-inline" style="float:right;">{{dateToCN}}</view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p">
+              <view class="wxParse-text wxParse-inline">
+                  <view class="WxEmojiView wxParse-inline">本件与原件核对无异</view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p"
+                style="text-align:right;mso-char-indent-count:16.5;line-height:30px;mso-pagination:widow-orphan;mso-layout-grid-align:none">
+              <view class="wxParse-text wxParse-inline">
+                  <view class="WxEmojiView wxParse-inline">书记员{{lawCase.clerkName}}</view>
+              </view>
+          </view>
+      </view>
+  </view>
+</template>
+
+
+
+<!--司法申请书-->
+<template name='application'>
+  <view class="wxParse">
+      <view class="Section1 wxParse-div" style="layout-grid:15.6pt">
+          <view class="MsoNormal wxParse-p" style="margin-top:15.6pt;mso-para-margin-top:1.0gd;text-align:center">
+              <view class="wxParse-b wxParse-inline" style="mso-bidi-font-weight:normal;">
+                  <view class="WxEmojiView wxParse-inline">
+                     <text style='font-size:16.0pt;mso-bidi-font-size:10.0pt;font-family:宋体;mso-ascii-font-family:"Times New Roman";mso-hansi-font-family:"Times New Roman"'>申请书
+                  </text>
+                  </view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p" wx:for='{{lawCase.applicantArray}}'  wx:for-item="i">
+              <view class="wxParse-text"  wx-if="{{i.idType==0}}">
+                  <view class="WxEmojiView" style="text-indent:32px;">当事人：{{i.personName}}，
+                    <text wx-if="{{i.sex=='1'}}">女</text>
+                    <text wx-if="{{i.sex=='0'}}">男</text>，{{i.birthDay}}日出生，{{i.nation}}，住{{i.domicile}}。联系方式：{{i.telephone}}</view>
+              </view>
+
+              <view class="wxParse-text"  wx-if="{{i.idType==1}}">
+              <view class="WxEmojiView" style="text-indent:32px;">当事人：{{i.orgName}}，住所地{{i.sendAddress}}，{{i.job}}，联系方式：{{i.telephone}}</view>
+              </view>
+
+             <view style="text-indent:30px;" wx:if="{{i.idType!='0'}}">{{i.legalType=='1'? '主要负责人':'法定代表人'}}：{{i.legalName}},{{i.orgName}}{{i.job}}
+                </view>
+                <view wx:if="{{i.agentArray}}">
+                  <view  wx:for="{{i.agentArray}}" wx:for-item="m">
+                    <view wx:if="{{m.agentType == '0'}}"><!--委托-->
+                      <view class="WxEmojiView" style="text-indent:30px;" wx:if="{{m.agentIdentity == '1'}} || {{m.agentIdentity == '0'}} || {{m.agentIdentity == '2'}}">
+                        委托代理人：{{m.agentName}},
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.sex}}">{{m.sex=='1'? '女':'男，'}}</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.birthDay}}">{{m.birthDay}}日出生,</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.nation}}">{{m.nation}}，</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.idNo}}">身份证号码：{{m.idNo}}</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '1'}}">驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '2'}}">外籍在华驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '3'}}">军队驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '4'}}">律师证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '5'}}">暂未获取</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.companyName}}">{{m.companyName}}职员</view>
+                        ，住{{i.sendAddress}}
+                      </view>
+                    </view>
+                    <view class="WxEmojiView" wx:if="{{m.agentType != '0'}}" style="text-indent:30px;">法定代理人：
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.sex}}">{{m.sex=='1'? '女':'男，'}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.birthDay}}">{{m.birthDay}}日出生,</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.nation}}">{{m.nation}}，</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.idNo}}">身份证号码：{{m.idNo}},住</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.isLive==true}}">{{m.residence}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.isLive==false}}">{{m.domicile}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{i.idType == '0'}}">（系申请人{{i.personName}}的</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{i.idType != '0'}}">（系申请人{{i.legalName}}的</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '1'}}">父亲</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '2'}}">母亲</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '3'}}">儿子</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '4'}}">女儿</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '5'}}">配偶</view>)
+                    </view>
+                  </view>
+               </view>
+
+          </view>
+          <view class="MsoNormal wxParse-p">
+            <view class="WxEmojiView" style="text-indent:32px;">请求事项：</view>
+           
+          </view>
+          <view class="MsoNormal wxParse-p">
+              <view class="wxParse-text">
+                  <view class="WxEmojiView" style="text-indent:32px;">确认申请人{{lawCase.applicant}}与{{lawCase.respondent}}于{{lawCase.adjustDate}}日达成的人民调解协议有效。</view>
+              </view>
+          </view>
+           <view class="WxEmojiView" style="text-indent:32px;">事实与理由：{{lawCase.factReason}}</view>
+             <view class="wxParse-text">
+              <view class="WxEmojiView" style="text-indent:32px;">{{lawCase.createDate}}日，申请人{{lawCase.applicant}}与{{lawCase.respondent}}经{{lawCase.adjustOrgName}}主持调解，达成如下调解协议：</view>
+            </view> 
+          <view class="MsoNormal wxParse-p">
+              <view class="wxParse-text">
+                  <view class="WxEmojiView" style="text-indent:32px;">{{lawCase.adjustResultRemark}}</view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p">
+              <view class="wxParse-text">
+                  <view class="WxEmojiView" style="text-indent:32px;">申请人出于解决纠纷的目的自愿达成协议，没有恶意串通、规避法律的行为；如果因为该协议内容而给国家、集体或他人造成损害的，愿意承担相应的民事责任和其他法律责任。</view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p">
+              <view class="WxEmojiView" style="text-indent:32px;">此致</view>
+          </view>
+          <view class="MsoNormal wxParse-p">
+              <view class="wxParse-text wxParse-inline">
+                  <view class="WxEmojiView wxParse-inline">{{lawCase.lawOrgName}}</view>
+              </view>
+          </view>
+          <view class="MsoNormal wxParse-p">
+            <view wx:for='{{lawCase.applicantArray}}' style='height:151rpx' wx:for-item='applicant' wx:for-index='index' wx:if='{{applicant.personType == "0"}}'>
+              <view class='clear sign-wp'>
+                <view data-index='{{index}}' class='signImage' wx:if="{{!applicant.isSignature && ((!isLocalSignature && document.remoteSign != 1) || (isLocalSignature && userInfo.userType != 2) || (document.remoteSign == 1 && userInfoType != '0') || lawCase.state != '1000')}}"></view>
+                <view data-index='{{index}}' bindtap='handleSignature' class='signImage' wx:if="{{!applicant.isSignature && lawCase.state == '1000' && ((isLocalSignature && userInfo.userType == 2) || (document.remoteSign == 1 && userInfoType == '0'))}}">点我签字</view>
+                <image class='signImage' wx:for='{{document.signatureList}}' src='{{imageAddress+item.signature}}' wx:if='{{applicant.id == item.applicantId}}'></image>
+                <view class='signName'>申请人(签字或者盖章)：</view>
+              </view>
+            </view>
+            <view wx:for='{{lawCase.applicantArray}}' style='height:151rpx' wx:for-item='respondent' wx:for-index='index' wx:if='{{respondent.personType == 1}}'>
+              <view class='clear sign-wp'>
+                <view data-index='{{index}}' class='signImage' wx:if="{{!respondent.isSignature && ((!isLocalSignature && document.remoteSign != 1) || (isLocalSignature && userInfo.userType != 2) || (document.remoteSign == 1 && userInfoType != 1) || lawCase.state != '1000')}}"></view>
+                <view data-index='{{index}}' bindtap='handleSignature' class='signImage' wx:if="{{!respondent.isSignature && lawCase.state == '1000' && ((isLocalSignature && userInfo.userType == 2) || (document.remoteSign == 1 && userInfoType == 1))}}">点我签字</view>
+                <image class='signImage' wx:for='{{document.signatureList}}' src='{{imageAddress+item.signature}}' wx:if='{{respondent.id == item.applicantId}}'></image>
+                <view class='signName'>被申请人(签字或者盖章)：</view>
+              </view>
+            </view>
+
+            <!-- <view class="wxParse-text">
+                <view class="WxEmojiView" style="text-align:right;">申请人(签名或者盖章)</view>
+            </view> -->
+          </view>
+          <view class="MsoNormal wxParse-p" style="text-align:right;">
+              <view class="wxParse-text">
+                  <view class="WxEmojiView">{{lawCase.adjustDate}}日</view>
+              </view>
+          </view>
+      </view>
+  </view>
+</template>
+
+
+
+
+<!--民事诉讼-->
+<template name='civilLitigation'>
+  <view class="wxParse">
+    <view class="wxParse-body wxParse-" style="tab-interval:21.0pt">
+      <view class="Section1 wxParse-div">
+        <view class="p1 wxParse-p" style="font-size:16.0pt;text-align:center;font-weight:blod;">民事起诉状</view>
+        <view class="wxParse-p" wx:for="{{lawCase.applicantArray}}" wx:for-item="i" >
+          <view class="wxParse-p p1" wx-if="{{i.idType=='0'}}">{{i.personType=='0'? '原告：':'被告：'}}{{i.personName}}，{{i.sex=='1'? '女':'男'}}，{{i.birthDay}}日出生，{{i.nation}}，身份证号码：{{i.idNo}}，住{{i.domicile}}</view>
+
+          <view style="text-indent:30px;" wx:if="{{i.idType != '0'}}">{{i.legalType=='1'? '主要负责人':'法定代表人'}}：{{i.legalName}}，{{i.orgName}}{{i.job}}
+                </view>
+                <view wx:if="{{i.agentArray}}">
+                  <view  wx:for="{{i.agentArray}}" wx:for-item="m">
+                    <view wx:if="{{m.agentType == '0'}}"><!--委托-->
+                      <view class="WxEmojiView" style="text-indent:30px;" wx:if="{{m.agentIdentity == '1'}} || {{m.agentIdentity == '0'}} || {{m.agentIdentity == '2'}}">
+                        委托代理人：{{m.agentName}}，
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.sex}}">{{m.sex=='1'? '女':'男，'}}</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.birthDay}}">{{m.birthDay}}日出生，</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.nation}}">{{m.nation}}，</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.idNo}}">身份证号码：{{m.idNo}}</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '1'}}">驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '2'}}">外籍在华驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '3'}}">军队驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '4'}}">律师证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '5'}}">暂未获取</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.companyName}}">{{m.companyName}}职员</view>
+                        ，住{{i.sendAddress}}
+                      </view>
+                    </view>
+                    <view class="WxEmojiView" wx:if="{{m.agentType != '0'}}" style="text-indent:30px;">法定代理人：
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.sex}}">{{m.sex=='1'? '女':'男'}}，</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.birthDay}}">{{m.birthDay}}日出生，</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.nation}}">{{m.nation}}，</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.idNo}}">身份证号码：{{m.idNo}},住</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.isLive==true}}">{{m.residence}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.isLive==false}}">{{m.domicile}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{i.idType == '0'}}">（系申请人{{i.personName}}的</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{i.idType != '0'}}">（系申请人{{i.legalName}}的</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '1'}}">父亲</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '2'}}">母亲</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '3'}}">儿子</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '4'}}">女儿</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '5'}}">配偶</view>)
+                    </view>
+                  </view>
+               </view>
+
+        </view>
+        <view wx-if="{{i.idType=='1' || i.idType=='2'}}">
+          {{i.personType=='0'? '原告：':'被告：'}}{{lawCase.respondent}},住{{i.domicile}}
+        </view>
+        <view class="wxParse-p">
+          <view class="WxEmojiView" style="text-indent:30px;">诉讼请求：请求法院判令{{lawCase.respondent}}支付原告
+            <text wx:for="{{lawCase.feeDetail}}" wx:for-item="i">
+              <text wx-if="{{i.claimAmount>0}}">{{i.value}}{{i.claimAmount}}元，</text>
+            </text>
+            <view class="WxEmojiView wxParse-inline">合计{{lawCase.applyTotal}}元。</view>
+          </view>
+        </view>
+        <view class=" wxParse-p"  style="text-indent:30px;">
+          <view class="WxEmojiView wxParse-inline">事实与理由：{{lawCase.factReason}}</view>
+        </view>
+        <view class="pwxParse-p" style="text-align:right;">
+          <!-- <view class="WxEmojiView wxParse-inline">具状人：{{lawCase.applicant}}</view> -->
+        </view>
+        <view class="pwxParse-p" style="text-align:right;">
+          <view class="WxEmojiView wxParse-inline">{{lawCase.adjustDate}}日</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template> 
+
+<!--民事调解书-->
+<template name='civilBook'>
+  <view class="wxParse">
+    <view class="wxParse-body wxParse-" style="tab-interval:21.0pt">
+      <view class="Section1 wxParse-div">
+      <view class="p1 wxParse-p" style="font-size:16.0pt;text-align:center;font-weight:blod;">{{lawCase.lawOrgName}}       </view>
+      <view class="p1 wxParse-p" style="font-size:16.0pt;text-align:center;font-weight:blod;">民事起诉状</view>
+         <view class="ng-binding wxParse-span" style="text-align:right">
+        <view class="WxEmojiView"> {{lawCase.regulationNo}}号</view>
+      </view>
+        <view class="wxParse-p" wx:for="{{lawCase.applicantArray}}" wx:for-item="i" >
+          <view class="wxParse-p p1" wx-if="{{i.idType=='0'}}">{{i.personType=='0'? '原告：':'被告:'}}{{i.personName}},{{i.sex=='1'? '女':'男，'}}{{i.birthDay}}日出生,{{i.nation}}，身份证号码：{{i.idNo}}，住{{i.domicile}}</view>
+        </view>
+        <view wx-if="{{i.idType=='1' || i.idType=='2'}}">
+          {{i.personType=='0'? '原告：':'被告:'}}{{lawCase.respondent}},住{{i.domicile}}
+        </view>
+       
+         <view style="text-indent:30px;" wx:if="{{i.idType != '0'}}">{{i.legalType=='1'? '主要负责人':'法定代表人'}}：{{i.legalName}},{{i.orgName}}{{i.job}}
+                </view>
+                <view wx:if="{{i.agentArray}}">
+                  <view  wx:for="{{i.agentArray}}" wx:for-item="m">
+                    <view wx:if="{{m.agentType == '0'}}"><!--委托-->
+                      <view class="WxEmojiView" style="text-indent:30px;" wx:if="{{m.agentIdentity == '1'}} || {{m.agentIdentity == '0'}} || {{m.agentIdentity == '2'}}">
+                        委托代理人：{{m.agentName}},
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.sex}}">{{m.sex=='1'? '女':'男，'}}</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.birthDay}}">{{m.birthDay}}日出生,</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.nation}}">{{m.nation}}，</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.idNo}}">身份证号码：{{m.idNo}}</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '1'}}">驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '2'}}">外籍在华驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '3'}}">军队驾驶证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '4'}}">律师证</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.certificatesType == '5'}}">暂未获取</view>
+                        <view class="WxEmojiView wxParse-inline" wx:if="{{m.companyName}}">{{m.companyName}}职员</view>
+                        ，住{{i.sendAddress}}
+                      </view>
+                    </view>
+                    <view class="WxEmojiView" wx:if="{{m.agentType != '0'}}" style="text-indent:30px;">法定代理人：
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.sex}}">{{m.sex=='1'? '女':'男，'}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.birthDay}}">{{m.birthDay}}日出生,</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.nation}}">{{m.nation}}，</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.idNo}}">身份证号码：{{m.idNo}},住</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.isLive==true}}">{{m.residence}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.isLive==false}}">{{m.domicile}}</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{i.idType == '0'}}">（系申请人{{i.personName}}的</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{i.idType != '0'}}">（系申请人{{i.legalName}}的</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '1'}}">父亲</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '2'}}">母亲</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '3'}}">儿子</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '4'}}">女儿</view>
+                      <view class="WxEmojiView wxParse-inline" wx:if="{{m.relation == '5'}}">配偶</view>)
+                    </view>
+                  </view>
+               </view>
+
+        <view class="wxParse-p" style="text-indent:30px;">本院于{{lawCase.adjustDate}}日立案受理了原告{{lawCase.applicant}}被告{{lawCase.respondent}}，机动车交通事故责任纠纷一案，依法适用简易程序，公开开庭进行了审理。原告诉至本院，要求赔偿<text wx:for="{{lawCase.feeDetail}}" wx:for-item="i">
+            <text wx-if="{{i.claimAmount>0}}">{{i.value}}：{{i.claimAmount}}元</text>
+          </text>，元合计{{lawCase.lawMoney}}元，被告应诉后同意调解。</view>
+        <view class="wxParse-p">
+          <view class="WxEmojiView" style="text-indent:30px;">本案在审理过程中，经本院主持调解，双方当事人自愿达成如下协议：</view>
+        </view>
+        <view class="wxParse-p">
+          <view class="WxEmojiView" style="text-indent:30px;">{{lawCase.adjustResultRemark}}</view>
+        </view>
+        <view class=" wxParse-p">
+          <view class="WxEmojiView" style="text-indent:30px;">双方当事人一致同意本调解协议的内容自双方在调解协议上签名或捺印后即具有法律效力。</view>
+        </view>
+        <view class="wxParse-p">
+          <view class="WxEmojiView" style="text-indent:30px;">上述协议，不违反有关法律规定，本院予以确认。</view>
+        </view>
+        <view class="pwxParse-p" style="text-align:right;">
+          <view class="WxEmojiView wxParse-inline">审 判 员  {{lawCase.courtJudgeName}}</view>
+        </view>
+        <view class="pwxParse-p" style="text-align:right;">
+          <view class="WxEmojiView wxParse-inline">{{dateToCN}}</view>
+        </view>
+        <view class="pwxParse-p" style="text-align:right;">
+          <view class="WxEmojiView wxParse-inline">书 记 员   {{lawCase.courtClerkName}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+

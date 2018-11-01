@@ -1,0 +1,90 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/journalism/journalism",
+    "pages/journalism/journalismDetail",
+    "pages/me/me",
+    "pages/selectCharacter/selectCharacter",
+    "pages/me/register/register",
+    "pages/me/authentication/authentication",
+    "pages/me/winCode/winCode",
+    "pages/litigants/step1/step1",
+    "pages/litigants/step2/step2",
+    "pages/litigants/step3/step3",
+    "pages/litigants/step4/step4",
+    "pages/litigants/step5/step5",
+    "pages/litigants/caseList/caseList",
+    "pages/litigants/caseDetail/caseDetail",
+    "pages/litigants/addEvidence/addEvidence",
+    "pages/litigants/detailsOfClaims/detailsOfClaims",
+    "pages/prejudge/step1/step1",    
+    "pages/prejudge/step2/step2",
+    "pages/prejudge/step3/step3",
+    "pages/prejudge/step4/step4",
+    "pages/prejudge/step5/step5",
+    "pages/template/template",
+    "pages/chatGroup/addGroup/addGroup",
+    "pages/chatGroup/chatDetail/chatDetail",
+    "pages/chatGroup/roomList/roomList",
+    "pages/chatGroup/mediationPlan/mediationPlan",
+    "pages/chatGroup/mediationDetail/mediationDetail",
+    "pages/chatGroup/newMediationPlan/newMediationPlan",
+    "pages/multiroom/room/room",
+    "pages/multiroom/roomlist/roomlist",
+    "pages/multiroom/roomname/roomname",
+    "pages/mediate/documentList/documentList",   
+    "pages/mediate/viewTheDocument/viewTheDocument",
+    "pages/signature/signature",
+    "pages/helps/helps",
+    "pages/journalism/news/news",
+    "pages/chatGroup/mediationUsers/mediationUsers"
+  ],
+  "window": {
+    "backgroundTextStyle": "#ffffff",
+    "navigationBarBackgroundColor": "#0D9DEB",
+    "navigationBarTitleText": "赔付计算器",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color":"#ababab",
+    "selectedColor": "#0D9DEB",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/pic7.png",
+        "selectedIconPath":"images/pic7_a.png"
+      },
+      {
+        "pagePath": "pages/litigants/caseList/caseList",
+        "text": "案件",
+        "iconPath": "images/pic8.png",
+        "selectedIconPath": "images/pic8_a.png"
+      },
+      {
+        "pagePath": "pages/journalism/journalism",
+        "text": "新闻",
+        "iconPath": "images/pic9.png",
+        "selectedIconPath": "images/pic9_a.png"
+      },
+      {
+        "pagePath": "pages/me/me",
+        "text": "我的",
+        "iconPath": "images/pic10.png",
+        "selectedIconPath":"images/pic10_a.png"
+      }
+    ]
+  },
+  "networkTimeout": {
+    "request": 10000,
+    "downloadFile": 10000
+  },
+  "debug": true,
+  "plugins": {
+    "WechatSI": {
+      "version": "0.0.7",
+      "provider": "wx069ba97219f66d99"
+    }
+  }
+}

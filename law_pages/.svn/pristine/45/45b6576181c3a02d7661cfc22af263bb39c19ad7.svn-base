@@ -1,0 +1,284 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{title}} <i class="iconfont icon-guanbi close" ng-click="cancel()"></i></h4>
+</div>
+<div class="modal-body">
+  <form class="form-horizontal" >
+    <div class="scroll-form-box">
+      <div class="form-group row">
+        <div class="col-xs-2 text-right">
+          <label  class="control-label padding-top-0"><i>*</i> 所属区域</label>
+        </div>
+        <div class="col-xs-6" ng-class="{'has-error':regionNameErrorMessage}">
+          <input name="regionName" class="form-control" ng-focus="isShowTree=true" ng-blur="blurAdmin()" ng-model="sysOrg.extPro.regionName" readonly>
+        </div>
+        <div class="col-xs-1"></div>
+        <div class="col-xs-6 col-xs-offset-2" style="position: absolute; top: 50px; left: -3px; z-index: 99;">
+          <div class="panel panel-default padding_none" ng-show="isShowTree" >
+            <div class="panel-body">
+              <div js-tree="treeConfig" should-apply="true" tree="treeInstance" ng-model="adminRegion" tree-events="select_node:selectAdmin" class="pre-scrollable"></div>
+            </div>
+          </div>
+        </div>
+        <span class="error-message" ng-bind="regionNameErrorMessage"></span>
+      </div>
+      <div class="form-group row">
+        <div class="col-xs-2 text-right">
+          <label  class="control-label padding-top-0"><i>*</i> 组织代码</label>
+        </div>
+        <div class="col-xs-6" ng-class="{'has-error':orgCodeErrorMessage}">
+          <input ng-model="sysOrg.orgCode" name="orgCodeName" type="text" class="form-control input-sm"  placeholder="请输入组织代码">
+        </div>
+        <span class="error-message" ng-bind="orgCodeErrorMessage"></span>
+      </div>
+      <div class="form-group row" ng-show="sysOrg.category == '#01'">
+        <div class="col-xs-2 text-right">
+          <label  class="control-label padding-top-0"><i>*</i> 组织名称</label>
+        </div>
+        <div class="col-xs-6" ng-class="{'has-error':orgNameErrorMessage}">
+          <input type="text" ng-model="sysOrg.text" name="organizationName"  ng-click="selectedCourtOpen($event)" class="form-control input-sm"  placeholder="请选择组织名称" readonly>
+        </div>
+        <div class="col-xs-1"></div>
+        <div class="col-xs-6 col-xs-offset-2" style="position: absolute; top: 138px; left: 0px; z-index: 99;">
+          <div class="panel panel-default padding_none" id="courtTree" ng-show="isShowTree1" >
+            <div class="panel-body no-padding">
+              <div court-list  ng-model="sysOrg.text" ng-show="isShowTree1" code="sysOrg.courtCode"></div>
+            </div>
+          </div>
+        </div>
+        <span class="error-message" ng-bind="orgNameErrorMessage"></span>
+
+      </div>
+      <div class="form-group row" ng-show="sysOrg.category == '#01' || sysOrg.category == '#05' ">
+        <div class="col-xs-2 text-right">
+          <label  class="control-label padding-top-0"><i>*</i> 组织全称</label>
+        </div>
+        <div class="col-xs-6" ng-class="{'has-error':orgFullNameErrorMessage}">
+          <input type="text" ng-model="sysOrg.orgFullName" name="organizationName" class="form-control input-sm"  placeholder="请输入组织全称" >
+        </div>
+        <span class="error-message" ng-bind="orgFullNameErrorMessage"></span>
+      </div>
+      <div class="form-group row" ng-show="sysOrg.category == '#02' || sysOrg.category == '#03'|| sysOrg.category == '#04'|| sysOrg.category == '#06' ||sysOrg.category == '#07'">
+        <div class="col-xs-2 text-right">
+          <label  class="control-label padding-top-0"><i>*</i> 组织名称</label>
+        </div>
+        <div class="col-xs-6" ng-class="{'has-error':orgNameErrorMessage}">
+          <input type="text" ng-model="sysOrg.text" name="organizationName" class="form-control input-sm"  placeholder="请输入组织名称" >
+        </div>
+        <span class="error-message" ng-bind="orgNameErrorMessage"></span>
+      </div>
+      <div class="form-group row" ng-show="sysOrg.category == '#02'">
+        <div class="col-xs-2 text-right">
+          <label  class="control-label padding-top-0">组织简称</label>
+        </div>
+        <div class="col-xs-6" ng-class="{'has-error':orgFullNameErrorMessage}">
+          <input type="text" ng-model="sysOrg.shortName" name="organizationName" class="form-control input-sm"  placeholder="请输入组织全称" >
+        </div>
+        <span class="error-message" ng-bind="orgFullNameErrorMessage"></span>
+      </div>
+      <div class="form-group row">
+        <div class="col-xs-2 text-right">
+          <label  class="control-label padding-top-0"><i>*</i> 组织类型</label>
+        </div>
+        <div class="col-xs-6">
+        <select class="form-control input-sm" ng-change="changeType()" ng-model="sysOrg.category" ng-options="x.id as x.text  for x in typeList"></select>
+      </div>
+    </div>
+    <div class="form-group row" ng-show="sysOrg.category =='#01' || sysOrg.category =='#02' || sysOrg.category =='#04' || sysOrg.category == '#05'">
+      <div class="col-xs-2 text-right">
+        <label  class="control-label padding-top-0" ng-show="sysOrg.category =='#01'"><i></i> 上级法院</label>
+        <label  class="control-label padding-top-0" ng-show="sysOrg.category =='#02'"><i></i> 所属法院</label>
+        <label  class="control-label padding-top-0" ng-show="sysOrg.category =='#04'"><i></i> 上级组织</label>
+        <label  class="control-label padding-top-0" ng-show="sysOrg.category =='#05'"><i></i> 上级组织</label>
+      </div>
+      <div class="col-xs-6">
+        <select class="form-control input-sm"  ng-model="sysOrg.parentId" ng-show="sysOrg.category =='#01' || sysOrg.category =='#02'|| sysOrg.category =='#04' || sysOrg.category =='#05'"  ng-options="x.id as x.text for x in superiorCourtList"></select>
+      </div>
+    </div>
+      <div class="form-group row" ng-show="sysOrg.category =='#04'">
+        <div class="col-xs-2 text-right">
+          <label  class="control-label padding-top-0"><i></i>保险总公司</label>
+        </div>
+        <div class="col-xs-6">
+          <select class="form-control input-sm"  ng-model="sysOrg.insuranceCode" ng-options="x.id as x.text for x in insuranceList"></select>
+        </div>
+      </div>
+      <div ng-show="sysOrg.category == '#01'">
+        <div class="form-group row" >
+          <div class="col-xs-2 text-right">
+            <label class="control-label padding-top-0">收款单位</label>
+          </div>
+          <div class="col-xs-6">
+            <input type="text" ng-model="sysOrg.extPro.company" class="form-control input-sm"  placeholder="请输入收款单位">
+          </div>
+        </div>
+        <div class="form-group row" >
+          <div class="col-xs-2 text-right">
+            <label class="control-label padding-top-0">开户行</label>
+          </div>
+          <div class="col-xs-6">
+            <input type="text" ng-model="sysOrg.extPro.bankAccount" class="form-control input-sm"  placeholder="请输入开户行">
+          </div>
+        </div>
+        <div class="form-group row" >
+          <div class="col-xs-2 text-right">
+            <label class="control-label padding-top-0"> 账户</label>
+          </div>
+          <div class="col-xs-6">
+            <input type="text" ng-model="sysOrg.extPro.account" class="form-control input-sm"  placeholder="请输入账户">
+          </div>
+        </div>
+        <div class="form-group row" >
+          <div class="col-xs-2 text-right">
+            <label class="control-label padding-top-0"> 账号</label>
+          </div>
+          <div class="col-xs-6">
+            <input type="text" ng-model="sysOrg.extPro.accountNumber" class="form-control input-sm"  placeholder="请输入账号">
+          </div>
+        </div>
+      </div>
+    <div class="form-group row" ng-show="sysOrg.category == '#02'">
+      <div class="col-xs-2 text-right">
+        <label class="control-label padding-top-0"><i>*</i> 调解号简称</label>
+      </div>
+      <div class="col-xs-6">
+        <input type="text" ng-model="sysOrg.extPro.orgNameShort" class="form-control input-sm"  placeholder="请输入调解号简称">
+      </div>
+    </div>
+    <div class="form-group row" ng-show="sysOrg.category == '#02'">
+      <div class="col-xs-2 text-right">
+        <label class="control-label padding-top-0"><i>*</i> 调解结果设定</label>
+      </div>
+      <div class="col-xs-6">
+        <label class="checkbox-inline" ng-repeat="type in organizeTypeList">
+          <input type="checkbox" ng-checked="type.select" ng-model="type.select" > {{type.value}}
+        </label>
+      </div>
+    </div>
+      <div class="form-group row" ng-show="sysOrg.category == '#02'">
+        <div class="col-xs-2 text-right">
+          <label class="control-label padding-top-0"> 调解号模板</label>
+        </div>
+        <div class="col-xs-5">
+          <input type="text" ng-model="sysOrg.extPro.template" class="form-control input-sm"  placeholder="请输入调解号模板">
+        </div>
+        <div class="col-xs-2">
+          <input type="text" class="form-control input-sm" ng-model="sysOrg.extPro.regulationNum" placeholder="请输入调解号位数">
+        </div>
+      </div>
+
+    <div ng-show="sysOrg.category == '#03'">
+      <div class="form-group row" >
+        <div class="col-xs-2 text-right">
+          <label class="control-label padding-top-0"><i>*</i>许可证号</label>
+        </div>
+        <div class="col-xs-6" ng-class="{'has-error':licenceErrorMessage}">
+          <input type="text" name="licence" ng-model="sysOrg.extPro.licence" class="form-control input-sm"  placeholder="请输入许可证号">
+        </div>
+        <span class="error-message" ng-bind="licenceErrorMessage"></span>
+      </div>
+      <div class="form-group row" >
+        <div class="col-xs-2 text-right">
+          <label class="control-label padding-top-0"><i>*</i>法人</label>
+        </div>
+        <div class="col-xs-6" ng-class="{'has-error':legalPersonErrorMessage}">
+          <input type="text" name="legalPerson" ng-model="sysOrg.extPro.legalPerson" class="form-control input-sm"  placeholder="请输入法人">
+        </div>
+        <span class="error-message" ng-bind="legalPersonErrorMessage"></span>
+      </div>
+      <div class="form-group row" >
+        <div class="col-xs-2 text-right">
+          <label class="control-label padding-top-0"><i>*</i>负责人</label>
+        </div>
+        <div class="col-xs-6" ng-class="{'has-error':personLiableErrorMessage}">
+          <input type="text" name="personLiable" ng-model="sysOrg.extPro.personLiable" class="form-control input-sm"  placeholder="请输入负责人">
+        </div>
+        <span class="error-message" ng-bind="personLiableErrorMessage"></span>
+      </div>
+      <div class="form-group row" >
+        <div class="col-xs-2 text-right">
+          <label class="control-label padding-top-0"><i>*</i>联系电话</label>
+        </div>
+        <div class="col-xs-6" ng-class="{'has-error':telephoneErrorMessage}">
+          <input type="text" name="telephone" ng-model="sysOrg.extPro.telephone" class="form-control input-sm"  placeholder="请输入联系电话">
+        </div>
+        <span class="error-message" ng-bind="telephoneErrorMessage"></span>
+      </div>
+      <div class="form-group row" >
+        <div class="col-xs-2 text-right">
+          <label class="control-label padding-top-0"><i>*</i>传真</label>
+        </div>
+        <div class="col-xs-6" ng-class="{'has-error':faxErrorMessage}">
+          <input type="text" name="fax" ng-model="sysOrg.extPro.fax" class="form-control input-sm"  placeholder="请输入传真">
+        </div>
+        <span class="error-message" ng-bind="faxErrorMessage"></span>
+      </div>
+      <div class="form-group row" >
+        <div class="col-xs-2 text-right">
+          <label class="control-label padding-top-0"><i>*</i>邮箱</label>
+        </div>
+        <div class="col-xs-6" ng-class="{'has-error':emailErrorMessage}">
+          <input type="text" name="email" ng-model="sysOrg.extPro.email" class="form-control input-sm"  placeholder="请输入邮箱">
+        </div>
+        <span class="error-message" ng-bind="emailErrorMessage"></span>
+      </div>
+      <div class="form-group row" >
+        <div class="col-xs-2 text-right">
+          <label class="control-label padding-top-0"><i>*</i>业务范围</label>
+        </div>
+        <div class="col-xs-6" ng-class="{'has-error':rangeErrorMessage}">
+          <textarea name="range" ng-model="sysOrg.extPro.range" class="form-control input-sm"  placeholder="请输入业务范围"></textarea>
+        </div>
+        <span class="error-message" ng-bind="rangeErrorMessage"></span>
+      </div>
+      <div class="form-group row" >
+        <div class="col-xs-2 text-right" >
+          <label class="control-label padding-top-0"><i>*</i>机构地址</label>
+        </div>
+        <div class="col-xs-6" ng-class="{'has-error':addressErrorMessage}">
+          <input type="text" name="address" ng-model="sysOrg.extPro.address" class="form-control input-sm"  placeholder="请输入机构地址">
+        </div>
+        <span class="error-message" ng-bind="addressErrorMessage"></span>
+      </div>
+      <div class="form-group row" >
+        <div class="col-xs-2 text-right" >
+          <label class="control-label padding-top-0"><i>*</i>机构是否随机</label>
+        </div>
+        <div class="col-xs-6" >
+          <label class="radio-inline">
+            <input ng-model="sysOrg.extPro.isRandom" type="radio" name="isRandomName"  value="1"> 是
+          </label>
+          <label class="radio-inline">
+            <input ng-model="sysOrg.extPro.isRandom" type="radio" name="isRandomName"  value="0"> 否
+          </label>
+        </div>
+      </div>
+      <div class="form-group row" >
+        <div class="col-xs-2 text-right">
+          <label class="control-label padding-top-0"><i>*</i>鉴定类型</label>
+        </div>
+        <div class="col-xs-10">
+          <div class="col-xs-11 checkbox-inline" style="padding-left:22px;">
+            <div ng-repeat="appraisalItem in appraisalItemList" style="width: 200px; float: left;">
+                <label>
+                  <input type="checkbox" name="appraisalItem"  ng-model="appraisalItem.selected" ng-checked="appraisalItem.selected" />{{appraisalItem.value}}
+                </label>
+            </div>
+          </div>
+        </div>
+        <span class="error-message" ng-bind="appraisalItemErrorMessage"></span>
+      </div>
+    </div>
+
+</div>
+</form>
+</div>
+<div class="modal-footer ">
+<div class="row">
+<div class="col-xs-offset-5 col-xs-1">
+  <button type="button" class="btn btn-default " ng-click="cancel()">取消</button>
+</div>
+<div class=" col-xs-1">
+  <button type="submit" class="btn btn-default bg-brand-color" ng-click="saveSysOrg()">保存</button>
+</div>
+</div>
+</div>

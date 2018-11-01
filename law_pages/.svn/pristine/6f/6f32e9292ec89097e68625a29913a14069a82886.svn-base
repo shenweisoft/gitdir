@@ -1,0 +1,48 @@
+<div class="bg-default">
+	<div class="modal-header">
+		<h4 class="modal-title">
+			<span class="h1_line"></span>
+			文书列表
+			<small class="mar-le-10">共{{num}}条文书</small>
+			<i class="iconfont icon-guanbi close" ng-click="cancel()"></i>
+		</h4>
+	</div>
+	<div class="modal-body modal-list">
+		<div class="list-title row bg-color line-height2">
+			<div class="case-stage"><b>案件阶段</b></div>
+			<div class="row no-margin instrument-title">
+				<div class=" col-xs-9 no-padding-r"><b>文书标题</b></div>
+				<div class=" col-xs-3 "><b>文书操作</b></div>
+			</div>
+		</div>
+		<div class="instrument-list">
+			<table class="table table-middle list-stage"  ng-repeat="instrumentLevel in levelArray">
+				<tr>
+					<td class="list-stage-title"><span ng-if="levelArray.length > 0" ng-repeat="level in instrmentLevel|filter:{code:instrumentLevel.type}">{{level.text}}</span></td>
+					<td class="list-stage-li">
+						<div class="row no-margin" ng-repeat="instrument in instrumentLevel.instrumentArray">
+							<div class="col-xs-9 no-padding">
+								<span ng-if="!instrument.picture" class="img-doc"></span>
+								<span ng-if="instrument.picture" class="img-jpg"></span>
+								<a>{{instrument.name}}</a>
+							</div>
+							<div class="col-xs-3 no-padding-r">
+								<a ng-href="{{buildUrl(instrument)}}" ng-show="instrument.isFileExist" class="col-xs-6 no-padding cur-pointer text-decoration brand-color"><i class="iconfont icon-xiazai brand-color"></i> 下载</a>
+								<div class="col-xs-6 no-padding cur-pointer text-decoration brand-color" ngf-select="uploadInstrument($file, instrument)"  ng-click="checkflash()">
+									<i class="iconfont icon-shangchuan brand-color"></i> 上传
+								</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="modal-footer ">
+		<div class="row">
+			<div class="col-xs-offset-5 col-xs-1">
+				<button type="button" class="btn btn-default " ng-click="cancel()">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>

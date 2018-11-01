@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel">修改邮箱 <i class="iconfont icon-guanbi close" data-dismiss="modal" ng-click="$dismiss('cancel')"></i></h4>
+</div>
+<div class="modal-body">
+    <form role="form">
+    	<div class="form-group">
+            <div class="row">
+                <div class="col-xs-3 password_reset">
+            		<i class="iconfont mailbox red_color">&#xe60a;</i>
+            	</div>
+            	<div class="col-xs-8">
+					<p class="edit_success">邮件链接已失效!</p>
+					<div class="post_again">请到个人中心界面点击修改邮箱，重新发送验证邮件。</div>
+					<button type="button" class="btn btn-brand" ng-click="$dismiss('cancel')">关闭</button>
+            	</div>
+            	<div class="col-xs-1"></div>
+            </div>
+        </div>
+       	<br>
+       	<br>
+    </form>
+</div>
+   
+
+
+
+
+
+
+
+
+
+

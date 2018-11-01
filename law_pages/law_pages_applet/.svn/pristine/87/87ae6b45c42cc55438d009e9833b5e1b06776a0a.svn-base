@@ -1,0 +1,18 @@
+.step1_cont_list_e_l{
+  flex: 1;
+}
+.step1_cont_list_e_r{
+  flex: 1;
+}
+.step1_cont_list_e_r_num{
+  text-align: right;
+  color: #038ffe;
+}
+.step1_cont_list{
+  margin-bottom: 0px;
+}
+.remove_btn{
+  text-align: center;
+  color: #038ffe;
+  font-size: 18px;
+}

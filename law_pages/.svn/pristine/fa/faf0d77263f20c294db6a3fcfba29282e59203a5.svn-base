@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <title>CameraService</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf8" />
+    <link rel="stylesheet" href="style.css" type="text/css" />
+    <script type="text/javascript" src="jquery.js"></script>    
+    <script type="text/javascript" src="jquery.rotate.js"></script>
+    <!--[if IE 6]>
+    <link rel="stylesheet" href="fix.css" type="text/css" />
+    <![endif]-->
+    <script type="text/javascript">
+    
+    var phi = 0;
+	var camidx = 0; 
+
+	function setXformClass () {
+		$('.xform').each(function(idx,el) {
+			el.className = "xform x" + "-rotated-" + phi;
+		});
+	}
+    $(document).ready(function() {
+		// set rotation angle phi and toggle rotate class
+		$('#rotate').click(function() {
+			phi = (phi + 90) % 360;
+			setXformClass();
+			if (phi % 180) {
+				$('.xform-p').addClass('rotated');
+			} else {
+				$('.xform-p').removeClass('rotated');
+			}
+		});
+	});
+	
+	
+		//初始化
+	function Init(){
+		GetResolution();
+	}
+	
+	
+	function GrabImage() {
+	
+		var cutpage = document.getElementsByName("cutpage");  
+		var params = "{\"filepath\":\"\",\"rotate\":\"" + phi.toString() + "\",\"camidx\":\"" + camidx.toString() + "\",\"cutpage\":\"" + (cutpage[0].checked ? "1" : "0") + "\"}";//
+		var url = "http://127.0.0.1:38088/?video=grabimage";  	
+
+		$.ajax({  
+			type: "post",  
+			url: url,  
+			dataType: "json", 
+			data: params,
+			success: function(data)
+			{				
+				if(data.code != 0)
+				{
+					document.getElementById("result").innerHTML = "GrabImage 失败<br />返回代码 = " + data.code + "<br />  返回信息 = " + data.message; 	
+				}
+				else
+				{
+					document.getElementById("snapshot").src="http://127.0.0.1:38088/?video=snapshot&id=" + data.message;
+				}  
+			}
+		});  
+	}	
+	
+	function SetFrameRate() {
+		var framerate = document.getElementById("framerate").value;  								 
+		var params = "{\"framerate\":\"" + framerate.toString() + "\",\"camidx\":\"" + camidx.toString() + "\"}";//
+		var url = "http://127.0.0.1:38088/?param=set";  
+
+		$.ajax({  
+			type: "post",  
+			url: url,  
+			dataType: "json", 
+			data: params,
+			success: function(data)
+			{				
+				document.getElementById("result").innerHTML = "SetFrameRate <br />返回代码 = " + data.code + "<br />  返回信息 = " + data.message; 	
+			}
+		});  
+	}	
+	
+	function SetResolution() {
+	
+		var select = document.getElementById("resolution");
+		var index = select.selectedIndex;		
+		var text = select.options[index].text
+		var splits = text.split("x");
+		
+		var params = "{\"resolution\": {\"width\":\"" + splits[0] + "\",\"height\":\"" + splits[1] + "\"},\"camidx\":\"" + camidx.toString() + "\"}";//
+		var url = "http://127.0.0.1:38088/?param=set";  
+
+		$.ajax({  
+			type: "post",  
+			url: url,  
+			dataType: "json", 
+			data: params,
+			success: function(data)
+			{				
+				document.getElementById("result").innerHTML = "SetResolution<br />返回代码 = " + data.code + "<br />  返回信息 = " + data.message; 	
+			}
+		});  
+	}	
+	
+	function GetResolution() {
+		var params = "{\"type\": \"resolution\",\"camidx\":\"" + camidx.toString() + "\"}";//
+		var url = "http://127.0.0.1:38088/?param=get";  
+
+		$.ajax({  
+			type: "post",  
+			url: url,  
+			dataType: "json", 
+			data: params,
+			success: function(data)
+			{
+				if(data.code != 0)
+				{
+					document.getElementById("result").innerHTML = "GetResolution 失败<br />返回代码 = " + data.code + "<br />  返回信息 = " + data.message; 	
+				}
+				else
+				{
+					var select = document.getElementById("resolution");
+					//获取select下拉框下所有的选项
+					while(select.options.length > 0)
+					{
+						select.remove(i);
+					}
+					
+					var arrays = data.resolution.split("|");
+					for(var i=0; i<arrays.length; i++)
+					{
+						select.options.add(new Option(arrays[i], arrays[i])); 
+					}
+										
+					document.getElementById("result").innerHTML = "GetResolution 成功<br />返回代码 = " + data.code; 	
+				}  				
+			}
+		});  
+	}	
+	
+	
+	function GrabImageBase64() {
+		
+		var cutpage = document.getElementsByName("cutpage");  
+		var params = "{\"filepath\":\"base64\",\"rotate\":\"" + phi.toString() + "\",\"camidx\":\"" + camidx.toString() + "\",\"cutpage\":\"" + (cutpage[0].checked ? "1" : "0") + "\"}";//
+		var url = "http://127.0.0.1:38088/?video=grabimage";  	
+
+		$.ajax({  
+			type: "post",  
+			url: url,  
+			dataType: "json", 
+			data: params,
+			success: function(data)
+			{			
+				document.getElementById("snapshot").src= "data:image/jpg;base64," + data.photoBase64;
+			}  
+			});  
+	}	
+	
+	
+	function SelectCamera() {
+		var camradio = document.getElementsByName("camidx");
+		for(i=0;i<camradio.length;i++)
+		{
+			if(camradio[i].checked)
+				camidx = camradio[i].value;
+		}
+		
+		document.getElementById("streamimage").src="http://127.0.0.1:38088/?video=stream&camidx=" + camidx.toString();
+		GetResolution();
+	
+	}	
+	
+	function VerifyIDCard() {
+
+	var params = "";
+	var url = "http://127.0.0.1:38088/?face=vertifyidcard";  	
+
+	$.ajax({  
+		type: "post",  
+		url: url,  
+		dataType: "json", 
+		data: params,
+		success: function(data)
+		{
+			if(data.code != 0)
+			{
+				document.getElementById("result").innerHTML = "VerifyIDCard 失败<br />返回代码 = " + data.code + "<br />  返回信息 = " + data.message; 	
+			}
+			else
+			{
+				document.getElementById("result").innerHTML = "VerifyIDCard <br />返回代码：" + data.code + 
+																		 "<br />返回信息：" + data.message +
+																		 "<br />可信度：" + data.vertifyidcard.confidence;
+				document.getElementById("snapshot").src= "data:image/gif;base64," + data.vertifyidcard.image_camera;
+				document.getElementById("idcardphoto").src= "data:image/gif;base64," + data.vertifyidcard.image_idcard;
+			}
+		}  
+		});  
+}
+		
+	</script>
+  </head>
+
+  <body onLoad="Init()">
+    <div id="sidebar">
+      <h1>CameraService Demo Page</h1>	  
+	  <h2>Function</h2>
+    </div>
+
+    <div id="content">
+      <h1>CameraService</h1>
+      <h2>Display the stream</h2>
+
+	<p id="xform">
+		<button id="rotate"><div class="btnface"></div></button>
+	</p>
+
+	<p>
+	<input type="radio" name="camidx" value="0" onclick="SelectCamera()" checked="checked"/>文档头&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio" name="camidx" value="1" onclick="SelectCamera()"/>人像头
+	</p>
+
+	<p><input type="checkbox" name="cutpage" value="cutpage" checked="checked" />Cut Page</p>
+	<p class="xform-p"></p>
+	<p id="streamwrap" class="xform-p">
+		<img id="streamimage" class="xform" src="http://127.0.0.1:38088/?video=stream&camidx=0" onerror="onerror=null;src='app_stop.jpg'"/>
+	</p>		
+	
+	</br>
+	<input type="button" onclick="GrabImage()" value="GrabImage" style="width:100px" />  	
+	<input type="button" onclick="GrabImageBase64()" value="GrabImage(Base64)" />  	
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	FrameRate:<input type="text" id="framerate" value="5" style="width:30px" />	
+	<input type="button" onclick="SetFrameRate()" value="SetFrameRate"/>  	
+	</br></br>	
+	分辨率：<select id="resolution" />
+	<input type="button" onclick="GetResolution()" value="GetResolution"/> 	
+	<input type="button" onclick="SetResolution()" value="SetResolution"/>  		
+	</br></br>	
+	<input type="button" onclick="VerifyIDCard()" value="VerifyIDCard"/>  		
+	</br>
+	<div id="result"></div>
+	</br>
+    <img id="snapshot" src="" alt="This is a static snapshot" width="520px"/>
+	<img id="idcardphoto" src="" alt="" width="100px"/>
+	
+	</div>	
+	
+	
+	
+  </body>
+</html>

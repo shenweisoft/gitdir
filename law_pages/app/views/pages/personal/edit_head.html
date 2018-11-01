@@ -1,0 +1,29 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel">修改头像 <i class="iconfont icon-guanbi close" data-dismiss="modal" ng-click="cancel()"></i></h4>
+</div>
+<div class="modal-body">
+	    <div class="select_picture">
+	    	<span><img id="original" ng-src="{{headAddress}}"/></span>
+			  <span><img id="result" ng-src="{{cropResutAddress}}"></span>
+        <label class="label_display cur-pointer" for="file">
+          <p><i class="iconfont">&#xe61f;</i>点击选择添加图片</p>
+        </label>
+	    </div>
+    </label>
+</div>
+<div class="modal-footer">
+	<div class="row">
+		<div class="col-xs-3 text-left">
+			<a name="file" class="post_picture" style="text-decoration:none; cursor: pointer;">
+			 	<input id="file" name="file" type="file" ngf-select="uploadHeadIcon($file)"  style="filter:alpha(opacity=0);opacity:0;position:absolute;left:0;top:0;"/>添加图片
+			</a>
+		</div>
+		<div class="col-xs-4 text-left">
+			<span>{{fileAddress}}</span>
+		</div>
+		<div class="col-xs-2"></div>
+        <div class="col-xs-3">
+        	<button type="button" class="btn btn-brand" ng-click="saveHead()">保存</button>
+        </div>
+    </div>
+</div>

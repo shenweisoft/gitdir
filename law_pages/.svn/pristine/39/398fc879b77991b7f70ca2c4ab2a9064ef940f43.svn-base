@@ -1,0 +1,103 @@
+        <div class="modal-header" ng-if="addFlag==true">
+            新增
+            <i class="iconfont pull-right icon-guanbi close"   ng-click="cancel()"></i>
+        </div>
+        <div class="modal-header" ng-if="addFlag==false">
+            修改
+            <i class="iconfont pull-right icon-guanbi close"   ng-click="cancel()"></i>
+        </div>
+        <table class=" modal-body height_box_d" >
+            <div class="form_box" style="height: 470px;"> 
+                 <form class="form-horizontal ng-pristine ng-valid">
+                    <div class="scroll-form-box">
+                        <div class="form-group margin_top_popup row">
+                            <label class="col-xs-offset-1 col-xs-2"><i class="Required">*</i> 区域名称</label>
+                            <div class="col-xs-6" ng-class="{'has-error':nameErrorMessage}">
+                                <input name="regionName"  ng-model="mtDenizenIncomeNorm.regionName" type="text" class="form-control input-sm ng-pristine ng-valid"  ng-keydown="regionNameListShow(mtDenizenIncomeNorm)" placeholder="请输入区域名称">
+                                <ul class="regionName" ng-show="regionFlag" >
+                                    <li ng-repeat="x in AdminRegionList"  ng-click="selectRegionName(x)"  >{{x.regionFullName}}</li>
+                                </ul>
+                            </div>
+                             <div class="error-message ng-binding" ng-bind="nameErrorMessage"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"> 城镇死亡/伤残标准</label>
+                            <div class="col-xs-6" ng-class="{'has-error':urbanDisposableIncomeErrorMessage}">
+                                <input name="urbanDisposableIncome" ng-model="mtDenizenIncomeNorm.urbanDisposableIncome"  type="text" class="form-control input-sm ng-pristine ng-valid" placeholder="请输入城镇死亡/伤残标准">
+                            </div>
+                             <div class="error-message ng-binding" ng-bind="urbanDisposableIncomeErrorMessage"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"> 农村死亡/伤残标准</label>
+                            <div class="col-xs-6" ng-class="{'has-error':ruralNetIncomeErrorMessage}">
+                                <input name="ruralNetIncome"  ng-model="mtDenizenIncomeNorm.ruralNetIncome"  type="text" class="form-control input-sm ng-pristine ng-valid" placeholder="请输入农村死亡/伤残标准">
+                            </div>
+                             <div class="error-message ng-binding" ng-bind="ruralNetIncomeErrorMessage"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"> 城镇被抚养人生活费</label>
+                            <div class="col-xs-6" ng-class="{'has-error':urbanAverageOutlayErrorMessage}">
+                                <input name="urbanAverageOutlay"    ng-model="mtDenizenIncomeNorm.urbanAverageOutlay"  type="text" class="form-control input-sm ng-pristine ng-valid" placeholder="请输入城镇被抚养人生活费">
+                            </div>
+                             <div class="error-message ng-binding" ng-bind="urbanAverageOutlayErrorMessage"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"> 农村被抚养人生活费</label>
+                            <div class="col-xs-6" ng-class="{'has-error':ruralAverageOutlayErrorMessage}">
+                                <input name="ruralAverageOutlay"  ng-model="mtDenizenIncomeNorm.ruralAverageOutlay" type="text" class="form-control input-sm ng-pristine ng-valid" placeholder="请输入农村被抚养人生活费">
+                            </div>
+                             <div class="error-message ng-binding" ng-bind="ruralAverageOutlayErrorMessage"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"><i class="Required">*</i> 起始时间</label>
+                            <div class="col-xs-6" ng-class="{'has-error':startDateErrorMessage}">
+                                <p class="input-group">
+                                <input  type="text" class="form-control input-sm ng-pristine ng-valid" placeholder="请选择起始时间" datepicker-popup="yyyy-MM-dd" show-button-bar="false" ng-readonly="true" ng-model="mtDenizenIncomeNorm.startDate"  is-open="mtDenizenIncomeNorm.calendarIsOpenStartDate" max-date="minDate" max-date="'2200-06-22'" datepicker-options="{startingDay: 1}" close-text="Close" />
+                                <span class="input-group-btn">
+                                 <button  type="button" class="btn btn-default btn-default-padding" ng-click="openStartDate($event, mtDenizenIncomeNorm)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                 </span>
+                                </p>
+                                <div class="error-message ng-binding" ng-bind="startDateErrorMessage"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"><i class="Required">*</i> 终止时间</label>
+                            <div class="col-xs-6" ng-class="{'has-error':endDateErrorMessage}">
+                            <p class="input-group">
+                                <input  type="text" class="form-control input-sm ng-pristine ng-valid" placeholder="请选择终止时间" datepicker-popup="yyyy-MM-dd" show-button-bar="false" ng-readonly="true" ng-model="mtDenizenIncomeNorm.endDate"  is-open="mtDenizenIncomeNorm.calendarIsOpenEndDate" max-date="minDate" max-date="'2200-06-22'" datepicker-options="{startingDay: 1}" close-text="Close" />
+                                <span class="input-group-btn">
+                                 <button  type="button" class="btn btn-default btn-default-padding" ng-click="openEndDate($event, mtDenizenIncomeNorm)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                 </span>
+                            </p>
+                             <div class="error-message ng-binding" ng-bind="endDateErrorMessage"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2">丧葬费标准</label>
+                            <div class="col-xs-6" ng-class="{'has-error':funeralFeeStandardErrorMessage}">
+                                <input name="funeralFeeStandard"  ng-model="mtDenizenIncomeNorm.funeralFeeStandard" type="text" class="form-control input-sm ng-pristine ng-valid" placeholder="请输入丧葬费标准">
+                            </div>
+                             <div class="error-message ng-binding" ng-bind="funeralFeeStandardErrorMessage"></div>
+                        </div>
+                        <!-- <div class="form-group">
+                            <label class="col-xs-offset-1 col-xs-2"><i>*</i> 角色组</label>
+                            <div class="col-xs-6">
+                                <select name="parentId" ng-model="parentId" class="form-control input-sm ng-pristine ng-valid" ng-options="x.value for x in roleList" placeholder="请输入角色组"><option value="0" selected="selected">法院角色</option><option value="1">调解中心角色</option><option value="2">鉴定机构角色</option><option value="3">保险公司角色</option></select>
+                            </div>
+                        </div> -->
+                    </div>
+
+                </form>
+            </div>
+        </table>
+        <div class="modal-footer">
+             <div class="form-group">
+                <div class="col-xs-offset-5 col-xs-1">
+                    <button type="submit" class="btn btn-default " ng-click="cancel()">取消</button>
+                </div>
+                <div class=" col-xs-1">
+                    <button type="submit" class="btn btn-brand bg-brand-color" ng-click="save()" >保存</button>
+                </div>
+                
+            </div>
+        </div>

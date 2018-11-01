@@ -1,0 +1,37 @@
+<!-- 流程图 -->
+<div class="row flowChart applicant">
+  <div class="flowChart_box" ng-show="options.mainFlow">
+    <div class="col-xs-12" style="height: 70px; margin-top: 10px;">
+      <div style="width: 605px; margin: 0 auto;">
+        <div class="pull-left" ng-repeat="step_e in stepArray">
+          <div class="pull-left applicant_e" ng-hide="step_e.id==1"></div>
+          <div class="step-circle pull-left" ng-class="{'circle-blue':options.step == step_e.id,'circle-line':options.step < step_e.id,'circle-ok':options.step > step_e.id}" ><i>{{step_e.id}}</i>
+            <span>{{step_e.value}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 applicant_cont">
+      <div class="col-xs-4"><p style="line-height: 40px;">流水号：<span>{{secondInstanceInfoVO.serialNo}}</span></p></div>
+    </div>
+  </div>
+  <div class="flowChart_bottom flowChart_b1" ng-show="options.mainFlow" ng-click="options.mainFlow=!options.mainFlow">
+    <img class="flowChart_bottom_img" src="views/images/2-pre.png">
+    <img src="views/images/2-nor.png">
+  </div>
+  <div class="flowChart_bottom flowChart_b2" ng-hide="options.mainFlow" ng-click="options.mainFlow=!options.mainFlow">
+    <img class="flowChart_bottom_img" src="views/images/1-pre.png">
+    <img src="views/images/1-.png">
+  </div>
+</div>
+<!-- UI-VIEW -->
+<div ui-view></div>
+<!-- 底部按钮 -->
+<div class="row applicant_footer padding_top_bottom button_box background_color_d bottom_btn_fixed">
+  <div class="col-xs-12 padding_top_bottom ">
+    <button type="button" class="btn btn-brand pull-right" ng-if="options.step != 5" ng-click="handleNext()">下一步</button>
+    <button type="button" class="btn btn-brand pull-right" ng-if="options.step == 5" ng-click="handleSubmit()">提交</button>
+    <button type="button" class="btn btn-brand pull-right" ng-click="handleSave()">保存</button>
+    <button type="button" class="btn btn-default pull-right" ng-if="options.step != 1" ng-click="handlePrev()">上一步</button>
+  </div>
+</div>

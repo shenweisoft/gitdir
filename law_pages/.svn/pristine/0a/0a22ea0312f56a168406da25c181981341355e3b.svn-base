@@ -1,0 +1,107 @@
+<!-- 鉴定申请单证据模块 -->
+<div  style="margin-bottom: 70px;">
+    <div class="appraisal_element_box" ng-repeat="appraisalDetailInfo in appraisalInfo.appraisalDetailList">
+        <!-- 鉴定申请号标题 -->
+        <div class="appraisal_element_box_t clearfix">
+            <p class=" pull-left">
+                <i class="iconfont icon-shudao"></i>
+                <span>鉴定申请号</span>
+                <span>{{appraisalDetailInfo.appraisalNo}}</span>
+            </p>
+            <button type="button" class="btn btn-brand pull-right"  ngf-pattern="'image/*'" ngf-select="addAppraisalEvidence($files,appraisalDetailInfo)"  ng-click="checkflash()" ngf-multiple="true"><i class="iconfont icon-tianjia"></i> 添加新证据</button>
+            <button type="button" class="btn btn-brand pull-right" ng-click="chooseEvidence(appraisalDetailInfo)"><i class="iconfont icon-tianjia" ></i> 选择已有证据</button>
+        </div>
+        <!-- 信息模块 -->
+        <div class="information_box">
+            <div class="row">
+                <p class="col-xs-4">申请人: <span>{{appraisalDetailInfo.applyName}}</span></p>
+                <p class="col-xs-4">被鉴定人: <span>{{appraisalDetailInfo.jyAppraisalApplyerInfoId | id2TextApplyer:applyerArray}}</span></p>
+                <p class="col-xs-4">鉴定类型: <span>{{appraisalDetailInfo.appraisalType | id2Text:appraisalTypeList}}</span></p>
+                <p class="col-xs-4">鉴定项目: <span>{{appraisalDetailInfo.appraisalItem | id2AppraisalItem:appraisalItemList}}</span></p>
+            </div>
+        </div>
+        <!-- 添加证据列表 -->
+        <div class="list_box" ng-repeat="appraisalEvidence in appraisalDetailInfo.appraisalEvidenceList">
+            <!-- 证据 -->
+            <div class="">
+                <input style="display:none"/>
+                <div class="row no-margin" style="position: relative;">
+                    <progressbar ng-show="appraisalEvidence.progressPercentage" value="appraisalEvidence.progressPercentage" type="success" style="width: 236px; position: absolute;top: 3px;left: 39px; height: 3px;" >{{appraisalEvidence.progressPercentage}}</progressbar>
+                    <div class="evidence_left">
+                        <div class="evidence_picture icon-duihao_box cur-pointer" >
+                            <img class="img-responsive center-block" ng-src="{{imageAddress+appraisalEvidence.picture}}" ng-click="selectEvidence(appraisalEvidence,appraisalDetailInfo)">
+                            <div class="delete_picture" ng-click="removeEvidences(appraisalDetailInfo,appraisalEvidence)"><i class="iconfont icon-iconfont19"></i>删除</div>
+                            <i class="iconfont" ng-class="{'icon-duihao-weixuanzhong':!appraisalEvidence.selected,'icon-tupian-xuanzhong':appraisalEvidence.selected}" ng-click="selectEvidence(appraisalEvidence,appraisalDetailInfo)"></i>
+                        </div>
+                    </div>
+                    <div class="evidence_right">
+                        <br>
+                        <div class="row" >
+                            <form class="form-horizontal" role="form">
+                                <div class="col-xs-3 text-right">
+                                    <label class="control-label" ng-model="appraisalEvidence.name"><i>*</i>证据名称</label>
+                                </div>
+                                <div class="col-xs-5"  ng-class="{'has-error':appraisalEvidence.evidenceNameError}">
+                                    <input ng-model="appraisalEvidence.name" class="form-control" placeholder="请输入证据名称" >
+                                </div>
+                                <div class="col-xs-5"></div>
+                            </form>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <form class="form-horizontal" role="form">
+                                <div class="col-xs-3 text-right">
+                                    <label class="control-label"><span class="Required">*</span>证据描述</label>
+                                </div>
+                                <div class="col-xs-9" ng-class="{'has-error':appraisalEvidence.evidenceDescriptionError}">
+                                    <textarea ng-model="appraisalEvidence.description" class="form-control" rows="3"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="row">
+                            <form class="form-horizontal" role="form">
+                                <div class="col-xs-3 text-right">
+                                    <label class="control-label">证据分类</label>
+                                </div>
+                                <div class="col-xs-9">
+                                    <ul class="evidence_classify">
+                                    <span ng-repeat="tag in appraisalEvidence.chooseTagArray">
+                                        <li>{{tag.value}}<i class="iconfont" ng-class="{'icon-guanbi':appraisalEvidence.tagClose}" ng-click="closeTag(appraisalEvidence,tag.id)"></i></li>
+                                    </span>
+                                        <li class="li_tab cur-pointer" ng-show="appraisalEvidence.tagClose" ng-click="appraisalEvidence.tagClose = !appraisalEvidence.tagClose">保存标签</li>
+                                        <li class="li_tab cur-pointer" ng-show="!appraisalEvidence.tagClose" ng-click="appraisalEvidence.tagClose = !appraisalEvidence.tagClose">编辑标签</li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </div>
+                        <br>
+                        <div class="row" ng-show="appraisalEvidence.tagClose">
+                            <div class="col-xs-2"></div>
+                            <div class="col-xs-10">
+                                <div class="all_classify" ng-repeat="appraisalClassify in  appraisalClassifyList">
+                                    <li class="cur-pointer" ng-class="{'slide-active2':appraisalEvidence.classify.split(',').indexOf(appraisalClassify.id) !== -1}" ng-click="addTag(appraisalEvidence, appraisalClassify.id)">{{appraisalClassify.value}}</li><li>|</li>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr style="border:1px dashed #dddddd;">
+            </div>
+        </div>
+        <!-- 未添加证据时显示 -->
+        <div class="empty_evidence_list" ng-show="appraisalDetailInfo.appraisalEvidenceList.length == 0">
+            <i class="iconfont icon-renzheng"></i>
+            <span>还没有证据，请点击按钮添加证据哦！</span>
+        </div>
+        <div class="row">
+            <div class="col-xs-7" ng-show="appraisalDetailInfo.appraisalEvidenceList.length > 0">
+                <h4 class="col-xs-4 flo-l icon-duihao_box cur-pointer" ng-click="selectAllappraisal(appraisalDetailInfo)">
+                    <i class="iconfont" ng-class="{'icon-duihao-weixuanzhong':!selectAllItems,'icon-tupian-xuanzhong':selectAllItems}"></i> 全选</h4>
+                <h4 class="col-xs-4 flo-l">已选中<span class="error_color">{{appraisalDetailInfo.appraisalEvidenceList | selectedCount }}</span>个</h4>
+                <h4 class="col-xs-4 flo-l error_color cur-pointer" ng-show="appraisalDetailInfo.appraisalEvidenceList | selectedCount" ng-click="removeEvidences(appraisalDetailInfo)">批量删除</h4>
+            </div>
+        </div>
+    </div>
+    <!--遮罩层-上传证据期间-->
+    <div ng-show="fileUploading" class="file-upload-masker"></div>
+</div>

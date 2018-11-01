@@ -1,0 +1,144 @@
+// pages/my/my.js
+const app = getApp()
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+    isLogin: 0
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+    var that = this
+    var wxUser = wx.getStorageSync("openUser");
+    var userInfo = wx.getStorageSync("userInfo");
+    that.setData({
+      userInfo: userInfo,
+      wxUser: wxUser
+    })
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+    
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+    var userInfo = wx.getStorageSync("userInfo");
+    if (!userInfo) {//未登录
+      // wx.redirectTo({
+        
+      // })
+    }else{
+      this.setData({
+        isLogin: 1
+      })
+    }
+  },
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload: function () {
+  
+  },
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh: function () {
+  
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom: function () {
+  
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+  
+  },
+
+  /**
+   * 修改密码
+   */
+  editPass: function(){
+    var userInfo = wx.getStorageSync('userInfo');
+    let mobile = userInfo.mobile
+    console.log(mobile);
+    if (mobile){
+      wx.navigateTo({
+        url: 'winCode/winCode?winCodeType=changePhoneNo',
+      })
+    }else{
+      wx.navigateTo({
+        url: 'winCode/winCode?winCodeType=NewPhoneNo',
+      })
+    }
+  },
+
+  /**
+   * 联系客服
+   */
+  customeService: function(){
+    
+  },
+
+  /**
+   * 电话客服
+   */
+  phoneCall: function(e){
+    var phoneNumber = '400-618-0508'
+    wx.makePhoneCall({
+      phoneNumber: phoneNumber,
+    })
+  },
+   /**
+   * 登陆
+   */
+  loginSyeTeam: function(){
+    wx.navigateTo({
+      url: '/pages/selectCharacter/selectCharacter',
+    })
+  },
+  /**
+   * 退出系统
+   */
+  logout: function(){
+    var that = this
+    var socketUrl = wx.getStorageSync("socketUrl") || 'wss://www.jtspt.com/lawProject/websocket'
+    wx.closeSocket({
+      url: socketUrl + "/" + app.globalData.userInfo.id,
+    })
+    app.globalData.userInfo = undefined
+    wx.setStorageSync("userInfo", undefined)
+    wx.setStorageSync("socketOpen", false);
+    wx.setStorageSync('JSESSIONID', undefined);
+    this.setData({
+      isLogin: 0
+    })
+    wx.switchTab({
+      url: '../index/index',
+    })
+  }
+})

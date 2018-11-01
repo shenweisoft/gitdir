@@ -1,0 +1,7 @@
+<div>
+    <object id="objActiveX" classid="clsid:A66F5373-0A8A-4C42-814B-38A87B331D40" width=0 height=0"></object>
+
+    fdsafdsafdsa
+
+    <input ng-model="idNo">
+</div>

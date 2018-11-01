@@ -1,0 +1,26 @@
+<div class="AIOCourtIndex_box">
+	<!-- 背景 -->
+	<img class="AIOCourtIndex_bj" src="views/images/AIOCourtIndex_bj.jpg">
+	<!-- 设置 -->
+	<img class="AIOCourtIndex_set" src="views/images/AIOset.png">
+	<!-- logo -->
+	<img class="AIOCourtIndex_logo" src="views/images/AIOCourtIndex_logo.png">
+	<div class="time">15:57</div>
+	<div class="date">2018年 8月 8日 星期三</div>
+	<div class="AIOCont">
+		<dl class="AIOCont_e" ng-click="prejudge()">
+			<dd><img src="views/images/pfssImg.png"></dd>
+			<dt>赔付试算</dt>
+		</dl>
+		<dl class="AIOCont_e" style="position: relative;" ng-click="weChat()">
+			<dd><img src="views/images/wxImg.png"></dd>
+			<dt>微信</dt>
+			<div class="yytj_wx">
+				<img src="views/images/ewm_yytj.png">
+				<p>如要预约调解，请扫码关注小程序后，在小程序端发起。</p>
+				<div class="bottom_triangle"></div>
+			</div>
+		</dl>
+	</div>
+	
+</div>

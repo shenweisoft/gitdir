@@ -1,0 +1,172 @@
+<div class="row bg-default relative_top" style="overflow-x:hidden;">
+	<div class="row panel-heading">
+		<h4 class="col-xs-12"><span class="h1_line"></span>
+			<span ng-show="personType==0">选择起诉方式</span>
+			<span ng-show="personType==1">我要应诉</span>
+		</h4>
+	</div>
+	<!--我要起诉-->
+	<div ng-show="personType==0">
+		<div class="row no-margin">
+			<div class="col-xs-12 padding-20 margin-bottom-20">
+				<p><b>说明：</b></p>
+				<p class="text-indent-50">对于已经过调解，但未达成调解线上开庭的案件，可通过录入该调解案件的流水号及对应的手机号码发起诉讼。</p>
+				<p class="text-indent-50">对于未进行调解的案件，可直接发起起诉，录入相关的起诉信息后，发起诉讼。</p>
+			</div>
+		</div>
+		<div class="row bg-sue padding-20" style="margin:0 15px;">
+			<div class="col-xs-6 line-height-34">
+				已经过调解的案件发起起诉
+			</div>
+			<div class="col-xs-6 line-height-34">
+				未经过调解发起起诉
+			</div>
+			<br><br><br><br>
+			<div class="col-xs-6 border-right" style="padding-right: 25px;">
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="col-xs-4 control-label"><span class="xing">*</span>
+							<span ng-show="personType==0">流水号</span>
+							<span ng-show="personType==1">流水号/案号</span>
+						</label>
+						<div class="col-xs-8" ng-class="{'has-error':messageSerialNoNull}">
+							<input  type="text" name="serialNoName" class="form-control" ng-model="serialNo" placeholder="请输入流水号">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-4 control-label"><span class="xing">*</span>手机号码</label>
+						<div class="col-xs-8" ng-class="{'has-error':messageTelephoneError}">
+							<input maxlength="11" name="telephoneName" class="form-control" ng-model="telephone" placeholder="请输入您的手机号码">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-4 control-label"><span class="xing">*</span>手机验证码</label>
+						<div class="col-xs-8">
+							<div class="input-group" ng-class="{'has-error':messageVerificationCode}">
+								<input name="verificationCodeName" type="text" class="form-control" ng-model="verificationCode" maxlength="6" placeholder="请输入验证码">
+								<span class="input-group-btn">
+								<button class="btn btn-brand get_checknumber" ng-show = "!codeTime" type="button" ng-click="getMobileCode()">获取验证码</button>
+										<span class="btn get_checknumber_disable" ng-show = "codeTime">{{codeTime}}</span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-4 control-label"></label>
+						<div class="col-xs-8">
+							<button type="submit" class="btn btn-brand" ng-click="extractCase()">提取案件</button>
+						</div>
+					</div>
+				</form>
+
+				<div>
+					<h4 class="ft14">温馨提示：</h4>
+					<ul class="ft12" style="padding-left:20px;margin:0; line-height:25px;">
+						<li style="list-style:disc;">流水号是调解完成后系统自动生成的，已发送至申请人手机上或在调解告知书中</li>
+						<li style="list-style:disc;">案号是法官立案后生成的，请登录司法邮箱，在传票中获取</li>
+						<li style="list-style:disc;" ng-show="personType == 0">手机号是您在调解时向调解人员所提供的申请人/代理人的手机号</li>
+						<li style="list-style:disc;" ng-show="personType == 1">手机号是在调解时向调解人员所提供的被申请人/代理人的手机号</li>
+						<li style="list-style:disc;">提取案件后，可以与当前帐号进行绑定，不可解绑</li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-xs-6 text-center" style="padding-left: 25px;">
+				<button type="submit" class="btn btn-brand" ng-click="notMediatedSue()">发起起诉</button>
+			</div>
+		</div>
+	</div>
+
+	<!--我要应诉-->
+	<div ng-show="personType==1">
+		<div class="row bg-sue no-margin" style="margin:0 15px;">
+			<br><br><br><br>
+			<div class="col-xs-6 border-right" style="padding-right: 25px;">
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="col-xs-4 control-label"><span class="xing">*</span>
+							<span ng-show="personType==0">流水号</span>
+							<span ng-show="personType==1">流水号/案号</span>
+						</label>
+						<div class="col-xs-8" ng-class="{'has-error':messageSerialNoNull}">
+							<input  type="text" name="serialNoName" class="form-control" ng-model="serialNo" placeholder="请输入流水号">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-4 control-label"><span class="xing">*</span>手机号码</label>
+						<div class="col-xs-8" ng-class="{'has-error':messageTelephoneError}">
+							<input maxlength="11" name="telephoneName" class="form-control" ng-model="telephone" placeholder="请输入您的手机号码">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-4 control-label"><span class="xing">*</span>手机验证码</label>
+						<div class="col-xs-8">
+							<div class="input-group" ng-class="{'has-error':messageVerificationCode}">
+								<input name="verificationCodeName" type="text" class="form-control" ng-model="verificationCode" maxlength="6" placeholder="请输入验证码">
+									<span class="input-group-btn">
+											<button class="btn btn-brand get_checknumber" ng-show = "!codeTime" type="button" ng-click="getMobileCode()">获取验证码</button>
+																		<span class="btn get_checknumber_disable" ng-show = "codeTime">{{codeTime}}</span>
+									</span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-4 control-label"></label>
+						<div class="col-xs-8">
+							<button type="submit" class="btn btn-brand" ng-click="extractCase()">提取案件</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-xs-6" style="padding-left: 25px;">
+				<h4 class="ft14">温馨提示：</h4>
+				<ul class="ft12" style="padding-left:20px;margin:0; line-height:25px;">
+					<li style="list-style:disc;">流水号是调解完成后系统自动生成的，已发送至申请人手机上或在调解告知书中</li>
+					<li style="list-style:disc;">案号是法官立案后生成的，请登录司法邮箱，在传票中获取</li>
+					<li style="list-style:disc;" ng-show="personType == 0">手机号是您在调解时向调解人员所提供的申请人/代理人的手机号</li>
+					<li style="list-style:disc;" ng-show="personType == 1">手机号是在调解时向调解人员所提供的被申请人/代理人的手机号</li>
+					<li style="list-style:disc;">提取案件后，可以与当前帐号进行绑定，不可解绑</li>
+				</ul>
+			</div>
+		</div>
+
+	</div>
+	<br>
+	<br>
+	<!--案件查询结果-->
+	<div class="bg-default" ng-show="queryResultFlag">
+		<div class="row panel-heading">
+			<span class="col-xs-12">查询结果</span>
+		</div>
+		<div class="row row_line" style="border-top:1px solid #ddd;" >
+			<div class="col-xs-11 padding_none">
+				<div class="col-xs-8 padding_none">
+					<div class="col-xs-12">
+						<div class="row clearfix no-margin">
+							<div class="flo-l no-padding text-left"><label>{{lawObj.party}}</label></div>
+							<div class="no-padding">
+										<span class="tips-box" ng-class="{'bg-cuccess':lawObj.jyLawInfoVO.state == lawState.finishState,'bg-prom':lawObj.jyLawInfoVO.state != lawState.finishState}" ng-show="lawObj.jyLawInfoVO.isReturn != '1'">
+											<b class="pop-arrow"></b>{{lawObj.jyLawInfoVO.state | stateChangeText:lawStateList}}
+										</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 padding_none">
+						<div class="col-xs-4">调解流水号：
+							<a class="cur-pointer" ng-click="queryLawInfoDetail(lawObj)">{{lawObj.jyLawInfoVO.serialNo}}</a>
+						</div>
+						<div class="col-xs-4"></div>
+						<div class="col-xs-3"></div>
+					</div>
+				</div>
+				<!--待起诉状态并且为我要起诉显示-->
+				<div class="col-xs-2 padding_none"  ng-show="personType== 0 && lawObj.jyLawInfoVO.state == lawState.prosecutionState ">
+					<button type="button" class="btn btn-brand flo-r" ng-click="initiateProceedings(lawObj)">发起起诉</button>
+				</div>
+				<div class="col-xs-2 padding_none text-center" ng-show = "!lawObj.isBind ">
+					<button type="button" class="btn btn-success flo-r" ng-click="bindCaseForUser()">绑定案件到该账号</button>
+				</div>
+				<div class="col-xs-12">事实与理由：{{lawObj.jyLawInfoVO.factReason}}</div>
+			</div>
+		</div>
+	</div>
+</div>

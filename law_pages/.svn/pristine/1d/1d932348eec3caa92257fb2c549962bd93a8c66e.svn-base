@@ -1,0 +1,76 @@
+<div class="panel row" style="border-radius: 0px;">
+    <div class="panel-heading boder_bottom" style="margin-left: 20px; margin-right: 20px; padding-left: 0px;">
+        <h4 style="margin: 5px 0px;"> <span class="h1_line"></span>事故事实及责任（交警认定）</h4>
+    </div>
+    <div class="panel-body" style="padding: 20px;" ng-class="{'has-error':algorithmInfo.accidentLiabilityError}">
+        <textarea  class="text-box" ng-model="algorithmInfo.accidentLiability" maxlength="500" style="min-height: 280px; padding: 14px;" placeholder="事故事实及责任（交警认定）" ></textarea>
+    </div>
+    <div class="appraisal_element_box" >
+        <div class="appraisal_element_box_t">
+            <p>
+                <i class="iconfont icon-shudao"></i>
+                <span>事故基本信息</span>
+            </p>
+        </div>
+        <div class="row margin-top-22">
+            <div class="col-xs-6">
+                <label class="col-xs-4 control-label text-right-height" >
+                    <span class="Required">*</span>事故认定书编号
+                </label>
+                <div class="col-xs-8"  ng-class="{'has-error':algorithmInfo.accidentNoError}">
+                    <input class="form-control"  ng-model="algorithmInfo.accidentNo"  placeholder="请输入事故认定书编号">
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <label class="col-xs-4 control-label text-right-height" >
+                    <span class="Required">*</span>事故地点
+                </label>
+                <div class="col-xs-8" ng-class="{'has-error':algorithmInfo.accidentPlaceError}">
+                    <input class="form-control" id="regNameInput" ng-model="algorithmInfo.accidentPlace" readonly/>
+                    <div class="panel panel-default padding_none" id="regNamebox" style="position:absolute;left:15px;z-index:999;width:93%; display: none;">
+                        <div class="panel-body">
+                            <div js-tree="treeConfig" should-apply="true" tree="treeInstance" ng-model="adminRegion" tree-events="select_node:selectAdmin" class="pre-scrollable"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 ">
+                <label class="col-xs-4 control-label text-right-height">
+                    <span class="Required">*</span>是否高速
+                </label>
+                <div class="col-xs-8"  ng-class="{'has-error':algorithmInfo.highSpeedFlagError}">
+                    <label class="radio-inline col-xs-5" style="margin-top: 10px;">
+                        <input type="radio" name="highSpeed" ng-model="algorithmInfo.highSpeedFlag" ng-value="1" ng-checked="algorithmInfo.highSpeedFlag =='1'" id="no">是
+                    </label>
+                    <label class="radio-inline col-xs-5"  style="margin-top: 10px;">
+                        <input type="radio" name="highSpeed" ng-model="algorithmInfo.highSpeedFlag" ng-value="2" ng-checked="algorithmInfo.highSpeedFlag =='2'" id="yes">否
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="appraisal_element_box" >
+        <div class="appraisal_element_box_t">
+            <p>
+                <i class="iconfont icon-shudao"></i>
+                <span>当事人身份信息</span>
+            </p>
+        </div>
+        <!-- 被鉴定人 -->
+        <div class="row mar-top-10">
+            <div class="col-xs-12">
+                <!-- card_active  选中状态 -->
+                <div class="card_box1 cur-pointer " ng-repeat="algorithmApplyerInfo in algorithmInfo.jyAlgorithmApplyerInfoVOList" ng-click="selectAlgorithmApplyerInfo(algorithmApplyerInfo)" ng-class="{'card_active':algorithmApplyerInfo.id == algorithmInfo.identityId }">
+                    <img src="views/images/active_fw_r2_c2.png">
+                    <p>姓名：<span>{{algorithmApplyerInfo.personName}}</span></p>
+                    <p>性别：<span>{{algorithmApplyerInfo.sex == 0?'男':'女'}}</span></p>
+                    <p>证件号码：<span>{{algorithmApplyerInfo.idNo}}</span></p>
+                    <p>出生日期：<span>{{algorithmApplyerInfo.birthday | stringDate|date: 'yyyy-MM-dd' }}</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <button class="btn btn-brand" ng-click="policeSubmit()">提交</button>
+    </div>
+</div>

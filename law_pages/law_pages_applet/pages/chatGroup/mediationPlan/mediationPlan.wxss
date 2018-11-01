@@ -1,0 +1,135 @@
+.detail_bg{
+  background: #ebf3f6;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: -1;
+  top:0; 
+}
+.detail_list{
+  padding-bottom: 80px;
+}
+.detail_e{
+  width: 702rpx;
+  margin-left: 24rpx;
+  background: #ffffff;
+  border-radius: 8rpx;
+  border: 1rpx solid #dddddd;
+  margin-top: 15px;
+  font-size: 16px;
+}
+.detail_e_top{
+  height: 78rpx;
+  width: 100%;
+  background: #f7f7f7;
+  line-height: 78rpx;
+  color: #969696;
+}
+.detail_e_top_img{
+  width: 50rpx;
+  height: 50rpx;
+  margin-left: 30rpx;
+  margin-right: 20rpx;
+  position: relative;
+  top: 18rpx;
+}
+.detail_e_e{
+  width: 630rpx;
+  padding-bottom: 30rpx;
+  border-bottom: 1rpx solid #dcdcdc;
+  margin-left: 32rpx;
+}
+.detail_e_e view{
+  line-height: 45rpx;
+  text-indent: 10rpx;
+}
+.detail_e_e_t{
+  margin-top: 25rpx;
+  color: #000000;
+}
+.detail_e_e_t text{
+  float: right;
+}
+.detail_e_button{
+  display: flex;
+}
+.detail_e_button_e{
+  flex: 1;
+  height: 45rpx;
+  color: #0e9deb;
+  text-align: center;
+  line-height: 45rpx;
+  margin-top: 14rpx;
+  margin-bottom: 14rpx;
+}
+.border_r{
+  border-right: 1rpx solid #dcdcdc;
+}
+.detail_e_bt{
+  background: #f7f7f7;
+  display: flex;
+  padding: 20rpx 40rpx;
+}
+.detail_e_bt_l{
+  flex: 1;
+  display: flex;
+}
+.iconfont_box{
+  width: 25px;
+  height: 25px;
+  background: #deeefd;
+  border-radius: 50%;
+  text-align: center;
+}
+.iconfont_box .iconfont{
+  color: #0e9deb;
+  position: relative;
+  top: -5px;
+}
+.detail_e_bt_r{
+  flex: 1;
+  text-align: right;
+  color: #0e9deb;
+}
+.detail_e_bt_l_r{
+  line-height: 25px;
+  margin-left: 10px;
+  color: #999999;
+}
+.add_box{
+  width: 64px;
+  height: 64px;
+  background: #5cd39d;
+  text-align: center;
+  line-height: 64px;
+  border-radius: 50%;
+  box-shadow: 0px 0px 15px #5cd39d;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  margin-left: -34px;
+}
+.add_box .iconfont{
+  font-size: 25px;
+  color: #ffffff;
+}
+.empty-img{
+  width:428rpx;
+  height:360rpx;
+  margin:200rpx 25% 100rpx;
+}
+.empty-text{
+  text-align:center;
+  font-size:16px;
+  color:#666;
+}
+.clear{
+  clear: both;
+  width: 100%;
+}
+.right_text{
+  text-align: right;
+  color: #0e9deb;
+  font-size: 18px;
+
+}

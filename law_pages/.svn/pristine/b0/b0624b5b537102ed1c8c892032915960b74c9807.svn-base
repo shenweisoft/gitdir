@@ -1,0 +1,511 @@
+<!-- <div class="left_top">
+    <div class="btn_style2" ng-click="nextStep()">下一步</div>
+    <div class="btn_style1" ng-click="preveStep()">上一步</div>
+    <div class="btn_style1">关闭</div>
+</div> -->
+
+<div ng-click="allClose($event)" style="padding-bottom: 40px;">
+<div class="AIOSetp_bt">
+    <div class="AIOSetp_bt_l"></div>医疗相关费用
+</div>
+<!-- 医疗相关费用 -->
+<div class="AIOlist">
+
+    <div class="AIOSetp2_cont1 AIOSetp_cont">
+        <div class="AIOSetp3_cont1_bt">医疗相关费用</div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-6 form-group form-group-sm" style="margin-top: 15px;" ng-repeat="fee in feeArray">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">{{fee.value}}</span>
+                </label>
+                <div class="col-xs-7 selected_relative" ng-if="fee.template == '1'">
+                    <input type="text" class="form-control ng-pristine ng-valid height" id="name" onkeyup="var p2 = parseFloat(value).toFixed(2);value = p2>=0?(/\.0?$/.test(value)?value:p2.replace(/0$/,'').replace(/\.0$/,'')):''"
+					onblur="value = value.replace(/\.0*$/,'')" maxlength="12" ng-model="fee.applyAmount" placeholder="请输入">
+                    <div class="right_unit">元</div>
+                </div>
+                <div class="col-xs-7 selected_relative" ng-if="fee.template == '2'">
+                    <p class="AIOText" >{{fee.applyAmount || '0'}}
+                        <span>({{fee.applyPerUnit}}元/天 X {{fee.applyUnit}}天)</span>
+                    </p>
+                </div>
+                <div class="col-xs-7 selected_relative" ng-if="fee.template == '3'">
+                    <p class="AIOText">{{fee.applyAmount || '0'}}
+                        <span>{{fee.applyPerUnit}}元/月 X {{fee.applyUnit}}月</span>
+                    </p>
+                </div>
+                <div class="col-xs-7 selected_relative" ng-if="fee.template == '4'">
+                    <p class="AIOText">{{fee.applyAmount}}
+                        <span>{{fee.applyPerUnit}}元/年 X {{fee.applyUnit}}年</span>
+                    </p>
+                </div>
+                <div class="col-xs-7 selected_relative" ng-if="fee.template == '5'">
+                    <p class="AIOText">{{fee.applyAmount || '0'}}
+                        <span>{{fee.applyPerUnit}}元/年 X {{fee.applyUnit}}年 X {{lawCase.compensateRate}}% </span>
+                    </p>
+                </div>
+                <div class="col-xs-7 selected_relative" ng-if="fee.template == '6'">
+                        <p class="AIOText">{{fee.applyAmount || '0'}}
+                            <span>{{fee.applyPerUnit}}元/级 x 10 X {{lawCase.compensateRate}}%</span>
+                        </p>
+                    </div>
+                <div class="col-xs-1 line-height pr">
+                    <iconfont class="iconfont icon--bangzhuqipao" ng-click="dynamicPopoverFn($event, $index)"></iconfont>
+                    <p ng-show="isIndex == $index" class="show-title">{{fee.remark}}</p>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm"></div>
+        </div>
+    </div>
+
+</div>
+<!-- 误工费 (没有死亡)-->
+<div class="AIOlist" ng-if="lawCase.isDeadAtTheScene != 1">
+    <div class="AIOSetp2_cont1 AIOSetp_cont" ng-repeat="fee in lawCase.feeDetail" ng-if="fee.id == '08'">
+        <div class="AIOSetp3_cont1_bt">误工费</div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">是否有固定收入</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <div class="switchButton" ng-click="selectBxShow(fee)">
+                        <img ng-show="fee.isFixedIncome" src="views/images/open_new.png" ng-click="onfeeChange(fee, 'isFixedIncome')">
+                        <img ng-show="!fee.isFixedIncome" src="views/images/close_new.png" class="ng-hide" ng-click="onfeeChange(fee, 'isFixedIncome')">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 form-group form-group-sm" ng-if="!fee.isFixedIncome">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">证明类型</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height" ng-model="fee.incomeEvidence" ng-options="x.id as x.value for x in incomeEvidenceArray" ng-change="onfeeChange(fee, 'incomeEvidence')">
+                        <option>{{x.value}}</option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm" ng-if="fee.isFixedIncome">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">工资收入</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <input class="form-control ng-pristine ng-valid height" ng-model="fee.applyPerUnit" onkeyup="var p2 = parseFloat(value).toFixed(2);value = p2>=0?(/\.0?$/.test(value)?value:p2.replace(/0$/,'').replace(/\.0$/,'')):''"
+					onblur="value = value.replace(/\.0*$/,'')" maxlength="12" placeholder="请输入日工资收入" ng-change="onfeeChange(fee, 'applyPerUnit')">
+                    <div class="right_unit">元/天</div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">误工费</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <p class="AIOText">
+                        {{fee.applyAmount || '0'}}元
+                        <span>({{fee.applyPerUnit==''?'0':fee.applyPerUnit}}元/天 x {{fee.applyUnit}}天)</span>
+                    </p>
+                </div>
+                <div class="col-xs-1"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 form-group form-group-sm" ng-if="fee.incomeEvidence == '1'">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">行业类型</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height" ng-model = "fee.industryType" ng-change="onfeeChange(fee, 'industryType')">
+                        <option value="{{$index}}" ng-repeat="x in industryTypeArray track by $index">{{x}}</option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 处理事故人员误工费 -->
+<div class="AIOlist" ng-if="lawCase.caseType == 2">
+    <div class="AIOSetp2_cont1 AIOSetp_cont" ng-repeat="fee in handlePersonArray">
+        <div class="AIOSetp3_cont1_bt">处理事故人员误工费
+            <div class="AIOAddBtn" ng-click="delPersonArray(fee)"><iconfont class="iconfont icon-jianhao"></iconfont>删除</div>
+            <div class="AIOAddBtn" ng-click="addPersonArray()"><iconfont class="iconfont icon--tianjia"></iconfont>添加</div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">是否有固定收入</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <div class="switchButton" ng-click="selectBxShow(fee)">
+                        <img ng-show="fee.isFixedIncome" src="views/images/open_new.png" ng-click="onfeeChange(fee, 'isFixedIncome')">
+                        <img ng-show="!fee.isFixedIncome" src="views/images/close_new.png" class="ng-hide" ng-click="onfeeChange(fee, 'isFixedIncome')">
+                    </div>
+                </div>
+            </div>
+           <div class="col-xs-6 form-group form-group-sm" ng-if="!fee.isFixedIncome">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">证明类型</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height" ng-model="fee.incomeEvidence" ng-options="x.id as x.value for x in incomeEvidenceArray" ng-change="onfeeChange(fee, 'incomeEvidence')">
+                        <option>{{x.value}}</option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-xs-6 form-group form-group-sm" ng-if="fee.isFixedIncome">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">工资收入</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <input class="form-control ng-pristine ng-valid height"onkeyup="var p2 = parseFloat(value).toFixed(2);value = p2>=0?(/\.0?$/.test(value)?value:p2.replace(/0$/,'').replace(/\.0$/,'')):''"
+					onblur="value = value.replace(/\.0*$/,'')" maxlength="12" ng-model="fee.applyPerUnit" placeholder="请输入日工资收入" ng-change="onfeeChange(fee, 'applyPerUnit')">
+                    <div class="right_unit">元/天</div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+                    <label class="col-xs-4 control-label text-right">
+                        <span class="ng-scope ng-binding">误工天数</span>
+                    </label>
+                    <div class="col-xs-7 selected_relative">
+                        <input class="form-control ng-pristine ng-valid height" onKeyUp="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');" onkeyup="var p2 = parseFloat(value).toFixed(2);value = p2>=0?(/\.0?$/.test(value)?value:p2.replace(/0$/,'').replace(/\.0$/,'')):''"
+                        onblur="value = value.replace(/\.0*$/,'')" maxlength="12"  ng-model="fee.applyUnit" placeholder="请输入误工天数" ng-change="onfeeChange(fee, 'applyPerUnit')">
+                        <div class="right_unit">天</div>
+                    </div>
+                </div>
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">误工费</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <p class="AIOText">
+                        {{fee.applyAmount || '0'}}元 
+                        <span>{{fee.applyPerUnit==''?'0':fee.applyPerUnit}}元/天 x {{fee.applyUnit}}天</span>
+                    </p>
+                </div>
+                <div class="col-xs-1"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 form-group form-group-sm" ng-if="fee.incomeEvidence == '1'">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">行业类型</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height" ng-model = "fee.industryType" ng-change="onfeeChange(fee, 'industryType')">
+                        <option value="{{$index}}" ng-repeat="x in industryTypeArray track by $index">{{x}}</option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 住院护理费 -->
+<div class="AIOlist" ng-repeat="fee in lawCase.feeDetail" ng-if="lawCase.treatmentType=='2' || lawCase.treatmentType=='3' && fee.id == '09'">
+    <div class="AIOSetp2_cont1 AIOSetp_cont" ng-repeat="nurse in fee.nursingArray" ng-if="nurse.type == '1'">
+        <div class="AIOSetp3_cont1_bt">住院护理费</div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">是否有固定收入</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <div class="switchButton">
+                        <img ng-show="nurse.isFixedIncome" src="views/images/open_new.png" ng-click="onfeeChange(nurse, 'isFixedIncome')">
+                        <img ng-show="!nurse.isFixedIncome" src="views/images/close_new.png" class="ng-hide" ng-click="onfeeChange(nurse, 'isFixedIncome')">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 form-group form-group-sm" ng-if="!nurse.isFixedIncome">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">证明类型</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height" ng-model="nurse.incomeEvidence" ng-options="x.id as x.value for x in incomeEvidenceArray" ng-change="onfeeChange(nurse, 'nurseEvidence')">
+                        <option>{{x.value}}</option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm" ng-if="nurse.isFixedIncome">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">工资收入</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <input class="form-control ng-pristine ng-valid height" ng-model="nurse.applyPerUnit" placeholder="请输入日工资收入" onkeyup="var p2 = parseFloat(value).toFixed(2);value = p2>=0?(/\.0?$/.test(value)?value:p2.replace(/0$/,'').replace(/\.0$/,'')):''"
+					onblur="value = value.replace(/\.0*$/,'')" maxlength="12"  ng-change="onfeeChange(nurse, 'applyPerUnit')">
+                    <div class="right_unit">元/天</div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm" ng-if="nurse.incomeEvidence == '1'">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">行业类型</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height" ng-model = "nurse.industryType" ng-change="onfeeChange(nurse, 'industryType')">
+                        <option value="{{$index}}" ng-repeat="x in industryTypeArray track by $index">{{x}}</option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">护理人数</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <input type="text" class="form-control ng-pristine ng-valid height"  onKeyUp="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');" maxlength="3"  ng-model="nurse.nursingNum" placeholder="请输入" ng-change="onfeeChange(nurse, 'nursingNum')">
+                    <div class="right_unit">人</div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">住院护理费</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <p class="AIOText">{{nurse.applyAmount}}元
+                        <span>({{nurse.applyUnit}}天 x {{nurse.applyPerUnit}}元/天 X {{nurse.nursingNum || 0}}人)</span>
+                    </p>
+                </div>
+                <div class="col-xs-1 line-height pr">
+                    <iconfont class="iconfont icon--bangzhuqipao" ng-click="dynamicPopoverFn($event, 'inhospatil')"></iconfont>
+                    <p ng-show="isIndex == 'inhospatil'" class="show-title">{{fee.remark}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 出院护理费 -->
+<div class="AIOlist" ng-repeat="fee in lawCase.feeDetail" ng-if="lawCase.treatmentType=='2' || lawCase.treatmentType=='3' && fee.id == '09'">
+    <div class="AIOSetp2_cont1 AIOSetp_cont" ng-repeat="nurse in fee.nursingArray" ng-if="nurse.type == '2'">
+        <div class="AIOSetp3_cont1_bt">出院护理费</div>
+        <div class="row" style="margin-top: 40px;">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">护理类型</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height" ng-model="nurse.nursingType" ng-options="x.id as x.value for x in nursingTypeArray">
+                        <option>{{x.value}}</option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm" style="height: 64px;">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">是否有固定收入</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <div class="switchButton">
+                        <img ng-show="nurse.isFixedIncome" src="views/images/open_new.png" ng-click="onfeeChange(nurse, 'isFixedIncome')">
+                        <img ng-show="!nurse.isFixedIncome" src="views/images/close_new.png" class="ng-hide" ng-click="onfeeChange(nurse, 'isFixedIncome')">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 form-group form-group-sm" ng-if="!nurse.isFixedIncome">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">证明类型</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height" ng-model="nurse.incomeEvidence" ng-options="x.id as x.value for x in incomeEvidenceArray" ng-change="onfeeChange(nurse, 'nurseEvidence')">
+                        <option>{{x.value}}</option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm" ng-if="nurse.isFixedIncome">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">工资收入</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <input class="form-control ng-pristine ng-valid height" onkeyup="var p2 = parseFloat(value).toFixed(2);value = p2>=0?(/\.0?$/.test(value)?value:p2.replace(/0$/,'').replace(/\.0$/,'')):''"
+					onblur="value = value.replace(/\.0*$/,'')" maxlength="12"  ng-model="nurse.applyPerUnit" placeholder="请输入日工资收入" ng-change="onfeeChange(nurse, 'applyPerUnit')">
+                    <div class="right_unit">元/天</div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm" ng-if="nurse.incomeEvidence == '1'">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">行业类型</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height" ng-model = "nurse.industryType" ng-change="onfeeChange(nurse, 'industryType')">
+                        <option value="{{$index}}" ng-repeat="x in industryTypeArray track by $index">{{x}}</option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 form-group form-group-sm" ng-if="nurse.nursingType == '1' || nurse.nursingType == '3'">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">医嘱护理天数</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <input type="text" class="form-control ng-pristine ng-valid height" onKeyUp="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');" maxlength="5"  ng-model="nurse.applyUnit" placeholder="请输入" ng-change="onfeeChange(nurse, 'applyUnit')">
+                    <div class="right_unit">天</div>
+                </div>
+                <div class="col-xs-1"></div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm" ng-if="nurse.nursingType == '1' || nurse.nursingType == '3'">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">护理人数</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <input type="text" class="form-control ng-pristine ng-valid height"  onKeyUp="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');" maxlength="5" ng-model="nurse.nursingNum" placeholder="请输入" ng-change="onfeeChange(nurse, 'nursingNum')">
+                    <div class="right_unit">人</div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm" ng-if="nurse.nursingType == '2' || nurse.nursingType == '3'">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">护理依赖系数</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height" ng-model="nurse.dependentRate" ng-options="x.id as x.value for x in dependentRateArray" ng-change="onfeeChange(nurse, 'dependentRate')">
+                        <option>{{x.value}}</option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm" style="height: 64px;" ng-if="nurse.nursingType == '2' || nurse.nursingType == '3'">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">有无护理鉴定</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <div class="switchButton">
+                        <img ng-show="nurse.isNurseIdentification" src="views/images/open_new.png" ng-click="onfeeChange(nurse, 'isNurseIdentification')">
+                        <img ng-show="!nurse.isNurseIdentification" src="views/images/close_new.png" class="ng-hide" ng-click="onfeeChange(nurse, 'isNurseIdentification')">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm" ng-if="nurse.isNurseIdentification">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">护理年限</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <input type="text" class="form-control ng-pristine ng-valid height" ng-model="nurse.nursingYear" placeholder="请输入" ng-change="onfeeChange(nurse, 'nursingYear')">
+                    <div class="right_unit">年</div>
+                </div>
+            </div>
+            <div class="col-xs-12 form-group form-group-sm" style="height: 64px;">
+                <label class="col-xs-2 control-label text-right">
+                    <span class="ng-scope ng-binding">出院护理费</span>
+                </label>
+                <div class="col-xs-10 selected_relative">
+                    <p class="AIOText" style="float: left;">
+                        {{nurse.applyAmount}}元
+                        <span ng-if="nurse.nursingType == '1'">({{nurse.applyPerUnit}}元/天 x {{nurse.applyUnit}}天 x {{nurse.nursingNum}}人)</span>
+                        <span ng-if="nurse.nursingType == '2'">({{nurse.applyPerUnit || 0}}元/天 X {{nurse.dependentRate || 0}}% X {{nurse.nursingYear || 0}}年 x 365)</span>
+                        <span ng-if="nurse.nursingType == '3'">
+                            ({{nurse.applyPerUnit || 0}}元/天 X {{nurse.applyUnit || 0}}天 X {{nurse.nursingNum || 0}}人+
+                            {{nurse.applyPerUnit || 0}}元/天 X {{nurse.dependentRate || 0}}% X {{nurse.nursingYear || 0}}年 x 365)
+                        </span>
+                    </p>
+                    <div class="line-height pr" style="float: left; margin-left: 70px;">
+	                    <iconfont class="iconfont icon--bangzhuqipao" ng-click="dynamicPopoverFn($event, 'leave')"></iconfont>
+	                    <p ng-show="isIndex == 'leave'" class="show-title">{{fee.remark}}</p>
+	                </div>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- 被扶养人生活费 -->
+<div class="AIOlist" style="margin-top: 15px;" ng-if="lawCase.caseType == '1' || lawCase.caseType == '2'">
+    <div ng-repeat="fee in lawCase.feeDetail" ng-if="fee.id == '14'">
+        <div class="AIOlist_hj">
+            <div class="AIOlist_hj_l">被扶养人生活费</div>
+            <div class="AIOlist_hj_r">合计：
+                <span>{{fee.applyAmount || '0.00'}}</span>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="AIOSetp2_cont1 AIOSetp_cont" ng-repeat="dependent in fee.dependents.apply track by $index">
+            <div class="AIOSetp3_cont1_bt">被扶养人生活费
+                <div class="AIOAddBtn" style="color:#0f9eec;" ng-click="removeDependent(fee,dependent)"><iconfont class="iconfont icon-jianhao"></iconfont>删除</div>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <div class="col-xs-6 form-group form-group-sm">
+                    <label class="col-xs-4 control-label text-right">
+                        <span class="ng-scope ng-binding">出生日期</span>
+                    </label>
+                    <div class="col-xs-7 selected_relative">
+                        <p class="input-group height">
+                            <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" show-button-bar="false" ng-model="dependent.birthDate"
+                                   ng-readonly="true" is-open="dependent.isOpen" max-date="minDate" max-date="2200-06-22" datepicker-options="{startingDay: 1}"
+                                   ng-required="true" close-text="Close" ng-change="onDependentChange(fee, dependent, 'birthDate')"/>
+                            <span class="input-group-btn" ng-click="openBirthDate($event,dependent)">
+                                <button type="button" class="btn btn-default btn-default-padding">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                            </span>
+                            <div class="line-height pr" style="float: left; margin-left: 70px;">
+                                <iconfont class="iconfont icon--bangzhuqipao" ng-click="dynamicPopoverFn($event, 'leave')"></iconfont>
+                                <p ng-show="isIndex == 'leave'" class="show-title">{{fee.remark}}</p>
+                            </div>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-xs-6 form-group form-group-sm">
+                    <label class="col-xs-4 control-label text-right">
+                        <span class="ng-scope ng-binding">抚养年限</span>
+                    </label>
+                    <div class="col-xs-7 selected_relative">
+                        <input type="text" class="form-control ng-pristine ng-valid height" oninput="if(value.length>3)value=value.slice(0,3)" ng-readonly="true" ng-model="dependent.fyAge" placeholder="请输入" ng-change="onDependentChange(fee, dependent, 'fyAge')">
+                        <div class="right_unit">年</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6 form-group form-group-sm">
+                    <label class="col-xs-4 control-label text-right">
+                        <span class="ng-scope ng-binding">共同抚养人数</span>
+                    </label>
+                    <div class="col-xs-7 selected_relative">
+                        <input type="text" class="form-control ng-pristine ng-valid height" onKeyUp="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');" oninput="if(value.length>4)value=value.slice(0,4)" onKeyUp="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');" ng-model="dependent.count" placeholder="请输入" ng-change="onDependentChange(fee, dependent, 'count')">
+                        <div class="right_unit">人</div>
+                    </div>
+                </div>
+                <div class="col-xs-6 form-group form-group-sm">
+                    <label class="col-xs-4 control-label text-right">
+                        <span class="ng-scope ng-binding">赔偿标准</span>
+                    </label>
+                    <div class="col-xs-8 selected_relative">
+                        <div class="radio_e" ng-class="dependent.household==1?'radio_e_active':''">
+                            <div class="radio_village ">
+                                <iconfont class="iconfont icon-fangzi"></iconfont>
+                                <input type="radio" name="" style="display: none;">
+                            </div>
+                            <div class="radio_text">农村</div>
+                        </div>
+                        <div class="radio_e" ng-class="dependent.household==2?'radio_e_active':''">
+                            <div class="radio_town">
+                                <iconfont class="iconfont icon-jianzhu"></iconfont>
+                                <input type="radio" name="" style="display: none;">
+                            </div>
+                            <div class="radio_text">城镇</div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="AIO_Add_bfyr" ng-click="addDepenDent(fee)"><iconfont class="iconfont icon--tianjia"></iconfont> 添加</div>
+        
+    </div>
+</div>
+</div>

@@ -1,0 +1,23 @@
+angular.module('sbAdminApp').controller('openMessageBoardCtrl', function ($scope, $modalInstance, items, $rootScope) {
+
+  $scope.items = items;
+
+  //点击发送信息
+  $scope.submitMessage = function () {
+    //验证内容
+    if(!$scope.message) {
+      $scope.messageError = true;
+      $rootScope.toaster('error', '错误', '请输入留言内容！');
+      return;
+    } else $scope.messageError = undefined;
+
+    //调用后台接口
+
+  };
+
+  //点击关闭modal
+  $scope.closeModal = function () {
+    $modalInstance.dismiss('cancel');
+  }
+
+});

@@ -1,0 +1,26 @@
+<!-- 单个元素 -->
+<view wx:for="{{roomArray}}" wx:for-item="room" class="list" data-roomid='{{room.id}}' data-name="{{room.name}}" wx:for-index="idx" bindtap='viewChatInfo' data-index="{{index}}">
+  <view class='caseCommunication_e_box'>
+    <view class='caseCommunication_e'>
+      <view class='caseCommunication_e_l' bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" data-index="{{idx}}" style="{{room.txtStyle}}">
+        <image class='left_img' src='../../../images/pic29.png'></image>
+        <view class='red_dot' wx:if="{{room.newMessage}}"></view>
+        <view class='caseCommunication_e_l_r'>
+          <view>{{room.name}} </view>
+          <view class='caseCommunication_e_l_r_text'>{{room.createDate}}</view> 
+          <!-- <view class='caseCommunication_e_l_r_text'>{{room.content}}</view> -->
+        </view>
+      </view>
+      <view class='caseCommunication_e_r' data-index="{{idx}}" data-room="{{room}}" catchtap='delRoom'>删除</view>
+    </view>
+  </view>
+  <!-- 底线 -->
+  <view class='border_bottom clear'></view>
+</view>
+<image wx:if="{{userType == '2'}}" class='add_group' src='../../../images/newChat.png' bindtouchstart="newRoom"></image>
+
+<!--没有聊天室-->
+<view class='empty' wx-if="{{roomArray<=0}}">
+  <image class="empty-img" src='/images/empty.png'></image>
+  <view class="empty-text">您还没有聊天室哦！</view>
+</view>

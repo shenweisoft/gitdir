@@ -1,0 +1,418 @@
+<div style="padding-bottom: 30px;">
+    <div class="bg-default ng-scope row" ng-if="co.tabFlag == 'case'">
+        <div style="border: 1px solid #ddd;" class="bg-default module-box" style="padding-bottom: 10px;">
+            <div class="nav-line-left">
+                <h4 class="col-lg-8 col-xs-8" style="padding: 0 20px;margin: 0;">
+                    <i class="caseDetailIcon icon1"></i>
+                    事故信息
+                </h4>
+            </div>
+            <div class="module-content font-size13">
+                <form role="form" class="form-horizontal form-input">
+                    <div class="row clearfix ">
+                        <div class="form-group col-lg-12 col-xs-12 row clearfix" style="margin-bottom: 0">
+                            <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">事故编号：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{police.accidentInfo.accidentCode}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">事故时间：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{police.accidentInfo.accidentTime | stringDate | date:'yyyy-MM-dd'}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">事故地点：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{police.accidentInfo.accidentPlace}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">是否高速：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{police.accidentInfo.highSpeed == '0'? '是': '否'}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">死亡人数：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{police.accidentInfo.deathNumber}}人</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">受伤人数：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{police.accidentInfo.injuredNumber}}人</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">事故类型：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{police.accidentInfo.accidentType | id2Text: accidentTypeList}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">现场形态：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{police.accidentInfo.scene | id2Text: sceneList}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-2 text-right text-muted">简要案情：</div>
+                                    <div style="word-break: break-all;" class="col-xs-10 no-padding ng-binding">{{police.accidentInfo.briefCase}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">直接财产损失：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{police.accidentInfo.propertyLoss}}元</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">事故认定原因：</div>
+                                    <div class="col-xs-1 no-padding ng-binding">{{police.accidentInfo.accidentCauseCode}}</div>
+                                    <div class="col-xs-7 no-padding ng-binding">{{police.accidentInfo.accidentCauseRemark}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">现场勘查日期：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{police.accidentInfo.surveyDate | stringDate | date:'yyyy-MM-dd' }}</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">是否检验鉴定：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{police.accidentInfo.isAppraisal == '1'? '是': '否'}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-show="police.accidentInfo.isAppraisal == '1'" ng-repeat="appraisalInfo in police.appraisalInfoList">
+            <div style="border: 1px solid #ddd;" class="bg-default module-box" style="padding-bottom: 10px;" >
+                <div class="nav-line-left">
+                    <h4 class="col-lg-8 col-xs-8" style="padding: 0 20px;margin: 0;">
+                        <i class="caseDetailIcon icon2"></i>
+                        检验鉴定信息
+                    </h4>
+                </div>
+                <div class="module-content font-size13">
+                    <form role="form" class="form-horizontal form-input">
+                        <!--此处需要循环-->
+                        <div style="border-bottom: 1px dashed #ddd">
+                            <div class="row clearfix ">
+                                <div class="form-group col-lg-12 col-xs-12 row clearfix" sle="margin-bottom: 0">
+                                    <div class="col-xs-12">
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <label class="col-lg-2 col-xs-2 text-right  control-label" style="margin-top: 8px;font-weight: normal;">检验鉴定类型</label>
+                                            <div class="col-lg-10 col-xs-10" ng-class="{'has-error':police.highSpeedError}">
+                                                <label class="radio-inline" ng-repeat="type in policeAppraisalType">
+                                                    <input type="radio" name="policeAppraisalType" ng-value="type.id" ng-checked="appraisalInfo.appraisalType.indexOf(type.id) != -1" disabled>{{type.value}}
+                                                </label>
+                                                <label class="radio-inline" style="margin-left: -15px;">
+                                                    <input type="text" maxlength="50" class="form-control input-inline ng-pristine ng-valid" ng-model="appraisalInfo.appraisalTypeRemark" disabled>
+                                                </label>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--<div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                        <div class="col-xs-12 margin_top">
+                                            <div class="col-xs-4 text-right text-muted">事故时间：</div>
+                                            <div class="col-xs-8 no-padding ng-binding">{{police.accidentInfo.accidentTime | stringDate | date:'yyyy-MM-dd' }}</div>
+                                        </div>
+                                    </div>-->
+                                    <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                        <div class="col-xs-12 margin_top">
+                                            <div class="col-xs-4 text-right text-muted">检验鉴定机构：</div>
+                                            <div class="col-xs-8 no-padding ng-binding">{{appraisalInfo.appraisalOrgName}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                        <div class="col-xs-12 margin_top">
+                                            <div class="col-xs-4 text-right text-muted">委托日期：</div>
+                                            <div class="col-xs-8 no-padding ng-binding">{{appraisalInfo.entrustTime | stringDate | date:'yyyy-MM-dd' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                        <div class="col-xs-12 margin_top">
+                                            <div class="col-xs-4 text-right text-muted">约定完成日期：</div>
+                                            <div class="col-xs-8 no-padding ng-binding">{{appraisalInfo.promiseTime | stringDate | date:'yyyy-MM-dd' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                        <div class="col-xs-12 margin_top">
+                                            <div class="col-xs-4 text-right text-muted">当事人：</div>
+                                            <div class="col-xs-8 no-padding ng-binding">{{appraisalInfo.partyName}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div style="border: 1px solid #ddd;" class="bg-default module-box" style="padding-bottom: 10px;">
+                <div class="nav-line-left">
+                    <h4 class="col-lg-8 col-xs-8" style="padding: 0 20px;margin: 0;">
+                        <i class="caseDetailIcon icon3"></i>
+                        鉴定处理
+                    </h4>
+                </div>
+                <div class="module-content font-size13">
+                    <form role="form" class="form-horizontal form-input">
+                        <div class="row clearfix ">
+                            <div class="form-group col-lg-12 col-xs-12 row clearfix" style="margin-bottom: 0">
+                                <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                                    <div class="col-xs-12 margin_top">
+                                        <div class="col-xs-4 text-right text-muted">委托完成时限：</div>
+                                        <div class="col-xs-8 no-padding ng-binding">{{appraisalInfo.entrustFinishTime | stringDate | date:'yyyy-MM-dd'}}</div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6 col-xs-6 row clearfix">
+                                    <label class="col-lg-4 col-xs-5 text-right  control-label"><i>*</i> 实际完成日期</label>
+                                    <div class="col-lg-8 col-xs-7" ng-class="{'has-error':appraisalInfo.completeTimeError}">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form_datetime_2" max-date="today" datepicker-popup="yyyy-MM-dd" ng-change="compareTime(appraisalInfo)" ng-readonly="true" ng-model="appraisalInfo.completeTime" is-open="appraisalInfo.completeTimeIsOpen" datepicker-options="{startingDay: 1}" close-text="关闭" clear-text="清除" current-text="今天"/>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="openCompleteTime($event, appraisalInfo)" ng-disabled="appraisalInfo.appraisalState >= '2'"><i class="glyphicon glyphicon-calendar"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-12">
+                                    <div class="col-lg-2 col-xs-2 text-right">
+                                        <label class=" control-label"><i>*</i> 检测鉴定报告</label>
+                                    </div>
+                                    <div class="col-lg-1 col-xs-1" style="margin-right: 20px;" ng-show="appraisalInfo.appraisalState < '2'">
+                                        <button type="button" class="btn btn-brand pull-right" style="opacity: 0.8;position: relative;top: -2px;" ngf-multiple="true" ngf-pattern=".doc,.docx,image/*,.pdf"  accept="image/gif,image/jpeg,image/jpg,image/png,image/svg,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf" ngf-select="addEvidence($files, appraisalInfo)"  ng-click="checkflash()" ng-model="files">
+                                            <i class="iconfont icon-shangchuan brand-color" style="color: #fff;"></i>
+                                            上传
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-1 col-xs-1" style="font-size: 16px;border-left: 1px solid #E4E4E4;padding-left: 30px;min-width: 100px;" ng-if="appraisalInfo.enclosureInfoList.length > 0" ng-show="appraisalInfo.appraisalState < '2'">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" ng-checked="appraisalInfo.isAllChecked" ng-click="handleAllChecked($event, appraisalInfo.enclosureInfoList, appraisalInfo)">全选
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-1 col-xs-1" ng-if="appraisalInfo.enclosureInfoList.length > 0 && appraisalInfo.enclosureArr.length" ng-show="appraisalInfo.appraisalState < '2'">
+                                        <button type="button" class="btn btn-brand pull-right" style="opacity: 0.8;position: relative;top: -2px;" ng-click="deleteEnclosure(appraisalInfo)">
+                                            删除
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-12">
+                                    <div class="col-lg-2 col-xs-2 text-right"></div>
+                                    <div class="col-lg-10 col-xs-10">
+                                        <ul class="evidences">
+                                            <li ng-repeat="enclosureInfo in appraisalInfo.enclosureInfoList">
+                                                <i ng-show="appraisalInfo.appraisalState < '2'" class="{{enclosureInfo.isChecked? 'icon-active':'icon-normal'}}" ng-click="handleEnclosure(enclosureInfo, appraisalInfo.enclosureInfoList, appraisalInfo)"></i>
+                                                <!--<img ng-src="{{enclosureInfo.fileType == '0'? imageAddress+enclosureInfo.path : 'views/images/police-evidence-default.png'}}" alt="">-->
+                                                <img ng-show="enclosureInfo.fileType == '0'" ng-src="{{imageAddress+enclosureInfo.path}}" ng-click="zoomImage(bigPictureUrl+enclosureInfo.path)">
+                                                <a ng-click="downloadFile(enclosureInfo)">
+                                                    <img ng-show="enclosureInfo.fileType == '1'" ng-src="{{'views/images/police-evidence-default1.png'}}" alt="">
+                                                    <img ng-show="enclosureInfo.fileType == '2'" ng-src="{{'views/images/police-evidence-default2.png'}}" alt="">
+                                                </a>
+                                                <p>{{enclosureInfo.oldname}}</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-default ng-scope row" ng-if="co.tabFlag == 'parties'" ng-repeat="info in police.jpoliceVehicVO">
+        <div style="border: 1px solid #ddd;" class="bg-default module-box" style="padding-bottom: 10px;">
+            <div class="nav-line-left">
+                <h4 class="col-lg-8 col-xs-8" style="padding: 0 20px;margin: 0;">
+                    <i class="caseDetailIcon icon4"></i>
+                    人员信息
+                </h4>
+            </div>
+            <div class="module-content font-size13">
+                <form role="form" class="form-horizontal form-input">
+                    <div class="row clearfix ">
+                        <div class="col-xs-6 form-horizontal ng-pristine ng-invalid ng-invalid-required">
+                            <div class="form-group col-xs-12" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">姓名：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.userName}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">性别：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.sex == '1'? '男':'女'}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">身份证号：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.personCard}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12" style="padding-bottom: 1px;">
+                                <div class="col-xs-12 margin_top">
+                                    <div class="col-xs-4 text-right text-muted">年龄：</div>
+                                    <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.age}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6" style="margin-top: -10px;">
+                            <div class="col-lg-6" ng-class="{'z-index-img':info.policePersonInformation.identityCardApic.indexOf(co.defaultImg)==-1}">
+                                <div class="margin_top img_box_boder Front img_width">
+                                    <img style="height: 177px;cursor: pointer;" class="id_img" ng-src="{{info.policePersonInformation.identityCardApic && info.policePersonInformation.identityCardApic.indexOf(co.defaultImg)==-1&&info.policePersonInformation.identityCardApic.indexOf(co.defaultImg2)==-1 ?imageAddress+info.policePersonInformation.identityCardApic:co.defaultImg2}}" ng-click="zoomImage(info.policePersonInformation.identityCardApic && info.policePersonInformation.identityCardApic.indexOf(co.defaultImg)==-1&&info.policePersonInformation.identityCardApic.indexOf(co.defaultImg2)==-1 ?bigPictureUrl+info.policePersonInformation.identityCardApic:co.defaultImg2)">
+                                    <div class="img_bottom_bar">
+                                        <p><span>证件照身份证号面</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6"  ng-class="{'z-index-img':info.policePersonInformation.identityCardBpic.indexOf(co.defaultImg)==-1}">
+                                <div class=" margin_top img_box_boder Back img_width">
+                                    <img style="height: 177px;cursor: pointer;" class="id_img" ng-src="{{info.policePersonInformation.identityCardBpic && info.policePersonInformation.identityCardBpic.indexOf(co.defaultImg)==-1&&info.policePersonInformation.identityCardBpic.indexOf(co.defaultImg3)==-1 ?imageAddress+info.policePersonInformation.identityCardBpic:co.defaultImg3}}" ng-click="zoomImage(info.policePersonInformation.identityCardBpic && info.policePersonInformation.identityCardBpic.indexOf(co.defaultImg)==-1&&info.policePersonInformation.identityCardBpic.indexOf(co.defaultImg3)==-1 ?bigPictureUrl+info.policePersonInformation.identityCardBpic:co.defaultImg3)">
+                                    <div class="img_bottom_bar">
+                                        <p><span>证件照国徽面</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-2 text-right text-muted">户籍地：</div>
+                                <div class="col-xs-10 no-padding ng-binding">{{info.policePersonInformation.placeOfDomicile}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-2 text-right text-muted">实际居住地：</div>
+                                <div class="col-xs-10 no-padding ng-binding">{{info.policePersonInformation.address}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-4 text-right text-muted">交通方式：</div>
+                                <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.trafficType | id2Text : trafficTypeList}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-4 text-right text-muted">准驾车型：</div>
+                                <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.drivingType | id2Text :drivingList}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-2 text-right text-muted">违法行为：</div>
+                                <div class="col-xs-1 no-padding ng-binding">{{info.policePersonInformation.illegality}}</div>
+                                <div class="col-xs-9 no-padding ng-binding">{{info.policePersonInformation.illegalityRemark}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-4 text-right text-muted">事故责任：</div>
+                                <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.accidentLiability | id2Text : accidentLiabilityList}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-4 text-right text-muted">伤害程度：</div>
+                                <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.hurt | id2Text : hurtList}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-4 text-right text-muted">恶劣情节：</div>
+                                <div class="col-xs-8 no-padding ng-binding">{{riskTypesCheckedFun(info.policePersonInformation.abominablePlot, abominablePlotList)}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-4 text-right text-muted">驾驶证：</div>
+                                <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.drivingLicence | id2Text : drivingLicenceList}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-4 text-right text-muted">扣留/扣押时间：</div>
+                                <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.detainTime | stringDate | date:'yyyy-MM-dd'}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-4 text-right text-muted">返还时间：</div>
+                                <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.returnTime | stringDate | date:'yyyy-MM-dd'}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-2 text-right text-muted">是否伤者：</div>
+                                <div class="col-xs-10 no-padding ng-binding">{{info.policePersonInformation.isWounded == '0'? '是' : '否'}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-4 text-right text-muted">手机号：</div>
+                                <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.phoneNumber}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-4 text-right text-muted">固定电话：</div>
+                                <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.telephoneNumber}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-4 text-right text-muted">QQ号：</div>
+                                <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.qqNumber}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6" style="padding-bottom: 1px;">
+                            <div class="col-xs-12 margin_top">
+                                <div class="col-xs-4 text-right text-muted">微信号：</div>
+                                <div class="col-xs-8 no-padding ng-binding">{{info.policePersonInformation.wechatNumber}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="big_img_box">
+    <div class="big_img_box_bj"></div>
+    <div class="big_img_box_img_box">
+        <div id="big_img_box_img_f" style="position: absolute;">
+            <div id="big_img_box_img_bar" style="width: 100%; height: 100%;" title="可以拖拽移动"></div>
+            <img id="big_img_box_img" src="imgSrc">
+        </div>
+        <div class="big_img_box_bottom">
+            <div class="big_img_box_bottom_bg"></div>
+            <i class="iconfont icon-qiepian30" onclick="rotateImg();"></i>
+            <i class="iconfont icon-iconfontfangda" onclick="enlargeimg();"></i>
+            <i class="iconfont icon-iconfontsuoxiao" onclick="narrowimg();"></i>
+        </div>
+        <i class="iconfont icon--tingqiantiaojieduihao-Xhao" onclick="hideImg();"></i>
+        <i class="iconfont icon-zuoyoujiantou-copy-copy-copy" onclick="leftImg();"></i>
+        <i class="iconfont icon-zuoyoujiantou-copy-copy" onclick="rightImg();"></i>
+    </div>
+</div>
+<script type="text/javascript">
+  var oBox = document.getElementById("big_img_box_img_f");
+  var oBar = document.getElementById("big_img_box_img_bar");
+  startDrag(oBar, oBox);
+</script>
+

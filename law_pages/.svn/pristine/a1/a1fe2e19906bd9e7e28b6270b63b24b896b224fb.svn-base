@@ -1,0 +1,52 @@
+<div class="modal-header">
+	权限配置
+	<i class="iconfont pull-right icon-guanbi close" ng-click="cancel()"></i>
+</div>
+<div class="modal-body">
+	<div class="form_box" style="height: 300px;">
+		<form class="form-horizontal" >
+			<div class="scroll-form-box">
+				<div class="form-group">
+					<label  class="col-xs-offset-1 col-xs-4"><i>*</i> 是否使用视频开庭</label>
+					<div class="col-xs-6">
+						<input type="checkbox"  ng-model="sysOrg.vidOpenPower"  name="vidOpenPower"   ng-true-value="1" ng-false-value="0">是
+					</div>
+				</div>
+				<div class="form-group">
+					<label  class="col-xs-offset-1 col-xs-4"><i>*</i> 小程序调解视频</label>
+					<div class="col-xs-6">
+						<input type="checkbox"  ng-model="sysOrg.smaProVidPower"  name="smaProVidPower"  ng-true-value="1" ng-false-value="0">是
+					</div>
+				</div>
+				<div class="form-group">
+					<label  class="col-xs-offset-1 col-xs-4"><i>*</i> 立案审批完成推送审判 </label>
+					<div class="col-xs-6">
+						<input type="checkbox"  ng-model="sysOrg.regisPushPower"  name="regisPushPower"   ng-true-value="1" ng-false-value="0">是
+					</div>
+				</div>
+				<div class="form-group">
+					<label  class="col-xs-offset-1 col-xs-4"><i>*</i> 小程序是否采购</label>
+					<div class="col-xs-6">
+						<input type="checkbox"  ng-model="sysOrg.smaProgPower"  name="smaProgPower"   ng-true-value="1" ng-false-value="0">是
+					</div>
+				</div>
+				<div class="form-group row" >
+					<label  class="col-xs-offset-1 col-xs-4"><i>*</i> 是否对接鉴定平台</label>
+					<div class="col-xs-6">
+						<input type="checkbox"  ng-model="sysOrg.isSendAppraisal"  name="isAppraisal"   ng-true-value="1" ng-false-value="0">是
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="modal-footer">
+	<div class="form-group">
+		<div class="col-xs-offset-4 col-xs-2">
+			<button type="submit" class="btn btn-default " ng-click="cancel()">取消</button>
+		</div>
+		<div class=" col-xs-1">
+			<button type="submit" class="btn btn-brand bg-brand-color" ng-click="save()" >保存</button>
+		</div>
+	</div>
+</div>

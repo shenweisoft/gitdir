@@ -1,0 +1,115 @@
+<div class="bg-default ng-scope" style="margin-left: -15px; margin-right: -15px;">
+    <div class=" panel-heading">
+        <div class="row">
+            <div class="row">
+                <div class="col-xs-12" style="text-align: center; line-height: 35px; font-size: 24px;">{{titleRegionName}}登录情况统计表</div>
+                <div class="col-xs-12" style="margin-top: 10px;">
+                    <div class="col-md-3">
+                        <div class="col-xs-3">
+                            <button type="button" class="btn btn-brand pull-right" ng-click="initDate('day')">今天</button>
+                        </div>
+                        <div class="col-xs-3">
+                            <button type="button" class="btn btn-brand pull-right" ng-click="initDate('weekday')">本周</button>
+                        </div>
+                        <div class="col-xs-3">
+                            <button type="button" class="btn btn-brand pull-right" ng-click="initDate('month')">本月</button>
+                        </div>
+                        <div class="col-xs-3">
+                            <button type="button" class="btn btn-brand pull-right" ng-click="initDate('year')">本年</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="control-label col-md-4" style="line-height: 35px; text-align: right;">开始时间</label>
+                        <p class="input-group col-md-8">
+                            <input type="text" readonly class="form-control" placeholder="请选择开始日期" datepicker-popup="yyyy-MM-dd" ng-model="loginStatisticsVO.startDate" is-open="dateOpen.opened" show-button-bar="false" >
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open($event,'opened')">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="control-label col-md-4" style="line-height: 35px; text-align: right;">结束日期</label>
+                        <p class="input-group col-md-8">
+                            <input type="text" readonly class="form-control" placeholder="请选择结束日期" datepicker-popup="yyyy-MM-dd" ng-model="loginStatisticsVO.endDate" is-open="dateOpen.opened1" show-button-bar="false">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open($event,'opened1')">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="col-xs-3">
+                            <button type="button" class="btn btn-brand" style="margin-right: 10px;" ng-click="queryLoginStatisticsList()">查询</button>
+                        </div>
+                        <div class="col-xs-3">
+                            <button class="btn btn-brand" style="margin-right: 10px;"><a ng-href="{{exportExcel()}}" style="color: #fff;">导出</a></button>
+                        </div>
+                        <div class="col-xs-3">
+                            <button type="button" class="btn btn-brand" style="margin-right: 10px;" ng-click="statisticsSendBack()">返回</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12" style="margin-top: 10px;">
+                    <!--法院为市级时显示-->
+                    <div class="col-md-3 form-group form-group-sm" ng-show="sysExtPro.regionLevel == '3'">
+                        <label class="col-xs-4 control-label" style="line-height: 30px;margin-bottom: 0;text-align: right">区（县）</label>
+                        <div class="col-xs-8" style="padding-right: 0">
+                            <select class="form-control ng-pristine ng-valid" ng-model="loginStatisticsVO.areaName" ng-options="x.fullName as x.fullName for x in regionNameList" ng-change="changeRegionName(loginStatisticsVO.areaName)"></select>
+                        </div>
+                    </div>
+                    <div class="col-md-3 form-group form-group-sm">
+                        <label class="col-xs-4 control-label" style="line-height: 30px;margin-bottom: 0;text-align: right">机构名称</label>
+                        <div class="col-xs-8" style="padding: 0">
+                            <select class="form-control ng-pristine ng-valid" ng-model="loginStatisticsVO.deptId" ng-options="point.deptId as point.deptName for point in adjustPersonList"></select>
+                        </div>
+                    </div>
+                    <div class="col-md-3 form-group form-group-sm">
+                        <label class="col-xs-4 control-label" style="line-height: 30px;margin-bottom: 0;text-align: right">调解员</label>
+                        <div class="col-xs-8" style="padding: 0">
+                            <select class="form-control ng-pristine ng-valid" ng-model="loginStatisticsVO.userId" ng-options="point.userId as point.userName for point in adjustPersonList | pointPersonFilter :loginStatisticsVO.deptId"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12">
+                <table class="table table-striped-info table-fixed table-hover" ng-show="loginStatisticsList.length > 0">
+                    <thead>
+                    <tr>
+                        <th class="col-xs-1">序号</th>
+                        <th class="col-xs-2">调解员</th>
+                        <th class="col-xs-3">所属机构名称</th>
+                        <th class="col-xs-1">登录次数</th>
+                        <th class="col-xs-2">最后一次登录时间</th>
+                        <th class="col-xs-3">最后一次登录IP</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in loginStatisticsList">
+                        <td>{{$index+1}}</td>
+                        <td>
+                            <label><a ng-click="handleCheckLogin(x)" class="cur-pointer po-relative ng-binding" title="点击查询详细">{{x.userName}}</a></label>
+                        </td>
+                        <td>{{x.orgName}}</td>
+                        <td>{{x.number}}</td>
+                        <td>{{x.createDate | stringDate | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                        <td>{{x.ipAddress}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-center" ng-show="loginStatisticsList.length > 0">
+                <pagination previous-text="<" next-text=">" first-text="<<" last-text=">>" items-per-page="loginStatisticsVO.pageSize" class="pagination-custom" total-items="loginStatisticsVO.pageTotal" ng-model="loginStatisticsVO.pageNo" ng-change="pageChanged()" max-size="7" boundary-links="true" rotate="false"></pagination>
+            </div>
+
+            <div  class="text-center" ng-show="loginStatisticsList.length == 0">
+                <img src="views/images/search_null.png" ><br>
+                抱歉，未找到相关内容！
+            </div>
+        </div>
+    </div>
+</div>

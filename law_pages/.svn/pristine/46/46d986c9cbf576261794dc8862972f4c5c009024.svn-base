@@ -1,0 +1,60 @@
+<div style="overflow: hidden;" ng-style="bgColor" ng-class="{'testingEnvironment': environmentalAllocation == '1','baiduCloud': environmentalAllocation == '2', 'capitelCloud': environmentalAllocation =='3'}">
+	<div class="homePage_top">
+	  <div class="homePage_top_cont">	
+		<!--<button type="button" class="btn btn-default pull-right margin-right-20 margin-left-20 margin-top-5" ui-sref="register" ng-show="loginShow">注册</button>-->
+		<!--<button type="button" class="btn btn-warning pull-right margin-top-5 margin-left-86" ui-sref="login" ng-style="btnColor"  ng-show="loginShow">登录</button>-->
+	  	<button type="button" class="btn btn-brand pull-right margin-top-5 margin-left-86" ui-sref="register" ng-style="btnColor"  ng-show="loginShow">当事人注册</button>
+		<div class="header_r_box pull-right col-xs-3" ng-show="!loginShow" >
+			<span style="padding-left: 15px;padding-right: 15px;">
+				<span >{{username}}</span> | <span ui-sref="party_page" class="cur-pointer">我的诉讼</span> | <span class="cur-pointer" ng-click="exit()"> 退出</span>
+			</span>
+		</div>
+	    <div ng-show="loginShow">
+	      <div class="login_btn btn-default" ui-sref="identificationLogin({type:3})">鉴定机构登录</div>
+	      <div class="login_btn btn-default" ui-sref="login({type:1})">法院登录</div>
+	      <div class="login_btn btn-default select_tj_btn" style="position: relative;" >调解员登录
+	      	 <div class="select_tj">
+	      	 	<img class="select_tj_img" src="views/images/index_top_img_t.png">
+	      		<p class="select_tj_bt">调解员登录</p>
+	      		<div class="select_tj_e" ui-sref="tjLogin({type:2})">人民调解登录</div>
+	      		<div class="select_tj_e" ui-sref="insuranceCompanyLogin({type:2})">保险行业调解登录</div>
+	      		<div class="select_tj_e" ui-sref="publicSecurityLogin({type:2})">公安调解登录</div>
+	         </div>
+	      </div>
+	     
+	      <div class="login_btn btn-default" ui-sref="litigantLogin({type:0})">当事人/代理人登录</div>
+	      <!--<div class="login_btn btn-default" ui-sref="AIOHomePage">一体机</div>-->
+	      <!--<div class="login_btn btn-default managementPlatform_btn" ng-click="toManagePlatForm()">管理平台</div>-->
+	      <!--<div class="login_btn btn-default insuranceHospital_btn " ui-sref="insuranceHospitalLogin">担保治疗</div>-->
+		  <!--<div class="login_btn btn-default" ui-sref="policeLogin">交警系统</div>-->
+		</div>
+	  </div>
+	</div>
+	<div class="homePage_top_img" ng-style="top2bgColor">
+		<div class="homePage_top_img_cont">
+		   	<!-- <img class="pull-left_img" ng-src="{{headerNavImgUrl}}"> -->
+		   	<img style="width: 70px; height: 70px; margin: 0 15px 15px 0;" src="views/images/qweasd.png">
+			<span class="text">{{domainName? domainName : '道路交通事故数据一体化平台'}}</span>
+		   	<!--<span class="text">广东省</span>
+		  	<span class="text"> · 道路交通事故纠纷数据一体化平台</span>-->
+		</div>
+	</div>
+	<div class="homePage_nav">
+		<div class="homePage_nav_cont">
+			<div class="homePage_nav_e" ui-sref="home_page.homeContent" ng-click="headerActive='home'" ng-class="{'active':headerActive=='home'}">首页</div>
+			<div class="homePage_nav_e" ng-click="online() " ng-class="{'active':headerActive=='online'}">在线庭审</div>
+			<!-- <div class="homePage_nav_e" ng-click="headerActive='prejudge'" ng-class="{'active':headerActive=='prejudge'}"><a style="text-decoration:none; color: #666;" href="http://124.42.1.7:8001/court_dg/calc/lossCalcStep1.do">赔付试算</a></div> -->
+			<!-- <div class="homePage_nav_e" ui-sref="home_page.prejudge" ng-click="headerActive='prejudge'" ng-class="{'active':headerActive=='prejudge'}">赔付试算</div> -->
+			<div class="homePage_nav_e" ui-sref="home_page.prejudge_new.AIOCourtSetp1" ng-click="headerActive='prejudge'" ng-class="{'active':headerActive=='prejudge'}">赔付试算</div>
+			<!-- <div class="homePage_nav_e" ui-sref="AIOCourtSetpBox.AIOCourtSetp1" ng-click="headerActive='prejudge'" ng-class="{'active':headerActive=='prejudge'}">一体机版</div> -->
+			<div class="homePage_nav_e" ui-sref="home_page.helpCenter" ng-click="headerActive='help'" ng-class="{'active':headerActive=='help'}">帮助中心</div>
+		</div>
+	</div>
+	<div ui-view></div>
+	<div class="homePage_footer">
+		<div class="homePage_footer_logo" style="height: 20px;"></div>
+		<p><a href="http://cpc.people.com.cn" target="_blank">中国共产党新闻网</a> | <a href="http://www.gov.cn" target="_blank">中国政府网</a> | <a href="http://www.npc.gov.cn" target="_blank">中国人大网</a> | <a href="http://www.cppcc.gov.cn" target="_blank">中国政协网</a> | <a href="http://www.chinacourt.org" target="_blank">中国法院网</a> | <a href="http://www.spp.gov.cn" target="_blank">最高人民检察院</a></p>
+		<p><a href="http://www.court.gov.cn/zscq" target="_blank">人民法院知识产权审判网</a> | <a href="http://www.rmfysszc.gov.cn" target="_blank">人民法院诉讼资产网</a> | <a href="http://ipr.court.gov.cn" target="_blank">中国知识产权裁判文书网</a> | <a href="http://wzzx.71.cn" target="_blank">中央国家机关理论武装在线</a></p>
+		<div class="homePage_footer_b">Copyright©2015   版权所有  <span ng-hide="sign">ICP证:京ICP备09106946号-4</span><span ng-show="sign">ICP证:京ICP备05023036号</span> <span ng-hide="sign"><img class="img_c" src="views/images/gh.png"> <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024143">京公网安备 11010802024143号</a></span></div>
+	</div>
+</div>

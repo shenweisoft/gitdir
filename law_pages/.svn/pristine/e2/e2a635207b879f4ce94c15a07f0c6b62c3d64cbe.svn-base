@@ -1,0 +1,6 @@
+/**
+ * Created by shenwei on 2017/5/11.
+ */
+angular.module('sbAdminApp').controller('shakingNumberCtrl', function($scope ,$stateParams,$log) {
+
+});

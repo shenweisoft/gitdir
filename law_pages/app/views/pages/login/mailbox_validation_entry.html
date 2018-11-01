@@ -1,0 +1,32 @@
+<div class="login-bg">
+	<img class="login-bg-img" src="views/images/bg_dangshiren.jpg">
+	<div class="heaer-back">
+		<span ui-sref="home_page.homeContent">回到首页&nbsp;&nbsp;<i class="iconfont icon-iconset0416"></i></span>
+	</div>
+	<div class="register-box row">
+		<div class="tab-under">
+			<div class="tab">忘记密码</div>
+			<div class="tab-right">已有账号，<a ui-sref="login" class="brand-color">去登录</a></div>
+		</div>
+		<div class="schedule">
+			<div class="clearfix">
+				<div class="step-circle circle-ok"><i>1</i>
+					<span>确认账号</span>
+				</div>
+				<div class="step-line"></div>
+				<div class="step-circle circle-blue">2
+					<span>安全验证</span>
+				</div>
+				<div class="step-line"></div>
+				<div class="step-circle circle-line">3
+					<span>重置密码</span>
+				</div>
+			</div>
+		</div>
+		<img class="mail-icon" src="views/images/mail.png">
+		<p class="mail-p">密码重置邮件已发送到您的邮箱。</p>
+		<input class="enter-mailbox" ng-click="toLoginEmail()" type="button"  value="进入邮箱" />
+		<p class="mail-p-l">如果点击按钮没有反应请登录您的邮箱<span id="email">{{emailAddress}}</span>,完成密码重置操作。</p>
+		
+	</div>
+</div>

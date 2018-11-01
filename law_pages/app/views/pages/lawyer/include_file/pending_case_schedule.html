@@ -1,0 +1,57 @@
+<div class="module-box bg-default">
+	<div class="nav-line-left">
+		<h4>
+			<span class="h1_line"></span>
+			待排期
+		</h4>
+	</div>
+	<div class="module-content font-size13">
+		<form role="form" class="form-horizontal form-input">
+			<div class="row clearfix ">
+				<div class="form-group col-xs-6">
+					<label class="col-lg-3 col-xs-12 control-label "><i>*</i> 立案日期</label>
+					<div class="col-lg-9 col-xs-11">
+						<div class="input-group">
+							<input readonly type="text" class="form-control" name="filingDate" datepicker-popup="yyyy-MM-dd" ng-model="law.filingDate" is-open="law.openedFiling" datepicker-options="{startingDay:1}"  show-weeks="false" show-button-bar="false">
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-default" ng-click="openFiling($event,law)">
+									<i class="glyphicon glyphicon-calendar"></i>
+								</button>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-xs-6">
+					<label class="col-lg-3 col-xs-12 control-label"><i>*</i> 开庭时间</label>
+					<div class="col-lg-9 col-xs-11">
+						<div class="input-group">
+							<input type="text" readonly class="form-control" datetime-picker="yyyy-MM-dd HH:mm:ss" ng-model="law.courtDate" min-date="today" enable-date="true" enable-time="true" is-open="law.openedCourt" close-text="确定" />
+							<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="openCalendar($event, law)"><i class="glyphicon glyphicon-calendar"></i></button>
+						  </span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row clearfix ">
+
+				<div class="form-group col-xs-6">
+					<label class="col-lg-3 col-xs-12 control-label "><i>*</i> 法庭名称</label>
+					<div class="col-lg-9 col-xs-11">
+						<select class="form-control" name="courtId" ng-model="law.courtId"  ng-options="x.id as (x.courtName) for x in courtList">
+							<option value="">请选择</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group col-xs-6">
+					<label class="col-lg-3 col-xs-12 control-label "><i>*</i> 庭次</label>
+					<div class="col-lg-6 col-xs-11">
+						<input type="text" class="form-control" name="courtNum" ng-model="law.courtNum" placeholder="请输入">
+					</div>
+				</div>
+
+			</div>
+
+		</form>
+	</div>
+</div>

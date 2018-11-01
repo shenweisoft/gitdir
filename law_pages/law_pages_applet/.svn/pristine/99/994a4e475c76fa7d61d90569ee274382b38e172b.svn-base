@@ -1,0 +1,567 @@
+// pages/prejudge/step1/step1.js
+const app = getApp()
+const util = require('../../../utils/util.js');
+const dictionary = require('../../../utils/dictionary.js')
+Page({
+  /**
+   * 页面的初始数据
+   */
+  data: {
+    accidentTypeRemark: ['指事故侵权一方为机动车，被侵权一方为行人或非机动车驾驶人或乘客。', '指事故双方均为机动车，受害人为一方机动车上任一人员。', '只计算事故总损失的案件。'],
+    iconfontActive:'城镇',
+    lawCase: {
+      regionName: "北京市-市辖区-海淀区",
+      createDate: util.formatDate(new Date()),
+      applicantArray: [{
+        personType: '0',
+        household: '0',
+        responsibleRate: 100,
+        birthDay: util.formatDate(new Date())
+      }],
+      accidentType: '0',
+      caseType: '0',
+      isDeadAtTheScene: '0',
+      treatmentType: '1',
+      outPatientTimes: '',
+      restDaysOfOutPatient: '',
+      household: '1',
+      responsibility: '0',
+      standardYear: new Date().getFullYear(),
+      feeDetail: dictionary.feeTypeList,
+      compensateTable: [],
+      compensateStandard: {}
+    },
+    responsibilityLabel: '机动车责任',
+    accidentTypeArray: ['机动车与行人或非机动车', '机动车之间', '单方事故'],//事故性质
+    accidentTypeArraytitle: ['机动车与行人或非机动车：指事故侵权一方为机动车，被侵权一方为行人或非机动车驾驶人或乘客。', '机动车之间：指事故双方均为机动车，受害人为一方机动车上任一人员。','单方事故：只计算事故总损失的案件。'],
+    titlesg:'',
+    accidentTypeIndex:0,
+    caseTypeArray: ['普通受伤(无伤残)','伤残', '死亡', '仅财产损失'],//受害性质
+    caseTypeIndex:0,
+    responsibility: ['全部责任(100%)', '主要责任(80%)', '同等责任(60%)', '次要责任(40%)', '无责(10%)'],//车方责任
+    responsibilityIndex:0,
+    standardYearArray: [new Date().getFullYear() - 2, new Date().getFullYear() - 1, new Date().getFullYear()],//赔偿标准
+    standardYearArrayIndex:2,
+    currentDate: util.formatDate(new Date()),
+    currentStep:'1',//当前步数
+    isStep5: ''
+  },
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+    var that = this;
+    var region = ['北京市','市辖区', '海淀区'];
+    if(options.isStep5) {
+      let storageLawCase = wx.getStorageSync('step5-set-key')
+      console.log(storageLawCase)
+      that.data.lawCase.region = storageLawCase.region
+      that.data.lawCase.adjustOrgCode = storageLawCase.adjustOrgCode
+      that.data.lawCase.adjustOrgName = storageLawCase.adjustOrgName
+      that.data.lawCase.adjustPointCode = storageLawCase.adjustPointCode
+      that.data.lawCase.adjustPointName = storageLawCase.adjustPointName
+      that.data.lawCase.applicantArray = storageLawCase.applicantArray
+      that.data.lawCase.applicantArray.forEach(v=>{
+        v.household = '0'
+        v.responsibleRate = 100
+        v.birthDay = util.formatDate(new Date())
+      })
+      that.data.lawCase.evidenceArray = storageLawCase.evidenceArray
+      that.data.lawCase.factReason = storageLawCase.factReason
+      that.data.lawCase.id = storageLawCase.id
+      that.data.lawCase.lawOrgId = storageLawCase.lawOrgId
+      that.data.lawCase.lawOrgName = storageLawCase.lawOrgName
+      that.setData({
+        lawCase: that.data.lawCase
+      })
+    }
+    //定位当前地址
+    if (wx.canIUse('getLocation')){
+      util.getLocation(function (res) {
+        console.log(res);
+        var lawCase = that.data.lawCase;
+        var lawCaseName = res.province + "-" + res.city + "-" + res.district;
+        var region = [res.province, res.city, res.district]
+        let adjustCity = "";
+        if (lawCaseName) {
+          lawCaseName.split("省")[1] ? adjustCity = region : adjustCity = [res.province, '市辖区', res.district];
+        }
+        that.setData({
+          region: adjustCity,
+          ['lawCase.regionName']: lawCaseName,
+          lawCase: lawCase,
+        })
+        //查询费用标准数据
+        that.getStandardFeeByRegion();
+      });
+    }
+
+    that.setData({
+      region: region,
+      isStep5: options.isStep5 == 'true'? 'true': 'false'
+    })
+    //查询费用标准数据
+    that.getStandardFeeByRegion();
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload: function () {
+  
+  },
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh: function () {
+  
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom: function () {
+  
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+  
+  },
+  
+  /**
+   * 伤残等级
+   */
+  DisabledLevel: function(){
+    this.level = "九级";
+    this.times = "1处";
+    this.rate = 10;
+    this.index = [9, 0]
+  },
+
+  /**
+   * 误工费
+   */
+  LostIncome: function(){
+    this.isFixedIncome = false
+    this.incomeEvidence = "2"
+    this.industryType = ""
+    this.applyAmount = ""
+  },
+
+  /**
+   * lawCase数据改变事件
+   */
+  lawCaseDataChange: function (e) {
+    var that = this;
+    console.log(that);
+    var attribute = e.currentTarget.dataset.attribute
+    var currentValue = e.detail.value
+
+
+    var lawCase = e.detail.value[0] + "-" + e.detail.value[1] + "-" + e.detail.value[2];
+    var region = [e.detail.value[0], e.detail.value[1], e.detail.value[2]]
+    let adjustCity = "";
+    if (lawCase) {
+      lawCase.split("省")[1] ? adjustCity = e.detail.value : adjustCity = [e.detail.value[0], '市辖区', e.detail.value[2]];
+    }
+    
+    console.log(attribute + "-----" + currentValue)
+    var lawCase = that.data.lawCase
+    if (lawCase.hasOwnProperty(attribute) && (attribute in lawCase)) {
+      if (attribute == 'regionName') {
+        var region = e.detail.value
+        lawCase[attribute] = region[0] + "-" + region[1] + "-" + region[2];
+        this.setData({
+          region: adjustCity
+        })
+      } else if (attribute == 'household') {//户口性质
+        lawCase[attribute] = currentValue;
+        
+      } else if (attribute == 'accidentType') {//事故类型
+        lawCase[attribute] = currentValue;
+        var responsibility = that.data.responsibility
+        var responsibilityLabel;
+        if (currentValue == '0'){
+          responsibilityLabel = '车方责任'
+          responsibility = ['全部责任(100%)', '主要责任(80%)', '同等责任(60%)', '次要责任(40%)', '无责(10%)']
+        }else if (currentValue == '1'){
+          responsibilityLabel = '对方车辆责任'
+          responsibility = ['全部责任(100%)', '主要责任(70%)', '同等责任(50%)', '次要责任(30%)', '无责(0%)']
+        }else{
+          responsibilityLabel = ''
+          lawCase.applicantArray[0].responsibleRate = 0
+        }
+
+        that.setData({
+          accidentTypeIndex: currentValue,
+          responsibilityLabel: responsibilityLabel,
+          responsibility: responsibility
+        })
+
+        calculateResponsibleRate()
+      } else if (attribute == 'caseType') {//受害性质
+        lawCase[attribute] = currentValue;
+        if (currentValue == '1'){//伤残
+          lawCase.deathDate = util.formatDate(new Date())
+          lawCase.compensateRate = 10
+          lawCase.disabledLevelArray = [new that.DisabledLevel()];
+        } else if(currentValue == '2'){//死亡
+          lawCase.disabledLevelArray = [];
+          lawCase.deathDate = util.formatDate(new Date())
+          lawCase.compensateRate = 100
+          lawCase.feeDetail.filter((v) =>{
+            return v.id == '19'
+          })[0].personArray.push(new that.LostIncome())
+        }
+
+        if (currentValue == '2' && lawCase.isDeadAtTheScene == '1'){
+          lawCase.isDeadAtTheScene = '1'
+        }else{
+          lawCase.isDeadAtTheScene = '0'
+        }
+        that.setData({
+          caseTypeIndex: currentValue
+        })
+      } else if (attribute == 'responsibility') {//事故责任
+        lawCase[attribute] = currentValue
+        calculateResponsibleRate()
+        that.setData({
+          responsibilityIndex: currentValue
+        })
+      } else if (attribute == 'isDeadAtTheScene'){//是否当场死亡
+        if (currentValue)
+          lawCase[attribute] = 1;
+        else 
+          lawCase[attribute] = 0
+      } else if (attribute == 'standardYear'){
+        lawCase[attribute] = that.data.standardYearArray[currentValue];
+      } else
+        lawCase[attribute] = currentValue;
+    }
+
+    this.setData({
+      lawCase: lawCase
+    })
+
+    //根据地区+户口性质+赔偿年度，查询标准赔付数据
+    if (attribute == 'regionName' || attribute == 'household' || attribute == 'standardYear'){
+      that.getStandardFeeByRegion();
+    }
+
+    //根据事故性质，计算责任比例
+    function calculateResponsibleRate(){
+      var applicant = lawCase.applicantArray[0]
+      if (lawCase.accidentType == '0') {//机动车与行人或非机动车
+        if (lawCase.responsibility == '0')
+          applicant.responsibleRate = 100
+        else if (lawCase.responsibility == '1')
+          applicant.responsibleRate = 80
+        else if (lawCase.responsibility == '2')
+          applicant.responsibleRate = 60
+        else if (lawCase.responsibility == '3')
+          applicant.responsibleRate = 40
+        else if (lawCase.responsibility == '4')
+          applicant.responsibleRate = 10
+      } else if (lawCase.accidentType == '1') {//机动车之间
+        if (lawCase.responsibility == '0')
+          applicant.responsibleRate = 100
+        else if (lawCase.responsibility == '1')
+          applicant.responsibleRate = 70
+        else if (lawCase.responsibility == '2')
+          applicant.responsibleRate = 50
+        else if (lawCase.responsibility == '3')
+          applicant.responsibleRate = 30
+        else if (lawCase.responsibility == '4')
+          applicant.responsibleRate = 0
+      }else{
+        applicant.responsibleRate = 0
+      }
+    }
+  },
+
+  /**
+   * applicant数据改变事件
+   */
+  applicantDataChange: function (e) {
+    var that = this;
+    var attribute = e.currentTarget.dataset.attribute
+    var currentValue = e.detail.value
+
+    var lawCase = that.data.lawCase;
+    var index = e.currentTarget.id;
+    var applicant = lawCase.applicantArray[index]
+    if (applicant.hasOwnProperty(attribute) && (attribute in applicant)) {
+      applicant[attribute] = currentValue;
+    }
+
+    this.setData({
+      lawCase: lawCase
+    })
+  },
+  // 提示
+  opentitle: function (e) {
+    var title = e.currentTarget.dataset.title;
+    wx.showModal({
+      title: '提示',
+      content: title,
+      showCancel: false,
+      confirmText: "知道了"
+    })
+  },
+  /**
+   * 通过地区，获取赔偿标准
+   */
+  getStandardFeeByRegion: function(){
+    var that = this;
+    var lawCase = that.data.lawCase;
+
+    var requetUrl = app.globalData.dataUrl + '/adjust/queryCalculateStandard';
+    var data = {
+      regionName: that.data.lawCase.regionName,
+      household: that.data.lawCase.household,
+      standardYear: that.data.lawCase.standardYear
+    }
+
+    wx.request({
+      url: requetUrl,
+      method: "POST",
+      data: data,
+      success: res => {
+        if (res.data.code == '0') {
+          var calculateResultVO = res.data.result;
+          //误工费
+          if (calculateResultVO.lostIncome) {
+            lawCase.compensateStandard.lostIncome = calculateResultVO.lostIncome;
+          } else {
+            lawCase.compensateStandard.lostIncome = "";
+          }
+          //护理费
+          if (calculateResultVO.standardNurseFee) {
+            lawCase.compensateStandard.standardNurseFee = calculateResultVO.standardNurseFee;
+          } else {
+            lawCase.compensateStandard.standardNurseFee = "";
+          }
+          //住院伙食补助费
+          if (calculateResultVO.hospitalFoodSubsidies) {
+            lawCase.compensateStandard.hospitalFoodSubsidies = calculateResultVO.hospitalFoodSubsidies;
+          } else {
+            lawCase.compensateStandard.hospitalFoodSubsidies = "";
+          }
+          //营养费
+          if (calculateResultVO.thesePayments) {
+            lawCase.compensateStandard.thesePayments = calculateResultVO.thesePayments;
+          } else {
+            lawCase.compensateStandard.thesePayments = "";
+          }
+          //交通费
+          if (calculateResultVO.transportationFee) {
+            lawCase.compensateStandard.transportationFee = calculateResultVO.transportationFee;
+          }
+          //住宿费
+          if (calculateResultVO.accommodationFee) {
+            lawCase.compensateStandard.accommodationFee = calculateResultVO.accommodationFee;
+          } else {
+            lawCase.compensateStandard.accommodationFee = "";
+          }
+          //丧葬费
+          if (calculateResultVO.funeralFeeStandard) {
+            lawCase.compensateStandard.funeralFeeStandard = calculateResultVO.funeralFeeStandard;
+          } else {
+            lawCase.compensateStandard.funeralFeeStandard = "";
+          }
+          //精神损害抚慰金 刘长明，芮玉群  2018-08-02 无标准默认5000
+          if (calculateResultVO.spiritualConsolationFee){
+            lawCase.compensateStandard.spiritualConsolationFee = calculateResultVO.spiritualConsolationFee;
+          } else {
+            lawCase.compensateStandard.spiritualConsolationFee = "5000";
+          }
+
+          //计算收入和支出标准[农村和城镇]
+          if (calculateResultVO.urbanSalary) {
+            lawCase.compensateStandard.wageIncome = calculateResultVO.urbanSalary;
+          } else {
+            lawCase.compensateStandard.wageIncome = "";
+          }
+
+          //农村净收入
+          if (!calculateResultVO.ruralNetIncome) {
+            calculateResultVO.ruralNetIncome = "";
+          }
+          //农村平均支出
+          if (!calculateResultVO.ruralAverageOutlay) {
+            calculateResultVO.ruralAverageOutlay = "";
+          }
+          //城镇居民可支配收入
+          if (!calculateResultVO.urbanDisposableIncome) {
+            calculateResultVO.urbanDisposableIncome = "";
+          }
+          //城镇居民平均支出
+          if (!calculateResultVO.urbanAverageOutlay) {
+            calculateResultVO.urbanAverageOutlay = "";
+          }
+          //农村的
+          lawCase.compensateStandard["1"] = {
+            "income": calculateResultVO.ruralNetIncome,
+            "expense": calculateResultVO.ruralAverageOutlay
+          };
+          //城镇赔偿标准
+          lawCase.compensateStandard["2"] = {
+            "income": calculateResultVO.urbanDisposableIncome,
+            "expense": calculateResultVO.urbanAverageOutlay
+          };
+        } else {
+          wx.showToast({
+            title: res.data.message,
+            icon: 'success',
+            duration: 2000
+          })
+        }
+      },
+      fail: function (res) {
+        console.log(res)
+        wx.showToast({
+          title: '服务器异常',
+        })
+      }
+    })
+  },
+
+  validateForm: function(){
+    var that = this
+    var lawCase = that.data.lawCase
+
+    //事故发生时间
+    if (!lawCase.createDate){
+      wx.showToast({
+        title: '请选择事故时间',
+      })
+      return false;
+    }
+
+    //事故发生地
+    if (!lawCase.regionName) {
+      wx.showToast({
+        title: '请选择事故地点',
+      })
+      return false;
+    }
+
+    //事故性质
+    if (!lawCase.accidentType) {
+      wx.showToast({
+        title: '请选择事故性质',
+      })
+      return false;
+    }
+
+    //受害性质
+    if (!lawCase.caseType) {
+      wx.showToast({
+        title: '请选择受害性质',
+      })
+      return false;
+    }
+
+    if (lawCase.accidentType == '0' && !lawCase.responsibility){//机动车与行人或非机动车，机动车责任
+        wx.showToast({
+          title: '请选择车方责任',
+        })
+        return false;
+    }
+
+    if (lawCase.accidentType == '1' && !lawCase.responsibility) {//机动车之间，对方机动车责任
+      wx.showToast({
+        title: '请选择对方责任',
+      })
+      return false;
+    }
+
+    if (lawCase.accidentType != "2"){//事故性质非其他
+      var applicant = lawCase.applicantArray[0];
+
+      //户籍性质
+      if (!applicant.household){
+        wx.showToast({
+          title: '请选择户籍性质',
+        })
+        return false;
+      }
+
+      //户籍性质
+      if (!applicant.birthDay) {
+        wx.showToast({
+          title: '请选择出生日期',
+        })
+        return false;
+      }
+
+      //户籍性质
+      if (!lawCase.standardYear) {
+        wx.showToast({
+          title: '请选择赔偿年度',
+        })
+        return false;
+      }
+    }
+
+    return true;
+  },
+
+  /**
+   * 下一步
+   */
+  nextStep: function(){
+    var regionName = this.data.lawCase.regionName.split("-")
+    let adjustCity = "";
+    if (regionName) {
+      console.log(this.data.lawCase.regionName.split("省")[1]);
+      this.data.lawCase.regionName.split("省")[1] ? adjustCity = this.data.lawCase.regionName : adjustCity = regionName[0] + '-市辖区-' + regionName[2];
+    }
+    this.setData({
+      ['lawCase.regionName']: adjustCity
+    })
+    console.log(this.data.lawCase.regionName);
+    var that = this;
+    if(that.validateForm()){
+      var lawCase = that.data.lawCase
+      if (lawCase.caseType == '3'){//仅财产损失
+        wx.navigateTo({
+          url: '../step4/step4?lawCase=' + JSON.stringify(lawCase)+'&isStep5='+that.data.isStep5
+        })
+      } else if (lawCase.isDeadAtTheScene == '1'){//当场死亡
+        wx.navigateTo({
+          url: '../step3/step3?lawCase=' + JSON.stringify(lawCase) + '&isStep5=' + that.data.isStep5
+        })
+      } else {
+        wx.navigateTo({
+          url: '../step2/step2?lawCase=' + JSON.stringify(lawCase) + '&isStep5=' + that.data.isStep5
+        })
+      }
+    }
+  }
+})

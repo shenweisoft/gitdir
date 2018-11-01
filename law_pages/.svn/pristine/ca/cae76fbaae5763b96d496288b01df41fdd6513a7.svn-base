@@ -1,0 +1,237 @@
+<div class="role_management_d relative_top">
+    <div class="row bg-default">
+        <div class="col-xs-12 role_management_right_d">
+            <div class="role_management_right_t_d">
+                <div class="col-xs-2 role_management_right_t_l_d no-padding">保险公司信息表</div>
+                <div class="col-xs-3 padding_top_bottom margin-top-6">
+                    <label class="col-xs-4 control-label" style="line-height: 37px;">所在地区</label>
+                    <div class="col-xs-8">
+                        <input class="form-control" id="regNameInput" ng-model="queryInsuranceVO.areaName" readonly/>
+                        <div class="panel panel-default padding_none" id="regNamebox" style="position:absolute;left:15px;z-index:999;width:93%; display: none;">
+                            <div class="panel-body">
+                                <div js-tree="treeConfig" should-apply="true" tree="treeInstance" ng-model="adminRegion" tree-events="select_node:selectAdmin" class="pre-scrollable"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-3 padding_top_bottom margin-top-6">
+                    <label class="col-xs-4 control-label" style="line-height: 37px;">总公司名称</label>
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" ng-focus="queryInsuranceFocus1()" ng-blur="queryInsuranceBlur2()" ng-model="queryInsuranceVO.companyName" placeholder="请填写承保保险公司" readonly maxlength="50">
+                        <ul class="select_border position_ul" ng-show="queryInsuranceList" style="width: 130%;height: 700%">
+                            <li ng-repeat="x in insuranceList" id = "{{x.id}}" ng-click="selectedCompanyName1(x)">{{x.text}}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-xs-3 line-height40 margin-top-6">
+                    <div class="search_box">
+                        <input type="text" class="input-xs search_input" ng-model="queryInsuranceVO.queryText" placeholder="企业名称、代理人姓名">
+                        <i class="iconfont icon-sousuo input-search-img"></i>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-xs-1 line-height40 no-padding" style="margin-top: 4px">
+                    <button type="button" class="btn btn-brand mar-v-3" ng-click="handleQueryInsurance()">搜索</button>
+                </div>
+
+            </div>
+            <div class="col-xs-12" style="text-align: right;">
+                <button type="button" class="btn btn-brand mar-v-3" style="margin-right: 30px;padding: 5px 30px" ng-click="resetQuery()">重置搜索选项</button>
+                <button type="button" class="btn btn-brand mar-v-3" style="margin-right: 30px;padding: 5px 30px">导入</button>
+                <button type="button" class="btn btn-brand mar-v-3" style="padding: 5px 30px;" ng-click="checkDetail()">新增</button>
+            </div>
+            <div class="clear"></div>
+            <div class="panel-body">
+                <div class="table-responsive" ng-show="insuranceCompanyList.length > 0">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-1">序号</th>
+                                <th class="col-xs-2">所在地区</th>
+                                <th class="col-xs-4">企业名称</th>
+                                <th class="col-xs-2">代表人姓名</th>
+                                <th class="col-xs-2">代理人姓名</th>
+                                <th class="col-xs-1">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="insurance in insuranceCompanyList">
+                                <td>{{$index+1}}</td>
+                                <td>{{insurance.areaName}}</td>
+                                <td>{{insurance.companyName}}</td>
+                                <td>{{insurance.legalName}}</td>
+                                <td>{{insurance.agentName}}</td>
+                                <td class="action_bar">
+                                    <i class="iconfont icon-bianji" ng-click="checkDetail(insurance)"></i>
+                                    <i class="iconfont iconfont icon-iconfont19" ng-click="deleteInsurance(insurance.id)"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <pagination previous-text="<" next-text=">" first-text="<<" last-text=">>" items-per-page="queryInsuranceVO.pageSize" class="pagination-custom" total-items="queryInsuranceVO.totalPage" ng-model="queryInsuranceVO.pageNo" max-size="7" boundary-links="true" rotate="false" ng-click="pageChanged()"></pagination>
+                    </div>
+                </div>
+                <div class="text-center" ng-show="insuranceCompanyList.length == 0">
+                    <img src="views/images/search_null.png" ><br>
+                    抱歉，未找到相关内容！
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="file-upload-masker" style="z-index: 99999" ng-show="insuranceModal"></div>
+<div ng-show="insuranceModal" class="insurance-detail" style="height: 630px;margin-top: -315px;">
+    <form class="col-xs-12 form-horizontal ng-pristine ng-invalid ng-invalid-required" novalidate="">
+        <div class="col-xs-12 form-group form-group-sm">
+            <label class="col-xs-2 control-label">
+                <span class="Required">*</span>
+                企业名称
+            </label>
+            <div class="col-xs-4" ng-class="{'has-error':insuranceInfoVO.companyNameError}">
+                <input type="text" class="form-control ng-pristine ng-valid" ng-model="insuranceInfoVO.companyName" placeholder="请填写企业名称" maxlength="15">
+            </div>
+            <label class="col-xs-2 control-label">
+                <span class="Required">*</span>
+                总公司
+            </label>
+            <div class="col-xs-4" ng-class="{'has-error':insuranceInfoVO.parentNameError}">
+                <input type="text" class="form-control" ng-focus="queryInsuranceFocus2()" ng-blur="queryInsuranceBlur2()" ng-model="insuranceInfoVO.parentName" placeholder="请填写承保保险公司" readonly maxlength="50">
+                <ul class="select_border position_ul" ng-show="queryInsuranceList" style="width: 130%;height: 700%">
+                    <li ng-repeat="x in insuranceList" id = "{{x.id}}" ng-click="selectedCompanyName2(x)">{{x.text}}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-12 form-group form-group-sm">
+            <label class="col-xs-2 control-label">
+                <span class="Required">*</span>
+                代表人类型
+            </label>
+            <div class="col-xs-4" ng-class="{'has-error':insuranceInfoVO.legalTypeError}">
+                <div class="radio">
+                    <label ng-repeat="legalType in idTypeList" style="margin-right: 20px;" class="ng-scope ng-binding">
+                        <input type="radio" ng-model="insuranceInfoVO.legalType" ng-value="legalType.id" ng-checked="legalType.id == insuranceInfoVO.legalType" class="ng-pristine ng-valid">{{legalType.value}}
+                    </label>
+                </div>
+            </div>
+            <label class="col-xs-2 control-label">
+                <span class="Required">*</span>
+                代表人姓名
+            </label>
+            <div class="col-xs-4" ng-class="{'has-error':insuranceInfoVO.legalNameError}">
+                <input type="text" class="form-control ng-pristine ng-valid" ng-model="insuranceInfoVO.legalName" placeholder="请填写代表人姓名" maxlength="15">
+            </div>
+        </div>
+        <div class="col-xs-12 form-group form-group-sm">
+            <label class="col-xs-2 control-label">
+                工商注册号
+            </label>
+            <div class="col-xs-4">
+                <input type="text" class="form-control ng-pristine ng-valid" ng-model="insuranceInfoVO.registerCode" placeholder="请填写工商注册号" maxlength="20">
+            </div>
+            <label class="col-xs-2 control-label">
+                <span class="Required">*</span>
+                电话号码
+            </label>
+            <div class="col-xs-4" ng-class="{'has-error':insuranceInfoVO.telephoneError}">
+                <input type="text" class="form-control ng-pristine ng-valid" ng-model="insuranceInfoVO.telephone" placeholder="请填写电话号码" maxlength="11">
+            </div>
+        </div>
+        <div class="col-xs-12 form-group form-group-sm">
+            <label class="col-xs-2 control-label">
+                <span class="Required">*</span>
+                所在地区
+            </label>
+            <div class="col-xs-4" ng-class="{'has-error':insuranceInfoVO.areaNameError}">
+                <input class="form-control" id="regNameInput2" ng-model="insuranceInfoVO.areaName" readonly/>
+                <div class="panel panel-default padding_none" id="regNamebox2" style="position:absolute;left:15px;z-index:999;width:93%; display: none;">
+                    <div class="panel-body">
+                        <div js-tree="treeConfig" should-apply="true" tree="treeInstance" ng-model="adminRegion" tree-events="select_node:selectAdmin2" class="pre-scrollable"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 form-group form-group-sm">
+            <label class="col-xs-2 control-label">
+                <span class="Required">*</span>
+                所住地址
+            </label>
+            <div class="col-xs-10" ng-class="{'has-error':insuranceInfoVO.residenceError}">
+                <input type="text" class="form-control ng-pristine ng-valid" ng-model="insuranceInfoVO.residence" placeholder="请填写所住地址" maxlength="50">
+            </div>
+        </div>
+        <div class="col-xs-12 form-group form-group-sm">
+            <label class="col-xs-2 control-label">
+                <span class="Required">*</span>
+                送达地址
+            </label>
+            <div class="col-xs-10" ng-class="{'has-error':insuranceInfoVO.sendAddressError}">
+                <input type="text" class="form-control ng-pristine ng-valid" ng-model="insuranceInfoVO.sendAddress" placeholder="请填写送达地址" maxlength="50">
+            </div>
+        </div>
+        <div class="col-xs-12 form-group form-group-sm">
+            <label class="col-xs-2 control-label">
+                代理人类型
+            </label>
+            <div class="col-xs-4">
+                <div class="radio">
+                    <label ng-repeat="agentType in agentTypeList" style="margin-right: 20px;" class="ng-scope ng-binding">
+                        <input type="radio" ng-model="insuranceInfoVO.agentType" ng-value="agentType.id" ng-checked="agentType.id == insuranceInfoVO.agentType" class="ng-pristine ng-valid">{{agentType.value}}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 form-group form-group-sm">
+            <label class="col-xs-2 control-label">证件类型</label>
+            <div class="col-xs-4">
+                <select class="form-control ng-pristine ng-valid" ng-model="insuranceInfoVO.certificatesType" ng-options="x.id as x.value for x in certificatesTypeList"></select>
+            </div>
+            <label class="col-xs-2 control-label">
+                证件号码
+            </label>
+            <div class="col-xs-4">
+                <input type="text" class="form-control ng-pristine ng-valid" ng-model="insuranceInfoVO.idNo" placeholder="请填写证件号码" maxlength="30">
+            </div>
+        </div>
+        <div class="col-xs-12 form-group form-group-sm">
+            <label class="col-xs-2 control-label">
+                委托授权
+            </label>
+            <div class="col-xs-4">
+                <select class="form-control ng-pristine ng-valid" ng-model="insuranceInfoVO.entrustPower" ng-options="x.id as x.value for x in proxyPermissionConstantList"></select>
+            </div>
+            <label class="col-xs-2 control-label">
+                代理人姓名
+            </label>
+            <div class="col-xs-4">
+                <input type="text" class="form-control ng-pristine ng-valid" ng-model="insuranceInfoVO.agentName" placeholder="请填写代理人姓名" maxlength="15">
+            </div>
+        </div>
+        <div class="col-xs-12 form-group form-group-sm">
+            <label class="col-xs-2 control-label">
+                电话号码
+            </label>
+            <div class="col-xs-4">
+                <input type="text" class="form-control ng-pristine ng-valid" ng-model="insuranceInfoVO.agentTelephone" placeholder="请填写电话号码" maxlength="11">
+            </div>
+            <label class="col-xs-2 control-label">
+                单位名称
+            </label>
+            <div class="col-xs-4">
+                <input type="text" class="form-control ng-pristine ng-valid" ng-model="insuranceInfoVO.agentDomicile" placeholder="请填写单位名称" maxlength="50">
+            </div>
+        </div>
+        <div class="col-xs-12 form-group form-group-sm">
+            <label class="col-xs-2 control-label">
+                送达地址
+            </label>
+            <div class="col-xs-4">
+                <input type="text" class="form-control ng-pristine ng-valid" ng-model="insuranceInfoVO.agentResidence" placeholder="请填写送达地址" maxlength="50">
+            </div>
+        </div>
+    </form>
+
+    <div class="col-xs-12" style="text-align: center;margin-top: 30px;">
+        <button type="button" class="btn btn-brand" style="margin-right: 30px;" ng-click="submitModal()">提交</button>
+        <button type="button" class="btn btn-brand" ng-click="closeModal()">关闭</button>
+    </div>
+</div>

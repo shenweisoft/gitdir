@@ -1,0 +1,55 @@
+<div class="shakingNumber_bj">
+	<div class="shakingNumber_l">
+		<div class="shakingNumber_l_top"><img src=""> 区域选择</div>
+		<div class="shakingNumber_l_cont" style="height: 1172px; overflow-y: auto; width: 455px;"> 
+			<div class="shakingNumber_l_cont_e">
+				<div class="shakingNumber_l_cont_e_l">1</div> 北京中天永信会计师事务所（普通合伙）
+			</div>
+		</div>
+	</div>
+	<div class="shakingNumber_r">
+		<div class="shakingNumber_img_box">
+			<!-- 箱中 -->
+			<!-- <img class="shakingNumberBall ball1 wieyi1" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball2 wieyi2" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball3 wieyi3" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball4 wieyi4" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball5 wieyi5" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball6 wieyi6" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball7 wieyi7" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball8 wieyi8" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball9 wieyi9" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball10 wieyi10" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball11 wieyi11" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball12 wieyi12" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball13 wieyi13" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball14 wieyi14" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball15 wieyi15" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball16 wieyi16" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball17 wieyi17" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball18 wieyi18" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball19 wieyi19" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball20 wieyi20" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball21 wieyi21" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball22 wieyi22" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball23 wieyi23" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball24 wieyi24" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball25 wieyi25" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball26 wieyi26" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball27 wieyi27" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball28 wieyi28" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball29 wieyi29" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball30 wieyi30" src="views/images/shakingNumber_ball.png"> -->
+			<!-- 入口 -->
+			<img class="shakingNumberBall ball_e1" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball_e2" src="views/images/shakingNumber_ball.png">
+			<img class="shakingNumberBall ball_e3" src="views/images/shakingNumber_ball.png">
+			<!-- 出口 -->
+			<div><img class="shakingNumberBall ball_e4" src="views/images/shakingNumber_ball.png"></div>
+			<!-- <img class="shakingNumberBall ball_e5" src="views/images/shakingNumber_ball.png"> -->
+			<!-- 背景图 -->
+			<img src="views/images/shakingNumber_box.png"> 
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>

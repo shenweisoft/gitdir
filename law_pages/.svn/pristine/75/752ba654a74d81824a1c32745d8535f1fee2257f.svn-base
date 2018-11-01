@@ -1,0 +1,285 @@
+angular.module('sbAdminApp').controller('acquireMessageCtrl', function ($scope, DictionaryConfig, $modalInstance, items, $rootScope, $location, AdjustService, AdjustConfig) {
+  //保存公安信息
+  $scope.savePoliceAccidentinfo = AdjustService.savePoliceAccidentinfo;
+  //民族
+  $scope.famousList = DictionaryConfig.famousList;
+
+  //创建存储搜索项与插入的人员信息数据
+  if(items.adjust.acquireMessageInfo) {
+    $scope.acquireMessageInfo = JSON.parse(items.adjust.acquireMessageInfo);
+  } else {
+    $scope.acquireMessageInfo = {
+      chooseArray: [{ //存储已填充的人员数据
+        accidentNumber: '', //事故认定编号
+        idNo: '', //当事人身份证号
+        checkedUserType: '' //填充的人员类型 0：申请 1：被申请
+      }],
+      queryInfo: { //存储当前搜索的数据
+        accidentNumber: '', //事故认定编号
+        idNo: '' //当事人身份证号
+      },
+      dataInfo: [] //保存搜索到的数据
+    };
+  }
+
+  //创建当前页面数据对象
+  $scope.applicantInfo = {
+    caseType: '1', //查询条件 1：调解  2：诉讼
+    accidentNumber: $scope.acquireMessageInfo.queryInfo.accidentNumber,
+    highSpeed: '1',
+    idNo: $scope.acquireMessageInfo.queryInfo.idNo,
+    serialNo: items.adjust.serialNo,
+    cityCode: '130100',
+    cityName: '河北省-石家庄市'
+  };
+  $scope.policeInfoList = $scope.acquireMessageInfo.dataInfo? $scope.acquireMessageInfo.dataInfo : []; //存储搜索到的人员信息
+
+  $scope.applicantInfoTypeList = [{
+    id: '0',
+    value: '申请人'
+  },{
+    id: '1',
+    value: '被申请人'
+  }];
+
+  //检测数据
+  function validData() {
+    if(!$scope.applicantInfo.accidentNumber) {
+      $scope.applicantInfo.accidentNumberError = true;
+      $rootScope.toaster("error", "错误","请您输入事故认定编号！");
+      return false;
+    } else $scope.applicantInfo.accidentNumberError = undefined;
+    if(!$scope.applicantInfo.idNo) {
+      $scope.applicantInfo.idNoError = true;
+      $rootScope.toaster("error", "错误","请您输入当事人身份证号！");
+      return false;
+    } else $scope.applicantInfo.idNoError = undefined;
+    return true
+  }
+
+  $scope.handleApplicantInfo = function () {
+    //检测数据
+    if(!validData()) {
+      return;
+    }
+    //显示等待文字
+    $scope.isLoading = true;
+    //建立webSocket连接
+    $scope.creatWebSocket();
+  };
+
+
+  ///////////////////////////webSocket///////////////////////////
+  $scope.creatWebSocket = function () {
+    //检测浏览器是否支持websocket
+    var websocketUrl = "ws://210.73.66.152/lawDataExchangeProject/websocket?";
+    //  var websocketUrl = "ws://localhost:8088/lawDataExchangeProject/websocket?";
+    if('WebSocket' in window) {
+      console.log("此浏览器支持webSocket");
+      var host = $location.host();
+      var date =  Date.parse(new Date()) ;
+      var urlParam = "serialNo="+items.adjust.serialNo+"&key="+date;
+      $scope.webSocket = new WebSocket(websocketUrl+urlParam);
+    } else if('MozWebSocket' in window) {
+      console.log("此浏览器只支持MozWebSocket")
+    } else {
+      console.log("此浏览器只支持SockJS");
+    }
+
+    //当websocket打开时
+    $scope.webSocket.onopen = function (event) {
+      console.log("链接服务器成功!");
+      //查看是否存在搜索结果
+      if($scope.policeInfoList.length != 0) {
+        $scope.isLoading = false;
+        $scope.$apply();
+        return;
+      }
+
+      var param = angular.copy($scope.applicantInfo);
+      //与之前搜索的数据做对比（修改了认定书号码时，重新搜索。只修改身份证号时，搜索当前人员是否有符合项）
+      //获取上一次搜索的数据
+      oldSearchVO = $scope.acquireMessageInfo.queryInfo;
+      //当只修改了身份证时
+      if(oldSearchVO.accidentNumber == $scope.applicantInfo.accidentNumber) {
+        //在当前人员中搜索与身份证对应的人员
+        var filterArray = $scope.policeInfoList.filter(function (v) {
+          return v.sfzmhm == $scope.applicantInfo.idNo
+        });
+        //关闭等待文字
+        $scope.isLoading = false;
+        if(filterArray.length > 0) {
+          $scope.policeInfoList = filterArray;
+          $rootScope.toaster('success', '成功', "查询成功！");
+        } else {
+          $rootScope.toaster('success', '成功', "未查询到相关结果！");
+        }
+        $scope.$apply();
+      } else {
+        //重新请求后台
+        param.jkid = "ACDR1";
+        $scope.sendMessage(param);
+      }
+    };
+
+    //发送信息
+    $scope.sendMessage = function(data) {
+      if($scope.webSocket != null) {
+        console.log('发送消息：' + JSON.stringify(data))
+        $scope.webSocket.send(JSON.stringify(data));
+      } else {
+        console.log('未与服务器链接.');
+        toaster.pop(level.error, title.error, $scope.CONSTANT.messageSendError);
+      }
+    };
+
+    //当webSocket发送数据时
+    $scope.webSocket.onmessage = function(event) {
+      //关闭等待文字
+      $scope.isLoading = false;
+      console.log(event)
+      //将数据保存到本地
+      //$scope.savePoliceAccident();
+      var data = JSON.parse(event.data)
+      console.log(data)
+      if(data.body && data.body.acdfile){
+        //填充数据到页面
+        $scope.policeInfoList = data.body.humans;
+
+        //为之前选择过的用户添加isChecked属性
+        $scope.fillUserType();
+
+        //将当前的搜索条件与数据保存到对象
+        $scope.acquireMessageInfo.queryInfo.accidentNumber = $scope.applicantInfo.accidentNumber;
+        $scope.acquireMessageInfo.queryInfo.idNo = $scope.applicantInfo.idNo;
+        $scope.acquireMessageInfo.dataInfo = data.body.humans;
+        $scope.saveAcquireMessageInfo();
+
+        $rootScope.toaster('success', '成功', data.head.message);
+      }else if(data.body &&  data.body.acdphotos){
+        $scope.acdphotos = data.body.acdphotos;
+      }else{
+        $rootScope.toaster('error', '错误', data.head.message);
+      }
+      $scope.$apply();
+    };
+  };
+
+  //将线上数据保存到本地后台
+  //$scope.savePoliceAccident = function () {
+    //$scope.savePoliceAccidentinfo($scope.applicantInfo).success(function (res) {
+      // if (res.code == AdjustConfig.commonConStant.SUCCESS) {
+      // }else{
+      //   $rootScope.toaster('error','错误',res.message)
+      // }
+    //})
+  //}
+
+  //确认填充数据到案件中
+  $scope.fillData = function () {
+    //找出被选择的人
+    var chooseArr = $scope.policeInfoList.filter(function (v) {
+      return v.userType == '0' || v.userType == '1';
+    })
+    if(chooseArr.length == 0) {
+      $rootScope.toaster('error', '错误', "请选择要填充的人员！");
+      return;
+    }
+    //获取mediation的$scope
+    var appElement = document.getElementById('mediationCtrl');
+    var $parentScope = angular.element(appElement).scope(); //获取mediation的scope
+    //找出当前案件的申请人，被申请人
+    var applicatArr = $parentScope.adjust.applicantArray.filter(function(x){return x.personType == '0'});
+    var respondent = $parentScope.adjust.applicantArray.filter(function(x){return x.personType == '1'});
+    //将人员加入到主表数据中
+    chooseArr.forEach(function (v) {
+      //与当前案件的申请人、被申请人对比，进行验证规则
+      //申请人
+      if(v.userType == '0') {
+
+      }
+
+      //被申请人
+      if(v.userType == '1') {
+
+      }
+
+      //主表新增人员，并填充数据
+      $parentScope.adjust.applicantArray.push(new $parentScope.co.Applicant(v.userType));
+      var applicant = $parentScope.adjust.applicantArray[$parentScope.adjust.applicantArray.length - 1];
+      applicant.personName = v.xm;
+      applicant.idNo = v.sfzmhm;
+      applicant.telephone = v.dh;
+      applicant.domicile = v.zz;
+      applicant.residence = v.zz;
+      applicant.sendAddress = v.zz;
+      applicant.sex = v.xb? (v.xb == '1'? '0':(v.xb == '2'? '1': '')):'';
+      applicant.nation = v.mz? $scope.famousList.filter(function (x) {return x.id == v.mz})[0].value: '';
+
+      //将所选人员加入到主表的AcquireMessageInfo中，用于识别已带入的人员
+      var repetition = $scope.acquireMessageInfo.chooseArray.filter(function (x) {
+        return x.idNo == v.sfzmhm && x.accidentNumber == $scope.applicantInfo.accidentNumber;
+      });
+      if(repetition[0]) { //存在重复带入人员信息，只修改userType
+        repetition[0].checkedUserType = v.userType;
+      } else { //不存在重复人员，直接存入数据
+        $scope.acquireMessageInfo.chooseArray.push({
+          accidentNumber: $scope.applicantInfo.accidentNumber,
+          idNo: v.sfzmhm,
+          checkedUserType : v.userType
+        })
+      }
+    });
+
+    //去掉列表userType属性，防止下次自动选中
+    $scope.acquireMessageInfo.dataInfo.forEach(function (v) {
+      if(v.userType) delete v.userType;
+    });
+
+    //保存数据
+    $scope.saveAcquireMessageInfo();
+
+    //关闭模态框
+    $scope.closeModal();
+  };
+
+  //根据已被填充人员数据，为查找出的人员添加userType
+  $scope.fillUserType = function () {
+    //判断是否存在已被填充的数据
+    if($scope.acquireMessageInfo.chooseArray.length > 0 && $scope.policeInfoList.length > 0) {
+      //找出符合当前事故编码的已选择人员
+      var curChooseArray = $scope.acquireMessageInfo.chooseArray.filter(function (v) {
+        return v.accidentNumber == $scope.applicantInfo.accidentNumber;
+      });
+      //找出与policeInfoList中相同人员，存入userType
+      curChooseArray.forEach(function (v) {
+        $scope.policeInfoList.forEach(function (x) {
+          if(x.sfzmhm == v.idNo) {
+            x.checkedUserType = v.checkedUserType;
+          }
+        })
+      })
+    }
+  };
+
+  //保存acquireMessageInfo到调解主表
+  $scope.saveAcquireMessageInfo = function () {
+    //获取mediation的$scope
+    var appElement = document.getElementById('mediationCtrl');
+    var $parentScope = angular.element(appElement).scope(); //获取mediation的scope
+    //将本页面数据挂到主表数据中
+    $parentScope.adjust.acquireMessageInfo = JSON.stringify($scope.acquireMessageInfo);
+    //调用保存方法
+    $parentScope.save();
+  };
+
+  //关闭模态框
+  $scope.closeModal = function () {
+    $modalInstance.dismiss('cancel');
+  }
+
+  if($scope.policeInfoList.length > 0) {
+    //为之前选择过的用户添加checkedUserType属性
+    $scope.fillUserType();
+  }
+});

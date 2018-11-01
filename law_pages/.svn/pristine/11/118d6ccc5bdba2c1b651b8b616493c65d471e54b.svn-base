@@ -1,0 +1,138 @@
+<div class="bg-default row" style="position:relative;">
+	<div class="panel-heading ">
+		<div class="row clearfix ">
+			<h4 class="col-lg-3 col-xs-2"><span class="h1_line"></span>
+				<span ng-if="pages.isSmallAmount == '1'">小额诉讼办案</span>
+				<span ng-if="pages.isSmallAmount === '0'">普通诉讼办案</span>
+				<span ng-if="courtOrOnline == STATE_CONSTANT.courtMediationState">庭前调解需要介入</span>
+				<span ng-if="courtOrOnline == STATE_CONSTANT.courtSessionState">今日开庭</span>
+
+			</h4>
+			<div class="col-lg-4 col-xs-5 text-right  no-padding">
+				<div ng-show="!filterShow && courtOrOnline  == STATE_CONSTANT.all"  class="file-type">
+					<span ng-class="{'brand-color': filerState == STATE_CONSTANT.all}" ng-click="selectType(STATE_CONSTANT.all)">全部</span>
+					<span ng-class="{'brand-color': filerState == STATE_CONSTANT.courtMediationState}" ng-click="selectType(STATE_CONSTANT.courtMediationState)">庭前调解</span>
+					<span ng-class="{'brand-color': filerState == STATE_CONSTANT.courtSessionState}" ng-click="selectType(STATE_CONSTANT.courtSessionState)">在线开庭</span>
+				</div>
+			</div>
+
+			<div class="col-xs-5 line-height40">
+				<i class="iconfont icon-shaixuan1 cur-pointer pull-right " style="font-size: 24px; color: #3F65D6;" ng-click=" filterShow = !filterShow"></i>
+				<button type="button" class="btn btn-brand pull-right" ng-show="!filterShow" ng-click="searchData()" style="margin-right: 15px; margin-left: 20px; margin-top: 3px;">搜索</button>
+				<div class="search_box pull-right" ng-show="!filterShow" style="width: 212px;">
+					<input type="text" class="input-xs search_input" placeholder="流水号、案号、当事人" ng-model="pages.searchArea">
+					<i class="iconfont icon-sousuo input-search-img"></i>
+				</div>
+			</div>
+		</div>
+		<div ng-show="filterShow">
+			<form role="form" class="form-horizontal form-bg-color padding-20">
+				<div class="row clearfix form-row-bottom">
+					<div class="col-lg-3 col-md-4 col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-xs-3 text-right no-padding">流水号</label>
+							<div class="col-xs-9">
+								<input type="text" class="form-control" placeholder="请输入流水号" ng-model="pages.serialNo">
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-4 col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-xs-3 no-padding"> 当事人</label>
+							<div class="col-xs-9">
+								<input type="text" class="form-control" placeholder="请输入当事人" ng-model="pages.litigant">
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-4 col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-xs-3 no-padding"> 案由</label>
+							<div class="col-xs-9">
+								<select class="form-control no-padding " ng-model="pages.reason" style="text-indent: 8px;">
+									<option value="">==请选择==</option>
+									<option ng-repeat="item in factTypeList" value="{{item.id}}">{{item.value}}</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-4 col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-xs-3 no-padding">案号</label>
+							<div class="col-xs-9">
+								<input type="text" class="form-control input" placeholder="请输入调解号/案号" ng-model="pages.lawNo">
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="row clearfix form-row-bottom">
+					<div class="col-xs-12 text-center">
+						<button class="btn btn-default" ng-click="filterShow = false">取消</button>
+						<button class="btn btn-default" style="margin: 0 10px;" type="reset" ng-click="reset()">重置</button>
+						<button class="btn btn-brand" ng-click="queryCaseList()">查询</button>
+
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="panel-body no-padding-v">
+		<table class="table table-striped-info table-fixed table-hover" ng-if="pageData.showList.length != 0">
+			<thead>
+				<tr>
+					<th>流水号</th>
+					<th>案号</th>
+					<th>当事人</th>
+					<th>案由</th>
+					<th>缴费状态</th>
+					<th>开庭时间</th>
+					<th>操作</th>
+					<th>鉴定</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="case in pageData.showList|filter:{'state':filerState==-1?'':filerState}" >
+					<td>
+						<a class="cur-pointer" ng-click="queryDetail(case)" title="点击查询详细">{{case.serialNo}}</a>
+						<span ng-if="case.applyJudge" class="tips-box bg-error"  style="position: absolute;"><b class="pop-arrow"></b>待介入</span>
+					</td>
+					<td class=" hide-nowrap" title="{{case.lawNo}}">{{case.lawNo}}</td>
+					<td class=" hide-nowrap" >
+						<span title="{{case.applicant}}">被告：{{case.applicant}}</span>
+						<br>
+						<span title="{{case.respondent}}">原告：{{case.respondent}}</span>
+					</td>
+					<td ng-repeat="x in factTypeList|filter:{id:case.reason}">{{x.value}}</td>
+					<td><span ng-if="case.payState!=1">未缴费</span><span ng-if="case.payState==1">已缴费</span></td>
+					<td>{{case.courtDate}}</td>
+					<td>
+						<span ng-if="case.state==LAW_STATE.adjustState" class="brand-color cur-pointer" ng-click="queryDetail(case)"><i  class="iconfont icon-huifu mar-ri-8"></i>庭前调解</span>
+						<span ng-if="case.state==LAW_STATE.notHearingState && case.isShowFlag && case.vidOpenPower == 1" class="brand-color cur-pointer" ng-click="onlineCourt(case)" ><i  class="iconfont icon--banan mar-ri-8"></i>立即开庭</span>
+						<span ng-if="case.state==LAW_STATE.notHearingState && !case.isShowFlag && case.vidOpenPower == 1" class="brand-color cur-pointer btn_disable"><i  class="iconfont icon--banan mar-ri-8"></i>立即开庭</span>
+					</td>
+					<td class="cur-pointer" ng-click="Information(case.serialNo,case.isSendAppraisal)" style="position:relative;">
+						<a style="position:absolute;top:0;left:0;width:100%;
+						height:100%;display: block;line-height:50px;">
+							{{case.isSendAppraisal==1 || adjust.isAppraisalFinish==0?'查看鉴定':'发起鉴定'}}
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div ng-show="blankShow && pageData.showList.length == 0" class="text-center">
+			<img src="views/images/search_null.png" ><br>
+			抱歉，未找到相关内容！
+		</div>
+	</div>
+  <div class="text-center">
+		<pagination previous-text="<" next-text=">" first-text="<<" last-text=">>" items-per-page="itemNum" class="pagination-custom" total-items="pageData.totalItems" ng-model="pageData.currentPage" ng-change="pageChanged()" max-size="7" boundary-links="true" rotate="false"></pagination>
+	</div>
+<!--鉴定须知-->
+<div class="notice" ng-show="isInformation" style="position: absolute;top:0;left:0;width:100%;min-height:100%;z-index:999;">
+		<information></information>
+		<div class="text-align-center notice_button">
+			<button type="button" class="btn btn-brand" ng-click="sendAppraisal()">已阅，下一步</button>
+		</div>
+	</div>
+</div>

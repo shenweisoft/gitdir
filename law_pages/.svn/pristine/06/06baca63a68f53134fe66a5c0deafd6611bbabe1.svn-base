@@ -1,0 +1,319 @@
+<div class="role_management_d relative_top">
+    <div class="row bg-default" style="height: 60px; padding-top: 20px;">
+        <span class="col-lg-1" style="line-height: 36px; text-align: right;">流水号：</span>
+        <div class="col-lg-2"><input type="text" class=" search_input " ng-model="serialNo"></div>
+        <span class="col-lg-2" style="line-height: 36px; text-align: right;">登录名：</span>
+        <div class="col-lg-2"><input type="text" class=" search_input" ng-model="loginAccount"></div>
+        <span class="col-lg-2" style="line-height: 36px; text-align: right;">状态：</span>
+        <div class="col-lg-2"><input type="text" class=" search_input" ng-model="state"></div>
+        <div class="col-lg-1"></div>
+    </div>
+    <div class="row bg-default" >
+        <div class="row list-title line-height2" style="margin-top: 15px;">
+            <div class="vertical-m col-xs-2">
+                <div class="pull-right">
+                    <button class="btn btn-brand"  ng-click="queryCase()"> 查看案件</button>
+                </div>
+            </div>
+            <div class="vertical-m col-xs-2">
+                <div class="pull-right">
+                    <button class="btn btn-brand"  ng-click="caseCopy()"> 复制案件</button>
+                </div>
+            </div>
+            <div class="vertical-m col-xs-2">
+                <div class="pull-right">
+                    <button class="btn btn-brand"  ng-click="caseDelete()">删除案件</button>
+                </div>
+            </div>
+            <div class="vertical-m col-xs-2">
+                <div class="pull-right">
+                    <button class="btn btn-brand"  ng-click="caseDeleteJyAppraisal()"> 删除鉴定</button>
+                </div>
+            </div>
+            <div class="vertical-m col-xs-2">
+                <div class="pull-right">
+                    <button class="btn btn-brand"  ng-click="caseModify()"> 退回案件</button>
+                    <label><i class="iconfont icon-tishi margin-left-5 brand-color cur-pointer" popover="【调解】1000：调解中；1002：调解完成（待审批）；1003：审批完成（待立案）；1004：立案完成（待分案）；1006：分案完成（待办案：司法确认、调解）；1111：结案；1006：线上开庭(诉讼 办案);【诉讼】1001：待起诉;1002：起诉完成（待审批）;1003：审批完成（待立案）;1004：立案完成（待分案）;1005：庭前调节(诉讼办案)" width="300px;"></i></label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row bg-default" >
+        <div class="row list-title line-height2" style="margin-top: 15px;">
+            <div class="vertical-m col-xs-2">
+                <div class="pull-right">
+                    <button class="btn btn-brand"  ng-click="sendCaseToJudge()"> 审判推送</button>
+                </div>
+            </div>
+            <div class="vertical-m col-xs-2">
+                <div class="pull-right">
+                    <button class="btn btn-brand"  ng-click="modificationPassWord()"> 修改密码</button>
+                </div>
+            </div>
+            <div class="vertical-m col-xs-2">
+                <div class="pull-right">
+                    <button class="btn btn-brand"  ng-click="loginAccountRelieveIsLock()"> 账号解除锁定</button>
+                </div>
+            </div>
+            <div class="vertical-m col-xs-2">
+                <div class="pull-right">
+                    <button class="btn btn-brand"  ng-click="modificationLogin()"> 修改登录名</button>
+                    <label><i class="iconfont icon-tishi margin-left-5 brand-color cur-pointer" popover="登录名修改：同时输入原账号和现账号（英文逗号分开）"></i></label>
+                </div>
+            </div>
+            <div class="vertical-m col-xs-2">
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--数据统计-->
+<div class="role_management_d relative_top" style="margin-top: 10px;">
+    <div class="bg-default row">
+        <div class="panel-heading ">
+            <div class="row bg-default" style="height: 60px; padding-top: 20px;">
+                <span class="col-lg-1" style="line-height: 36px; text-align: right;">法院类型：</span>
+                <div class="col-lg-2">
+                    <select ng-model="dataStatistics.type" class="form-control">
+                        <option ng-value="state.type" ng-repeat="state in lawStateList">{{state.name}}</option>
+                    </select>
+                </div>
+                <span class="col-lg-2" style="line-height: 36px; text-align: right;">法院名称：</span>
+                <div class="col-lg-2"><input type="text" class=" search_input" ng-model="dataStatistics.orgName"></div>
+                <span class="col-lg-2" style="line-height: 36px; text-align: right;">保险公司：</span>
+                <div class="col-lg-2"><input type="text" class=" search_input" ng-model="dataStatistics.companyName"></div>
+            </div>
+            <div class="row bg-default" style="height: 60px; padding-top: 20px;">
+                <span class="col-lg-1" style="line-height: 36px; text-align: right;">地区：</span>
+                <div class="col-lg-2"><input type="text" class=" search_input" ng-model="dataStatistics.regionName"></div>
+                <span class="col-lg-2" style="line-height: 36px; text-align: right;">开始时间：</span>
+                <div class="col-lg-2" ng-class="{'has-error':adjust.adjustDateError}">
+                    <!--日期组件-->
+                    <div class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-readonly="true" show-button-bar="false" ng-model="dataStatistics.searchAdjustStartDate" is-open="searchAdjustStartDate"
+                               min-date="2010-01-01" max-date="currentTime" datepicker-options="dateOptions" ng-required="true" close-text="Close"/>
+                        <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="openStartDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                    </div>
+                </div>
+                <span class="col-lg-2" style="line-height: 36px; text-align: right;">结束时间：</span>
+                <div class="col-lg-2" ng-class="{'has-error':adjust.adjustDateError}">
+                    <!--日期组件-->
+                    <div class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-readonly="true" show-button-bar="false" ng-model="dataStatistics.searchAdjustEndDate" is-open="searchAdjustEndDate"
+                               min-date="dataStatistics.startDate || 2010-01-01" max-date="currentTime" datepicker-options="dateOptions" ng-required="true" close-text="Close"/>
+                        <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="openEndDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row bg-default" style="height: 80px; padding-top: 20px;">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6" style="text-align: center;">
+                    <button class="btn btn-brand"  ng-click="queryDataStatistics()">查看信息</button>
+                </div>
+                <div class="col-lg-3"></div>
+            </div>
+        </div>
+        <div class="panel-body no-padding-v" style="position: relative;">
+            <div class="row bg-default" style="height: 80px; padding-top: 20px;">
+                <div class="col-lg-11" style="text-align: right;">
+                    <button class="btn btn-brand" ><a ng-href="{{exportExcel()}}" style="color: #fff;">导出</a></button>
+                </div>
+            </div>
+            <div class="right_checkbox_list"><i style="cursor: pointer;" class="iconfont icon-icon"></i>
+                <div class="checkbox_list" style="margin-left: -35px;">
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox1" ng-model="fo.orgName" ng-checked="fo.orgName"  ng-change="listChange('orgName')"> <label for="checkbox1">法院名称</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox2" ng-model="fo.applyMediationCase" ng-checked="fo.applyMediationCase"  ng-change="listChange('applyMediationCase')"> <label for="checkbox2">申请调解案件量</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox3" ng-model="fo.mediationMiddleCase" ng-checked="fo.mediationMiddleCase"  ng-change="listChange('mediationMiddleCase')"> <label for="checkbox3">调解中案件量</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox4" ng-model="fo.mediationMiddleComplete" ng-checked="fo.mediationMiddleComplete"  ng-change="listChange('mediationMiddleComplete')"> <label for="checkbox4">调解完成案件量</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox5" ng-model="fo.mediationSuccessCase" ng-checked="fo.mediationSuccessCase"  ng-change="listChange('mediationSuccessCase')"> <label for="checkbox5">调解成功案件量</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox6" ng-model="fo.mediationFailureCase" ng-checked="fo.mediationFailureCase"  ng-change="listChange('mediationFailureCase')"> <label for="checkbox6">调解失败案件量</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox7" ng-model="fo.mediationSuccessApplyMoney" ng-checked="fo.mediationSuccessApplyMoney"  ng-change="listChange('mediationSuccessApplyMoney')"> <label for="checkbox7">调解成功案件申请总金额</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox8" ng-model="fo.mediationSuccessMoney" ng-checked="fo.mediationSuccessMoney"  ng-change="listChange('mediationSuccessMoney')"> <label for="checkbox8">调解成功案件达成总金额</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox9" ng-model="fo.newLitigationCase" ng-checked="fo.newLitigationCase"  ng-change="listChange('newLitigationCase')"> <label for="checkbox9">新收诉讼案件量</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox10" ng-model="fo.newJudicialCase" ng-checked="fo.newJudicialCase"  ng-change="listChange('newJudicialCase')"> <label for="checkbox10">新收司法确认案件量</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox11" ng-model="fo.endLitigationCase" ng-checked="fo.endLitigationCase"  ng-change="listChange('endLitigationCase')"> <label for="checkbox11">已结诉讼案件量</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox12" ng-model="fo.endJudicialCase" ng-checked="fo.endJudicialCase" ng-change="listChange('endJudicialCase')"> <label for="checkbox12">已结司法确认案件量</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox13" ng-model="fo.judicialCase" ng-checked="fo.judicialCase"  ng-change="listChange('judicialCase')"> <label for="checkbox13">司法确认案件数</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox14" ng-model="fo.judicialCaseMoney" ng-checked="fo.judicialCaseMoney"  ng-change="listChange('judicialCaseMoney')"> <label for="checkbox14">司法确认案件总金额</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox15" ng-model="fo.litigationCase" ng-checked="fo.litigationCase"  ng-change="listChange('litigationCase')"> <label for="checkbox15">起诉案件数</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox16" ng-model="fo.mediationSuccessRate" ng-checked="fo.mediationSuccessRate"  ng-change="listChange('mediationSuccessRate')"> <label for="checkbox16">成功率</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox17" ng-model="fo.claimCase" ng-checked="fo.claimCase"  ng-change="listChange('claimCase')"> <label for="checkbox17">一键理赔案件量</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox18" ng-model="fo.claimApplyMoney" ng-checked="fo.claimApplyMoney"  ng-change="listChange('claimApplyMoney')"> <label for="checkbox18">一键理赔案件申请总金额</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox19" ng-model="fo.claimSuccessApplyMoney" ng-checked="fo.claimSuccessApplyMoney"  ng-change="listChange('claimSuccessApplyMoney')"> <label for="checkbox19">一键理赔案件成功申请金额</label></div>
+                    <div class="checkbox_list_e"><input type="checkbox" id="checkbox20" ng-model="fo.claimSuccessCompensateMoney" ng-checked="fo.claimSuccessCompensateMoney"  ng-change="listChange('claimSuccessCompensateMoney')"> <label for="checkbox20">一键理赔案件成功达成金额</label></div>
+                </div>
+            </div>
+            <table class="table table-striped-info table-fixed table-hover" ng-if="dataStatisticsList.length != 0">
+                <thead>
+                    <tr>
+                        <th ng-if="fo.orgName" style="text-align:center;vertical-align:middle;">法院名称</th>
+                        <th ng-if="fo.applyMediationCase" style="text-align:center;vertical-align:middle;">申请调解案件量</th>
+                        <th ng-if="fo.mediationMiddleCase" style="text-align:center;vertical-align:middle;">调解中案件量</th>
+                        <th ng-if="fo.mediationMiddleComplete" style="text-align:center;vertical-align:middle;">调解完成案件量</th>
+                        <th ng-if="fo.mediationSuccessCase" style="text-align:center;vertical-align:middle;">调解成功案件量</th>
+                        <th ng-if="fo.mediationFailureCase" style="text-align:center;vertical-align:middle;">调解失败案件量</th>
+                        <th ng-if="fo.mediationSuccessApplyMoney" style="text-align:center;vertical-align:middle;">调解成功案件申请总金额</th>
+                        <th ng-if="fo.mediationSuccessMoney" style="text-align:center;vertical-align:middle;">调解成功案件达成总金额</th>
+                        <th ng-if="fo.newLitigationCase" style="text-align:center;vertical-align:middle;">新收诉讼案件量</th>
+                        <th ng-if="fo.newJudicialCase" style="text-align:center;vertical-align:middle;">新收司法确认案件量</th>
+                        <th ng-if="fo.endLitigationCase" style="text-align:center;vertical-align:middle;">已结诉讼案件量</th>
+                        <th ng-if="fo.endJudicialCase" style="text-align:center;vertical-align:middle;">已结司法确认案件量</th>
+                        <th ng-if="fo.judicialCase" style="text-align:center;vertical-align:middle;">司法确认案件数</th>
+                        <th ng-if="fo.judicialCaseMoney" style="text-align:center;vertical-align:middle;">司法确认案件总金额</th>
+                        <th ng-if="fo.litigationCase" style="text-align:center;vertical-align:middle;">起诉案件数</th>
+                        <th ng-if="fo.mediationSuccessRate" style="text-align:center;vertical-align:middle;">成功率</th>
+                        <th ng-if="fo.claimCase" style="text-align:center;vertical-align:middle;">一键理赔案件量</th>
+                        <th ng-if="fo.claimApplyMoney" style="text-align:center;vertical-align:middle;">一键理赔案件申请总金额</th>
+                        <th ng-if="fo.claimSuccessApplyMoney" style="text-align:center;vertical-align:middle;">一键理赔案件成功申请金额</th>
+                        <th ng-if="fo.claimSuccessCompensateMoney" style="text-align:center;vertical-align:middle;">一键理赔案件成功达成金额</th>
+                    </tr>
+                </thead>
+                <tbody class="table table-striped-info table-fixed table-hover" style="text-align:center;vertical-align:middle;">
+                    <tr ng-repeat="data in dataStatisticsList">
+                        <td ng-if="fo.orgName">{{data.orgName}}</td>
+                        <td ng-if="fo.applyMediationCase">{{data.applyMediationCase | statisticalValueNull}}</td>
+                        <td ng-if="fo.mediationMiddleCase">{{data.mediationMiddleCase | statisticalValueNull}}</td>
+                        <td ng-if="fo.mediationMiddleComplete">{{data.mediationMiddleComplete | statisticalValueNull}}</td>
+                        <td ng-if="fo.mediationSuccessCase">{{data.mediationSuccessCase | statisticalValueNull}}</td>
+                        <td ng-if="fo.mediationFailureCase">{{data.mediationFailureCase | statisticalValueNull}}</td>
+                        <td ng-if="fo.mediationSuccessApplyMoney">{{data.mediationSuccessApplyMoney | statisticalValueNull}}</td>
+                        <td ng-if="fo.mediationSuccessMoney">{{data.mediationSuccessMoney | statisticalValueNull}}</td>
+                        <td ng-if="fo.newLitigationCase">{{data.newLitigationCase | statisticalValueNull}}</td>
+                        <td ng-if="fo.newJudicialCase">{{data.newJudicialCase | statisticalValueNull}}</td>
+                        <td ng-if="fo.endLitigationCase">{{data.endLitigationCase | statisticalValueNull}}</td>
+                        <td ng-if="fo.endJudicialCase">{{data.endJudicialCase | statisticalValueNull}}</td>
+                        <td ng-if="fo.judicialCase">{{data.judicialCase | statisticalValueNull}}</td>
+                        <td ng-if="fo.judicialCaseMoney">{{data.judicialCaseMoney | statisticalValueNull}}</td>
+                        <td ng-if="fo.litigationCase">{{data.litigationCase | statisticalValueNull}}</td>
+                        <td ng-if="fo.mediationSuccessRate">{{data.mediationSuccessRate | statisticalValueNull}}</td>
+                        <td ng-if="fo.claimCase">{{data.claimCase | statisticalValueNull}}</td>
+                        <td ng-if="fo.claimApplyMoney">{{data.claimApplyMoney | statisticalValueNull}}</td>
+                        <td ng-if="fo.claimSuccessApplyMoney">{{data.claimSuccessApplyMoney | statisticalValueNull}}</td>
+                        <td ng-if="fo.claimSuccessCompensateMoney">{{data.claimSuccessCompensateMoney | statisticalValueNull}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div ng-show="dataStatisticsList.length == 0" class="text-center">
+                <img src="views/images/search_null.png" ><br>
+                抱歉，未找到相关内容！
+            </div>
+        </div>
+        <div class="text-center">
+            <pagination previous-text="<" next-text=">" first-text="<<" last-text=">>" items-per-page="dataStatistics.pageSize" class="pagination-custom" total-items="dataStatistics.totalPage" ng-model="dataStatistics.pageNo" ng-change="pageChanged()" max-size="7" boundary-links="true" rotate="false"></pagination>
+        </div>
+    </div>
+</div>
+
+
+
+<!--每周高院数据统计-->
+<div class="role_management_d relative_top" style="margin-top: 10px;">
+    <div class="bg-default row">
+        <div class="panel-heading ">
+
+            <div class="row bg-default" style="height: 80px; padding-top: 20px;">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6" style="text-align: center;">
+                    <button class="btn btn-brand"  ng-click="queryHighDataStatistics()">高院查看信息</button>
+                </div>
+                <div class="col-lg-3"></div>
+            </div>
+        </div>
+        <div class="panel-body no-padding-v" style="position: relative;">
+            <div class="row bg-default" style="height: 80px; padding-top: 20px;">
+                <div class="col-lg-11" style="text-align: right;">
+                    <button class="btn btn-brand" ><a ng-href="{{exportExcel()}}" style="color: #fff;">高院导出</a></button>
+                </div>
+            </div>
+
+            <table class="table table-striped-info table-fixed table-hover" ng-if="highDataStatisticsList.length != 0">
+                <thead>
+                <tr>
+                    <th   style="text-align:center;vertical-align:middle;">法院名称</th>
+                    <th   style="text-align:center;vertical-align:middle;">申请调解数量</th>
+                    <th   style="text-align:center;vertical-align:middle;">调解完成数量</th>
+                    <th   style="text-align:center;vertical-align:middle;">调解成功数量</th>
+                    <th   style="text-align:center;vertical-align:middle;">申请司法确认案件</th>
+                    <th   style="text-align:center;vertical-align:middle;">在线诉讼案件</th>
+                    <th   style="text-align:center;vertical-align:middle;">调解成功申请总金额(万元)</th>
+                    <th   style="text-align:center;vertical-align:middle;">调解成功达成金额(万元)</th>
+                    <th   style="text-align:center;vertical-align:middle;">申请一键理赔数量</th>
+                    <th   style="text-align:center;vertical-align:middle;">一键理赔达成总金额(万元)</th>
+                    <th   style="text-align:center;vertical-align:middle;">公安数据调取数量</th>
+                </tr>
+                </thead>
+                <tbody class="table table-striped-info table-fixed table-hover" style="text-align:center;vertical-align:middle;">
+                <tr ng-repeat="data in highDataStatisticsList">
+                    <td  >{{data.orgName}}</td>
+                    <td  >{{data.applyMediationCase | statisticalValueNull}}</td>
+                    <td  >{{data.mediationMiddleComplete | statisticalValueNull}}</td>
+                    <td  >{{data.mediationSuccessCase | statisticalValueNull}}</td>
+                    <td  >{{data.judicialCase | statisticalValueNull}}</td>
+                    <td  >{{data.litigationCase | statisticalValueNull}}</td>
+                    <td  >{{data.mediationSuccessApplyMoney | statisticalValueNull}}</td>
+                    <td  >{{data.mediationSuccessMoney | statisticalValueNull}}</td>
+                    <td  >{{data.claimCase | statisticalValueNull}}</td>
+                    <td  >{{data.claimSuccessCompensateMoney | statisticalValueNull}}</td>
+                    <td  >{{data.acccc | statisticalValueNull}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <div ng-show="highDataStatisticsList.length == 0" class="text-center">
+                <img src="views/images/search_null.png" ><br>
+                抱歉，未找到相关内容！
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--每周高院人员数据统计-->
+<div class="role_management_d relative_top" style="margin-top: 10px;">
+    <div class="bg-default row">
+        <div class="panel-heading ">
+
+            <div class="row bg-default" style="height: 80px; padding-top: 20px;">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6" style="text-align: center;">
+                    <button class="btn btn-brand"  ng-click="queryPersonDataStatistics()">高院查看人员信息</button>
+                </div>
+                <div class="col-lg-3"></div>
+            </div>
+        </div>
+        <div class="panel-body no-padding-v" style="position: relative;">
+            <div class="row bg-default" style="height: 80px; padding-top: 20px;">
+                <div class="col-lg-11" style="text-align: right;">
+                    <button class="btn btn-brand" ><a ng-href="{{exportExcel()}}" style="color: #fff;">人员导出</a></button>
+                </div>
+            </div>
+
+            <table class="table table-striped-info table-fixed table-hover" ng-if="personDataStatisticsList.length != 0">
+                <thead>
+                <tr>
+                    <th   style="text-align:center;vertical-align:middle;">区域名称</th>
+                    <th   style="text-align:center;vertical-align:middle;">法官数量</th>
+                    <th   style="text-align:center;vertical-align:middle;">调解员数量</th>
+                </tr>
+                </thead>
+                <tbody class="table table-striped-info table-fixed table-hover" style="text-align:center;vertical-align:middle;">
+                <tr ng-repeat="data in personDataStatisticsList">
+                    <td  >{{data.orgName}}</td>
+                    <td  >{{data.judicialCase | statisticalValueNull}}</td>
+                    <td  >{{data.applyMediationCase | statisticalValueNull}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <div ng-show="personDataStatisticsList.length == 0" class="text-center">
+                <img src="views/images/search_null.png" ><br>
+                抱歉，未找到相关内容！
+            </div>
+        </div>
+    </div>
+</div>
+

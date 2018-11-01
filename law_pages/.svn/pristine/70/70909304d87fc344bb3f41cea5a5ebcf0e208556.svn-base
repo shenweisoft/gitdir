@@ -1,0 +1,44 @@
+<div class="panel row" style="border-radius: 0px;">
+	<div class="panel-heading boder_bottom" style="margin-left: 20px; margin-right: 20px; padding-left: 0px;">
+		<h4 style="margin: 5px 0px;"> <span class="h1_line"></span>原审裁判结果</h4>
+	</div>
+	<div class="panel-body" style="padding: 20px;">
+        <label class="col-xs-2 control-label text-align-right line-height-30"><i class="Required">*</i>原审案号:</label>
+        <div class="col-xs-4" ng-class="{'has-error': secondInstanceInfoVO.orgLawNoError}">
+            <input type="text" class="form-control" ng-model="secondInstanceInfoVO.orgLawNo" maxlength="30" placeholder="请填写原审案号">
+        </div>
+        <label class="col-xs-2 control-label text-align-right line-height-30"><i class="Required">*</i>原审法院:</label>
+        <div class="col-xs-4" ng-class="{'has-error': secondInstanceInfoVO.orgLawIdError}">
+          <select class="form-control ng-pristine ng-valid" ng-model="secondInstanceInfoVO.orgLawId" ng-change="orgLawNameSelected()">
+              <option ng-value="v.id" ng-selected="v.id == secondInstanceInfoVO.orgLawId" ng-repeat="v in orgLawNameList">{{v.orgFullName}}</option>
+          </select>
+        </div>
+    </div>
+    <div class="col-xs-12 form-group form-group-sm">
+      <label class="col-xs-2 control-label text-align-right line-height-30"><i class="Required">*</i>案由:</label>
+      <div class="col-xs-4" ng-class="{'has-error': secondInstanceInfoVO.reasonError}">
+          <select class="form-control ng-pristine ng-valid" ng-model="secondInstanceInfoVO.reason" ng-options="v.id as v.value for v in factTypeList"></select>
+      </div>
+      <label class="col-xs-2 control-label text-align-right line-height-30"><i class="Required">*</i>立案登记日期:</label>
+      <div class="col-xs-4">
+        <p class="input-group" ng-class="{'has-error': secondInstanceInfoVO.filingDateError}">
+          <input type="text" class="form-control" is-open="options.filingDateOpened" ng-model="secondInstanceInfoVO.filingDate" datepicker-popup="yyyy-MM-dd" max-date="toDay" close-text="关闭" clear-text="清除" current-text="今天" readonly />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default btn-default-padding" ng-click="openFilingDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+      </div>
+	</div>
+	<div class="panel-heading boder_bottom step4_bt">
+		<h4 style="margin: 5px 0px;"> <span class="h1_line"></span>上诉请求</h4>
+	</div>
+	<div class="panel-body padding-20">
+		<textarea class="text-box" ng-class="{'has-error': secondInstanceInfoVO.claimsError}" ng-model="secondInstanceInfoVO.claims" maxlength="500" style="min-height: 240px; padding: 14px;" placeholder="请填写上诉请求"></textarea>
+	</div>
+	<div class="panel-heading boder_bottom step4_bt">
+		<h4 style="margin: 5px 0px;"> <span class="h1_line"></span>事实与理由</h4>
+	</div>
+	<div class="panel-body padding-20">
+		<textarea class="text-box" ng-class="{'has-error': secondInstanceInfoVO.factReasonError}" ng-model="secondInstanceInfoVO.factReason" maxlength="500" style="min-height: 240px; padding: 14px; margin-bottom: 20px;" placeholder="请填写事实与理由"></textarea>
+	</div>
+</div>

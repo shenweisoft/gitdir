@@ -1,0 +1,47 @@
+<div class="bg-default relative_top " style="margin-left: -15px; margin-right: -15px; ">
+	<div class=" panel-heading">
+		<div class="row">
+			<h4 class="col-xs-4 col-lg-7"><span class="h1_line"></span>缴费列表</h4>
+			<div class="row col-xs-8 col-lg-5">
+				<div class="col-xs-12 line-height40">
+					<button type="button" class="btn btn-brand pull-right" ng-click="queryDataList()" style="margin-right: 15px; margin-left: 20px; margin-top: 3px;">搜索</button>
+					<div class="search_box pull-right" style="width: 212px;">
+						<input type="text" class="input-xs search_input" placeholder="请输入流水号，案号" ng-model="searchContent">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel-body no-padding-v">
+		<table class="table table-striped-info table-hover table-fixed" ng-if="pageData.feeList.length != 0">
+			<thead>
+			<tr>
+				<th>流水号</th>
+				<th>当事人</th>
+				<th>缴费金额</th>
+				<th>缴费状态</th>
+				<th>生成时间</th>
+        <th>缴费时间</th>
+			</tr>
+			</thead>
+			<tbody>
+				<tr  ng-repeat="fee in pageData.feeList " >
+					<td ><label class="cur-pointer"><a ng-click="viewDetail(fee)" title="点击查询详细">{{fee.serialNo}}</a></label></td>
+					<td class="hide-nowrap">{{fee.applicant}}</td>
+					<td>{{fee.acceptanceFee}}</td>
+					<td><span ng-if="fee.payState!=1">未缴费</span><span ng-if="fee.payState==1">已缴费</span></td>
+					<td>{{fee.createDate|date:'yyyy-MM-dd'}}</td>
+          			<td>{{fee.payDate|date:'yyyy-MM-dd'}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<div ng-show="blankShow && pageData.feeList.length == 0" class="text-center">
+			<img src="views/images/search_null.png" ><br>
+			抱歉，未找到相关内容！
+		</div>
+		<div class="text-center">
+			<pagination previous-text="<" next-text=">" first-text="<<" last-text=">>" items-per-page="itemNum" class="pagination-custom" total-items="pageData.totalItems" ng-model="pageData.currentPage" ng-change="pageChanged()" max-size="7" boundary-links="true" rotate="false"></pagination>
+		</div>
+	</div>
+</div>

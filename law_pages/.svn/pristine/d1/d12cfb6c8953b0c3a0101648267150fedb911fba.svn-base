@@ -1,0 +1,51 @@
+angular.module('sbAdminApp').controller('AIOCourtSetp3Ctrl', function (PoliceConfig, PoliceService, AdminConstant, $location, $scope, $stateParams, $state, $http, $log, AlgorithmConfig, AlgorithmService, DictionaryConfig, toaster, $filter, IdentityService) {
+	$scope.selectShow = true;
+	$scope.selectBxShow = function () {
+		$scope.selectShow = !$scope.selectShow
+	}
+
+	$scope.open = function ($event) {
+		$event.preventDefault();
+		$event.stopPropagation();
+
+		$scope.opened = true;
+	};
+
+	
+
+
+
+  /**
+	 * 处理展示的费用项
+	 */
+	$scope.filterFeeList = function () {
+		$scope.feeArray = $scope.lawCase.feeDetail.filter((v) => {
+			if ($scope.lawCase.caseType == '0') { //普通受伤(无伤残)
+				if ($scope.lawCase.treatmentType == '1') { //门诊治疗,没有营养费
+					return (v.group == '1' || v.group == '2') && v.id != '07'
+				} else
+					return v.group == '1' || v.group == '2'
+			} else if ($scope.lawCase.caseType == '1') { //伤残
+				return v.group == '1' || v.group == '2' || v.group == '3' || v.group == '4' || v.group == '6'
+			} else if ($scope.lawCase.caseType == '2') { //死亡
+				if ($scope.lawCase.isDeadAtTheScene) { //当场死亡
+					return v.group == '1' || (v.group == '3' && v.id != '06') || v.group == '5' || v.group == '6'
+				} else { //非当场死亡
+					return v.group == '1' || v.group == '2' || v.group == '3' || v.group == '5' || v.group == '6'
+				}
+			}
+		})
+		console.log($scope.feeArray);
+	}()
+
+	//下一步
+	$scope.nextStep = function () {
+		console.log($scope.lawCase, "!!!!!!!!!");
+		$state.go("home_page.prejudge_new.AIOCourtSetp4")
+	}
+
+	//上一步
+	$scope.preveStep = function () {
+		$state.go("home_page.prejudge_new.AIOCourtSetp2")
+	}
+});

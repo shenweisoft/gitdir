@@ -1,0 +1,51 @@
+<import src="/pages/template/template.wxml" />
+<view class='bg'></view>
+<!-- 提示信息 -->
+<template is="wetoast" data="{{content, toastType}}" wx:if="{{showToast}}"></template>
+<!-- 头部步骤 -->
+<template is="lawCaseHeader" data="{{stepArray, step}}"></template>
+<!-- 调解地 -->
+<view class='step1_cont' style='padding-bottom:0px; padding-top:15px;'>
+  <view class='step1_cont_list' wx:if='{{userInfo.userType != 2}}'>
+    <view class='step1_cont_list_e'>
+        <view class="section__title" style='flex:4; border-bottom:1rpx solid #dddddd;'>调解地区</view>
+        <picker style='flex:8; text-align: right; border-bottom:1rpx solid #dddddd;' mode="region" bindchange="bindRegionChange" value="{{region}}" custom-item="{{customItem}}">
+          <view class="picker" style='color:#999999;'>
+           {{region? (region[0]+'，'+region[1]+'，'+region[2]) : '请选择'}}  <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+    </view>
+    <view class='step1_cont_list_e'>
+        <view class="section__title" style='flex:4; '>调解点</view>
+        <picker style='flex:8; text-align: right;' bindchange="bindPickerChange" value="{{index}}" range="{{adjustPointNameArray}}">
+          <view class="picker"  style='color:#999999;'>
+            {{adjustPointName}}  <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+    </view>
+  </view>
+</view>
+<!-- 标题  bindtap='toPrejudge'-->
+<navigator target="miniProgram" open-type="navigate" app-id="wxf3493fd86adb4898" path="pages/prejudge/step1/step1" extra-data="{{sendData}}" version="{{version}}">
+  <view class='bt_box' style='font-size:16px; text-align: right; color:#6cbdea;'>
+    不会填写点击这里 <icon class='iconfont icon--buhuijisuandianzheli'></icon>
+  </view>
+</navigator>
+
+<view class='step1_cont'>
+  <view class='step1_cont_list'>
+    <view class='step1_cont_list_e' wx:for='{{lawCase.feeDetail}}' wx:for-item='fee' wx:for-index="index">
+      <view class='step1_cont_list_e_l' style='flex:7'>{{fee.value}}</view>
+      <view class='step1_cont_list_e_r' style='flex:5'>
+       <input type='number' class="required_input" style='float: right;' bindinput='setFee' data-index='{{index}}' value='{{fee.applyAmount}}' maxlength="10" placeholder="请输入"/>
+      </view>
+      <text style='flex:1; text-align:right;'> 元</text>
+    </view>
+    
+  </view>
+</view>
+
+<view class='bottom_box_btn'>
+  <view class='bottom_box_btn_e'><view class='bottom_box_btn_e_l' bindtap='prev'>上一步</view></view>
+  <view class='bottom_box_btn_e'><view class='bottom_box_btn_e_r' bindtap='next'>提交</view></view>
+</view>

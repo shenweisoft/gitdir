@@ -1,0 +1,60 @@
+<div class="role_management_d relative_top">
+    <div class="row bg-default">
+        <div class="col-xs-12 role_management_right_d">
+            <div style="padding-bottom: 10px;">
+                <h4 class="col-lg-4 col-xs-4">
+                    <span class="h1_line"></span>
+                    查询交警案件
+                </h4>
+                <div class="col-lg-4 col-xs-4 col-md-offset-3 line-height40 margin-top-6">
+                    <div class="search_box">
+                        <input type="text" class="input-xs search_input" ng-model="searchVO.searchInfo" placeholder="请输入事故认定书编号、人员姓名">
+                        <i class="iconfont icon-sousuo input-search-img"></i>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-xs-1 line-height40 no-padding margin-top-6">
+                    <button type="button" class="btn btn-brand mar-v-3" ng-click="handleSearch()">搜索</button>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+            <div class="panel-body no-padding-v">
+                <table class="table table-striped-info table-hover table-fixed" ng-if="policeList.length > 0">
+                    <thead>
+                    <tr>
+                        <th width="25%" >事故认定书编号</th>
+                        <th width="10%" >事故地点</th>
+                        <th width="15%" >受案人</th>
+                        <th width="20%" >案由</th>
+                        <th width="15%" >受案时间</th>
+                        <th width="90" >操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="police in policeList">
+                            <td>
+                                {{police.accidentNumber? police.accidentNumber : '-'}}
+                                <!--<label>
+                                    <a class="cur-pointer po-relative" title="点击查询详细">{{data.accidentNumber}}</a>
+                                </label>-->
+                            </td>
+                            <td>{{police.accidentRegion? police.accidentRegion : '-'}}</td>
+                            <td title="{{police.recipientName}}">{{police.recipientName? police.recipientName : '-'}}</td>
+                            <td>{{police.causeType? (police.causeType | id2Text:causeTypeList) : '-'}}</td>
+                            <td>{{police.recipientDate? (police.recipientDate | stringDate | date: 'yyyy-MM-dd') : '-'}}</td>
+                            <td>
+                                <a class="cur-pointer po-relative" ng-click="handleCheck(police.id)">查看</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-center" ng-if="policeList.length == 0">
+                    <img src="views/images/search_null.png" ><br>
+                    抱歉，未找到相关内容！
+                </div>
+                <div class="text-center" ng-if="policeList.length != 0 ">
+                    <pagination previous-text="<" next-text=">" first-text="<<" last-text=">>" items-per-page="searchVO.pageSize" class="pagination-custom" total-items="searchVO.totalPage" ng-model="searchVO.pageNo" ng-change="initOrg()" max-size="7" boundary-links="true" rotate="false"></pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

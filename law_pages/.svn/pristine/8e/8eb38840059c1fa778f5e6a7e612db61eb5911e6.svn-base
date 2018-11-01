@@ -1,0 +1,619 @@
+<div style="margin-bottom: 55px;" id="step5Ctrl">
+  <form class="form-horizontal form-input">
+    <div class="row bg-default">
+      <div class="row" style="margin:0 20px;">
+        <div class="col-xs-12 tit_box">
+          <!--<div class="col-xs-12">-->
+            <i class="iconfont icon-jibenxinxi calc_icon"></i>
+            <div class="tit_personal">基本信息 </div>
+          <!--</div>-->
+        </div>
+      </div>
+      <br>
+      <div style="padding:0 20px;">
+      <div class="row no-margin">
+        <div class="col-xs-6">
+          <div class="form-group form-group-sm">
+            <label class="col-lg-4 col-xs-11 control-label"><span class="Required">*</span> 赔偿地</label>
+            <div class="col-lg-8 col-xs-11" ng-class="{'has-error':adjust.regionNameError}">
+              <input class="form-control"   id="regNameInput" ng-model="adjust.regionName" readonly/>
+              <div class="col-xs-1"></div>
+              <div class="panel panel-default padding_none" id="regNamebox" style="position:absolute;left:15px;z-index:999;width:93%; display: none;">
+                <div class="panel-body">
+                  <div js-tree="treeConfig" should-apply="true" tree="treeInstance" ng-model="adminRegion" tree-events="select_node:selectAdmin" class="pre-scrollable"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="form-group form-group-sm">
+            <label class="col-lg-3 col-xs-11 control-label text-right"><span class="Required">*</span> 赔偿年度</label>
+            <div class="col-lg-8 col-xs-11">
+              <select class="form-control" ng-model="adjust.standardYear" ng-change="changeYear()" ng-options="x as x for x in yearList">
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row no-margin">
+        <div class="col-xs-6">
+          <div class="form-group form-group-sm">
+            <label class="col-lg-4 col-xs-11 control-label text-right"><span class="Required">*</span>赔偿标准</label>
+            <div class="col-lg-8 col-xs-11">
+              <label class="radio-inline" ng-repeat="accountType in accountTypeList">
+                <input type="radio" name="household" ng-model="adjust.household" ng-change="changeHosehole()" ng-value="accountType.id" ng-checked="accountType.id==adjust.household">{{accountType.value}}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row no-margin">
+        <div class="col-xs-6">
+          <div class="form-group form-group-sm">
+            <label class="col-lg-4 col-xs-11 control-label text-right">定残/死亡日期</label>
+            <div class="col-lg-8 col-xs-11" ng-class="{'has-error':adjust.deathDateError}">
+              <div class="input-group">
+                <input type="text" class="form-control ng-isolate-scope ng-pristine ng-invalid ng-invalid-required ng-valid-date" datepicker-popup="yyyy-MM-dd" ng-readonly="true" show-button-bar="true" ng-model="adjust.deathDate" is-open="deathDateOpened" ng-change="computePayYear()" datepicker-options="{startingDay: 1}" max-date="currentTime" close-text="关闭" clear-text="清除" current-text="今天"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default btn-default-padding" ng-click="openDeathDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="form-group form-group-sm">
+            <label class="col-lg-3 col-xs-11 control-label text-right">伤残赔偿系数</label>
+            <div class="col-lg-6 col-xs-11" ng-class="{'has-error':adjust.compensateRateError}">
+              <div class="input-group">
+                <input type="text" class="form-control" ng-model="adjust.compensateRate" class="form-control" placeholder="" ng-change="compensateRateChanged(adjust)" int-only>
+                <span class="input-group-addon font-size13 form-bg-color">%</span>
+              </div>
+            </div>
+            <div class="col-lg-3 text-center" style="padding: 0">
+              <button class="btn btn-sm btn-brand pull-left" ng-click="co.showRankAppraisal()">等级鉴定</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row no-margin">
+        <div class="col-xs-6">
+          <div class="form-group">
+            <label class="col-lg-4 col-xs-11 control-label text-right"><span class="Required">*</span>案由</label>
+            <div class="col-lg-8 col-xs-11">
+              <select class="form-control" ng-model="adjust.reason" ng-options="x.id as x.value for x in factTypeList">
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="spacing_10"></div>
+      <div class="row" style="margin:0 20px;">
+        <div class="col-xs-12 tit_box">
+          <div class="col-xs-10 no-padding">
+            <i class="iconfont icon-baodandai calc_icon"></i>
+            <div class="tit_personal">责任承担及{{co.lblRespondent}}保单信息</div>
+          </div>
+          <div class="col-xs-2 btn-group" dropdown>
+            <button type="button" class="btn btn-brand margin-top-10 dropdown-toggle pull-right" dropdown-toggle ng-click="addPerson()">
+              增加责任人<span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" style="right:0;" ng-if="(adjust.applicantArray | filter:addRespondentFilter).length > 0">
+              <li ng-repeat="applicant in adjust.applicantArray | filter:addRespondentFilter" >
+                <a ng-click="addRespondent(applicant)">
+                  <span ng-if="applicant.idType==0" class="hide-nowrap" style="display: block;">{{applicant.personName}}</span>
+                  <span ng-if="applicant.idType!=0" class="hide-nowrap" style="display: block;">{{applicant.orgName}}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div ng-repeat="respondent in adjust.applicantArray | filter:showRespondentFilter">
+        <div style="background:#f3f7f9;margin:15px;padding:0 20px;">
+        <div class="row margin-bottom-10">
+          <div class="text-right padding-right-29 brand-color" style="margin-top:8px;"><span class="cur-pointer" ng-click="deleteRespondent(respondent)">删除</span></div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group form-group-sm">
+              <label class="col-lg-3 col-xs-11 control-label">{{co.lblRespondent}}名称</label>
+              <div class="col-lg-8 col-xs-11">
+                <input ng-model="respondent.personName" ng-if="respondent.idType==0" type="text" class="form-control" placeholder="" readonly>
+                <input ng-model="respondent.orgName" ng-if="respondent.idType!=0" type="text" class="form-control" placeholder="" readonly>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group form-group-sm">
+              <label class="col-lg-3 col-xs-11 control-label">责任比例</label>
+              <div class="col-lg-8 col-xs-11">
+                <div class="input-group">
+                  <input ng-model="respondent.responsibleRate" type="text" class="form-control" placeholder="" ng-change="responsibleRateChanged(respondent)" int-only>
+                  <span class="input-group-addon font-size13 form-bg-color">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group form-group-sm">
+              <label class="col-lg-3 col-xs-11 control-label">是否机动车</label>
+              <div class="col-lg-8 col-xs-11">
+                <label class="radio-inline">
+                  <!--<input ng-model="respondent.isVehicle" type="radio" value="1" name="{{respondent.id + 'radio'}}" ng-change="co.calculate()" checked>是-->
+                  <input ng-model="respondent.isVehicle" type="radio" value="1" name="{{respondent.id + 'radio'}}"  checked>是
+                </label>
+                <label class="radio-inline">
+                  <input ng-model="respondent.isVehicle" type="radio" value="0" name="{{respondent.id + 'radio'}}">否
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group form-group-sm">
+              <label class="col-lg-3 col-xs-11 control-label">绝对免赔率</label>
+              <div class="col-lg-8 col-xs-11">
+                <div class="input-group">
+                  <!--<input ng-model="respondent.absDeductible" type="text" class="form-control" placeholder="" ng-change="absDeductibleChanged(respondent)" int-only>-->
+                  <label ng-repeat="absDeductible in respondent.absDeductibleList" style="margin-right:30px;" >
+                    <input ng-change="changeAbsDeductible(respondent)" type="checkbox"  name="absDeductibleList"  ng-model="absDeductible.selected" ng-checked="absDeductible.selected" >{{absDeductible.value}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" ng-show="respondent.isVehicle=='1'">
+          <div class="col-xs-12 no-padding">
+            <div class="col-xs-6">
+              <div class="form-group form-group-sm">
+                <label class="col-lg-3 col-xs-11 control-label">车牌号</label>
+                <div class="col-lg-8 col-xs-11">
+                  <input id="plateNo" ng-model="respondent.plateNo" type="text" class="form-control" placeholder="">
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group form-group-sm">
+                <label class="col-lg-3 col-xs-11 control-label">投保险种</label>
+                <div class="col-lg-8 col-xs-11">
+                  <label class="checkbox-inline" ng-repeat="riskType in riskTypes">
+                    <input type="checkbox" name="{{respondent.id + 'checkbox'}}" ng-change="riskTypeChanged(respondent, riskType.id)" ng-model="respondent.riskTypes[riskType.id]" ng-checked="respondent.riskTypes[riskType.id]">{{riskType.value}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div class="row no-margin" ng-show="(respondent.riskTypes['0'] || respondent.riskTypes['1']) && respondent.isVehicle=='1'">
+          <div class="col-xs-12">
+            <table class="table table-bordered">
+              <thead>
+              <tr>
+                <th colspan="2" class="text-center">险种名称</th>
+                <th class="text-center">保额</th>
+                <th class="text-center">承保公司</th>
+                <th class="text-center">免赔率%</th>
+                <th class="text-center">赔偿比例%</th>
+                <th class="text-center">绝对免赔率比例%</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-show="respondent.riskTypes['0']">
+                <td rowspan="3" style="vertical-align:middle;">交强险</td>
+                <td>医疗费</td>
+                <td><input type="text" class="form-control" ng-value="respondent.responsibleRate>0?10000:1000" readonly="readonly"></td>
+                <td rowspan="3" style="vertical-align:middle;">
+                <select class="form-control" ng-model="respondent.insuranceForceCompany" ng-options="x for x in adjust.applicantArray|respondents2Company">
+                </select></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr ng-show="respondent.riskTypes['0']">
+                <td>死亡伤残</td>
+                <td><input type="text" class="form-control" ng-value="respondent.responsibleRate>0?110000:11000" readonly="readonly"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr ng-show="respondent.riskTypes['0']">
+                <td>财产损失</td>
+                <td><input type="text" class="form-control" ng-value="respondent.responsibleRate>0?2000:100" readonly="readonly"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr ng-show="respondent.riskTypes['1']">
+                <td>商业险</td>
+                <td>三者险</td>
+                <td><input type="text" ng-model="respondent.thirdParty" class="form-control" ng-change="thirdPartyChanged(respondent)" ng-blur="co.calculate()" float-only></td>
+                <td><select class="form-control" ng-model="respondent.insuranceBusinessCompany" ng-options="x for x in adjust.applicantArray|respondents2Company">
+                </select></td>
+                <td><input ng-disabled="respondent.riskTypes['2']" type="text" ng-model="respondent.thirdPartyFranchise" class="form-control" ng-change="thirdPartyFranchiseChanged(respondent)"></td>
+                <td><input ng-disabled="respondent.riskTypes['2']" type="text" ng-model="respondent.thirdPartyRate" class="form-control" ng-change="thirdPartyRateChanged(respondent)"></td>
+                <td><input ng-disabled="respondent.riskTypes['2']" type="text" ng-model="respondent.absDeductible" class="form-control" readonly="readonly"></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="spacing_10"></div>
+      <div >
+        <div class="row" style="margin:0 20px;">
+          <div class="col-xs-12 tit_box">
+            <!--<div class="col-xs-8">-->
+              <i class="iconfont icon-xinxi calc_icon"></i>
+              <div class="tit_personal"><span ng-if="co.isAdjust">调解赔偿详情</span><span ng-if="!co.isAdjust">申请赔偿详情</span></div>
+              <div class="tit_box_right" style="float: right;">
+                <span><img src="views/images/1_bx.png">保险承担(按责任比例计算)</span>
+                <span><img src="views/images/3_bxqp.png">保险全赔</span>
+                <span><img src="views/images/2_zx.png">自行承担费用</span>
+              </div>
+            <!--</div>-->
+            <!--<div class="col-xs-2"></div>-->
+          </div>
+        </div>
+        <br>
+        <div class="row no-margin">
+          <div class="col-xs-12">
+            <table class="table table-bordered">
+              <thead ng-if="co.isAdjust">
+              <tr>
+                <th class=" text-center" rowspan="2" style="vertical-align: middle; width: 65px;">是否赔偿</th>
+                <th class="col-xs-2 text-center" rowspan="2" style="vertical-align: middle;">费用名称</th>
+                <th class="col-xs-3 text-center" rowspan="2" style="vertical-align: middle;">申请金额</th>
+                <th class="text-center" colspan="2"   style="vertical-align: middle;">调解金额 <i class="iconfont icon-tishi margin-left-5 brand-color cur-pointer" popover-placement="top" popover="{{conciliationStatement}}"></i></th>
+                <th class="col-xs-2 text-center" rowspan="2"  style="vertical-align: middle;">备注说明</th>
+                <th class=" text-center" rowspan="2" style="vertical-align: middle; width: 35px;">依据</th>
+              </tr>
+              <tr>
+                <th class="text-center col-xs-3" style="vertical-align: middle;">保险内金额</th>
+                <th class="text-center col-xs-1" style="vertical-align: middle;">保险外金额</th>
+              </tr>
+              </thead>
+              <thead ng-if="!co.isAdjust">
+              <tr>
+                <th class="col-xs-1 text-center"  style="vertical-align: middle; width: 65px;">是否赔偿</th>
+                <th class="col-xs-3 text-center" rowspan="2" style="vertical-align: middle;">费用名称</th>
+                <th class="col-xs-3 text-center" rowspan="2" style="vertical-align: middle;">申请金额</th>
+                <th class="col-xs-3 text-center" rowspan="2"  style="vertical-align: middle;">备注说明</th>
+                <th class="col-xs-2 text-center" style="vertical-align: middle; width: 35px;">依据</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="fee in adjust.feeDetail" ng-class="{'bg-danger':fee.isChecked && fee.isClaimWarningFlag}">
+                <!-- 是否赔偿 -->
+                <td class="text-center"><input class="margin-top-10 paddingLr" type="checkbox" name="feeRow" ng-change="feeCheckChanged(fee, fee.id)" ng-model="fee.isChecked" ng-checked="fee.isChecked" ng-disabled="fee.disabled"></td>
+                <!-- 费用名称 -->
+                <td class="line-height-34">
+                  <!-- 保险承担按比例 -->
+                  <img src="views/images/1_bx.png" ng-show="!fee.insuranceFlag && insuranceFlag != '1'">
+
+                  <span ng-show="fee.insuranceFlag && fee.insuranceFlag== '2'">
+                    <!-- 保险全赔 -->
+                    <img ng-show="fee.selectShow==true" src="views/images/3_bxqp.png">
+                    <!-- 自行承担费用 -->
+                    <img ng-show="fee.selectShow==false" src="views/images/2_zx.png">
+                  </span>
+                    {{fee.value}}<i ng-show="fee.isClaimWarning" class="iconfont icon-tishi margin-left-5 brand-color cur-pointer" popover-placement="top" popover="{{fee.warningText}}"></i>
+                  <div class="switchButton" ng-show="fee.insuranceFlag && fee.insuranceFlag== '2'" ng-click="selectBxShow(fee)">
+                    <img ng-show="fee.selectShow" src="views/images/open.png">
+                    <img ng-hide="fee.selectShow" src="views/images/close.png">
+                  </div>
+                </td>
+                <!-- 申请金额 -->
+                <td>
+                  <div ng-show="fee.template=='0' && fee.isChecked">
+                    <div class="col-xs-6 no-padding">
+                      <input type="text" ng-model="fee.applyAmount" class="form-control paddingLr" ng-change="refreshTotal();" placeholder="元" float-only>
+                    </div>
+                  </div>
+                  <div ng-show="fee.template=='1' && fee.isChecked">
+                    <div class="col-xs-6 no-padding">
+                      <input type="text" ng-model="fee.applyAmount" class="form-control paddingLr" ng-change="refreshTotal();" placeholder="元" float-only>
+                    </div>
+                  </div>
+                  <div ng-show="fee.template=='2' && fee.isChecked">
+                    <div class="col-xs-3 no-padding">
+                      <input type="text" ng-model="fee.applyPerUnit" ng-change="computeChange(fee, true)" class="form-control paddingLr" placeholder="元/天" float-only>
+                    </div>
+                    <div class="col-xs-1 no-padding line-height2 text-center">×</div>
+                    <div class="col-xs-3 no-padding">
+                      <input type="text" ng-model="fee.applyUnit" ng-change="computeChange(fee, true)" class="form-control paddingLr" placeholder="天" float-only>
+                    </div>
+                    <div class="col-xs-1  no-padding line-height2 text-center">=</div>
+                    <div class="col-xs-4 no-padding">
+                      <input type="text" ng-model="fee.applyAmount" ng-change="computeChange(fee, false)" class="form-control paddingLr" placeholder="元" float-only>
+                    </div>
+                  </div>
+                  <div ng-show="fee.template=='3' && fee.isChecked">
+                    <div class="col-xs-2 no-padding">
+                      <input type="text" ng-model="fee.applyPerUnit" class="form-control paddingLr" ng-change="computeChange(fee, true)" placeholder="元/年" float-only>
+                    </div>
+                    <div class="col-xs-1 no-padding line-height2 text-center text-center">×</div>
+                    <div class="col-xs-2 no-padding">
+                      <input type="text" ng-model="fee.applyUnit" class="form-control paddingLr" ng-change="computeChange(fee, true)" placeholder="年" int-only>
+                    </div>
+                    <div class="col-xs-1 no-padding line-height2 text-center text-center">×</div>
+                    <div class="col-xs-2 no-padding" style="position: relative;">
+                      <input ng-if="fee.id != 15" type="text" ng-model="adjust.compensateRate" class="form-control paddingLr" ng-change="computeChange(fee, true)" placeholder="%" readonly="readonly">
+                      <input ng-if="fee.id == 15" type="text" ng-model="adjust.compensateRateDeath" class="form-control paddingLr" ng-change="computeChange(fee, true)" placeholder="%" readonly="readonly">
+                      <span style="position: absolute; top: 8px; right: 8px;">%</span>
+                    </div>
+                    <div class="col-xs-1 no-padding line-height2 text-center text-center">=</div>
+                    <div class="col-xs-3 no-padding">
+                      <input type="text" ng-model="fee.applyAmount" class="form-control paddingLr" ng-change="computeChange(fee, false)" placeholder="元" float-only>
+                    </div>
+                  </div>
+                  <div ng-show="fee.template=='4' && fee.isChecked">
+                    <div class="col-xs-3 no-padding">
+                      <input type="text" ng-model="fee.applyPerUnit" ng-change="computeChange(fee, true)" class="form-control paddingLr" placeholder="元/月" float-only>
+                    </div>
+                    <div class="col-xs-1 no-padding line-height2 text-center text-center">×</div>
+                    <div class="col-xs-3 no-padding">
+                      <input type="text" ng-model="fee.applyUnit" ng-change="computeChange(fee, true)" class="form-control paddingLr" placeholder="月" int-only>
+                    </div>
+                    <div class="col-xs-1 text-center line-height2 no-padding">=</div>
+                    <div class="col-xs-4 no-padding">
+                      <input type="text" ng-model="fee.applyAmount" ng-change="computeChange(fee, false)" class="form-control paddingLr" placeholder="元" float-only>
+                    </div>
+                  </div>
+                  <div ng-show="fee.template=='5' && fee.isChecked">
+                    <div class="col-xs-6 no-padding">
+                      <input type="text" ng-model="fee.applyAmount" class="form-control paddingLr" ng-change="refreshTotal();" placeholder="元" float-only>
+                    </div>
+                    <div class="col-xs-3 no-padding text-center">
+                      <i class="iconfont icon-jisuanqi brand-color font20 cur-pointer" ng-show="fee.id == '14'" ng-click="addDependent('apply')"></i>
+                      <!--误工费、护理费、处理人员误工费-->
+                      <i class="iconfont icon-jisuanqi brand-color font20 cur-pointer" ng-show="fee.id == '08' || fee.id == '09' || fee.id == '80'" ng-click="addNursingFee('apply',fee)"></i>
+                    </div>
+                  </div>
+                </td>
+                <!-- 调解金额 -->
+                <td ng-if="co.isAdjust">
+                  <div ng-show="fee.template=='0' && fee.isChecked">
+                    <div class="col-xs-6 no-padding">
+                      <input type="text" ng-model="fee.claimAmount" class="form-control paddingLr" ng-change="computeChange(fee, true, true)" placeholder="元" float-only>
+                    </div>
+                    <div class="col-xs-6" ng-if="fee.id == '40'">
+                      <button class="btn btn-brand" ng-click="carDamageCalculation()">车损计算</button>
+                    </div>
+                  </div>
+                  <div ng-show="fee.template=='1' && fee.isChecked">
+                    <div class="col-xs-6 no-padding">
+                      <input type="text" ng-model="fee.claimAmount" class="form-control paddingLr" ng-change="refreshTotal();" placeholder="元" float-only>
+                    </div>
+                  </div>
+                  <div ng-show="fee.template=='2' && fee.isChecked">
+                    <div class="col-xs-3 no-padding">
+                      <input type="text" ng-model="fee.claimPerUnit" class="form-control paddingLr" ng-change="computeChange(fee, true, true)"  placeholder="元/天" float-only>
+                    </div>
+                    <div class="col-xs-1 no-padding line-height2 text-center">×</div>
+                    <div class="col-xs-3 no-padding">
+                      <input type="text" ng-model="fee.claimUnit" class="form-control paddingLr" ng-change="computeChange(fee, true, true)"  placeholder="天" int-only>
+                    </div>
+                    <div class="col-xs-1  no-padding line-height2 text-center">=</div>
+                    <div class="col-xs-4 no-padding">
+                      <input type="text" ng-model="fee.claimAmount" class="form-control paddingLr" ng-change="computeChange(fee, false, true)"  placeholder="元" float-only>
+                    </div>
+                  </div>
+                  <div ng-show="fee.template=='3' && fee.isChecked">
+                    <div class="col-xs-2 no-padding">
+                      <input type="text" ng-model="fee.claimPerUnit" class="form-control paddingLr" ng-change="computeChange(fee, true, true)" placeholder="元/年" float-only>
+                    </div>
+                    <div class="col-xs-1 no-padding line-height2 text-center">×</div>
+                    <div class="col-xs-2 no-padding">
+                      <input type="text" ng-model="fee.claimUnit" class="form-control paddingLr" ng-change="computeChange(fee, true, true)" placeholder="年" int-only>
+                    </div>
+                    <div class="col-xs-1 no-padding line-height2 text-center">×</div>
+                    <div class="col-xs-2 no-padding" style="position: relative;">
+                      <input ng-if="fee.id != 15" type="text" ng-model="fee.compensateRate" class="form-control paddingLr" ng-change="computeChange(fee, true, true)" placeholder="%" >
+                      <input ng-if="fee.id == 15" type="text" ng-model="adjust.compensateRateDeath" class="form-control paddingLr" ng-change="computeChange(fee, true, true)" placeholder="%" readonly="readonly">
+                      <span style="position: absolute; top: 8px; right: 8px;">%</span>
+                    </div>
+                    <div class="col-xs-1 no-padding line-height2 text-center">=</div>
+                    <div class="col-xs-3 no-padding">
+                      <input type="text" ng-model="fee.claimAmount" class="form-control paddingLr" ng-change="computeChange(fee, false, true)" placeholder="元" float-only>
+                    </div>
+                  </div>
+                  <div ng-show="fee.template=='4' && fee.isChecked">
+                    <div class="col-xs-3 no-padding">
+                      <input type="text" ng-model="fee.claimPerUnit" class="form-control paddingLr" ng-change="computeChange(fee, true, true)" placeholder="元/月" float-only>
+                    </div>
+                    <div class="col-xs-1 no-padding line-height2 text-center">×</div>
+                    <div class="col-xs-3 no-padding">
+                      <input type="text" ng-model="fee.claimUnit" class="form-control paddingLr" ng-change="computeChange(fee, true, true)" placeholder="月" int-only>
+                    </div>
+                    <div class="col-xs-1 text-center line-height2 no-padding text-center">=</div>
+                    <div class="col-xs-4 no-padding">
+                      <input type="text" ng-model="fee.claimAmount" class="form-control paddingLr" ng-change="computeChange(fee, false, true)" placeholder="元" float-only>
+                    </div>
+                  </div>
+                  <div ng-show="fee.template=='5' && fee.isChecked">
+                    <div class="col-xs-6 no-padding">
+                      <input type="text" ng-model="fee.claimAmount" class="form-control paddingLr" ng-change="refreshTotal();" placeholder="元" float-only>
+                    </div>
+                    <!--调解金额（保险内金额） 被抚养人生活费、误工费、护理费-->
+                    <div class="col-xs-3 no-padding text-center">
+                      <i class="iconfont icon-jisuanqi brand-color font20 cur-pointer" ng-show="fee.id == '14'" ng-click="addDependent('claim')"></i>
+                      <!--误工费、护理费、处理人员误工费-->
+                      <i class="iconfont icon-jisuanqi brand-color font20 cur-pointer" ng-show="fee.id == '08' || fee.id == '09' || fee.id == '80'" ng-click="addNursingFee('claim',fee)"></i>
+                    </div>
+                  </div>
+                </td>
+                <!--保险外金额-->
+                <td ng-if="co.isAdjust">
+                  <div class="col-xs-11 no-padding" ng-show="fee.id != '90'">
+                    <input type="text" ng-model="fee.extraAmount" readonly="readonly" class="form-control paddingLr" placeholder="元" ng-click="handleExtraAmount(fee)" ng-disabled="fee.disabled">
+                  </div>
+                </td>
+                <!-- 备注说明 -->
+                <td><input title="{{fee.remark}}" type="text" ng-model="fee.remark" class="form-control"></td>
+                <!-- 依据 -->
+                <td class="ng-binding text-center criteriaColor" style=" cursor: pointer; vertical-align: middle;" ng-click="openCriteria('lg', fee , 'hide')">查看</td>
+              </tr>
+              <tr>
+                <th></th>
+                <th>合计</th>
+                <th>
+                  <div class="col-xs-6 no-padding text-center line-height2">申请合计</div>
+                  <div class="col-xs-6 no-padding">
+                    <input type="text" ng-model="adjust.applyTotal" class="form-control" placeholder="元" readonly="readonly">
+                  </div>
+                </th>
+                <th ng-if="co.isAdjust" colspan="2">
+                  <div class="col-xs-6 no-padding text-center line-height2">调解合计</div>
+                  <div class="col-xs-6 no-padding">
+                    <input type="text" ng-model="adjust.lawMoney" class="form-control" placeholder="元" readonly="readonly">
+                  </div>
+                </th>
+                <th colspan="2">
+                  <div class="col-lg-2 col-xs-6 no-padding text-center line-height2" ng-if="co.isAdjust">已付</div>
+                  <div class="col-lg-4 col-xs-6 no-padding" ng-if="co.isAdjust" ng-click="queryPayMoney()">
+                    <input type="text" ng-model="adjust.paidTotal" readonly="readonly"   class="form-control" placeholder="元">
+                  </div>
+                  <div class="col-lg-6 col-xs-12 no-padding" ng-if="co.isAdjust">
+                    <div class="col-lg-4 col-xs-6 no-padding text-center line-height2 pull-left">剩余</div>
+                    <div class="col-lg-8 col-xs-6 no-padding" ng-if="co.isAdjust">
+                      <input type="text" ng-model="adjust.willPayTotal" class="form-control" ng-readonly="true" placeholder="元">
+                    </div>
+                  </div>
+                </th>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="spacing_10"></div>
+        <div class="row" style="margin:0 20px;">
+          <div class="col-xs-12 tit_box">
+            <div class="col-xs-10 no-padding">
+              <i class="iconfont icon-qian-copy calc_icon" style="font-size:16px;"></i>
+              <div class="tit_personal"><span ng-if="co.isAdjust">调解赔偿信息</span><span ng-if="!co.isAdjust">申请赔偿信息</span></div>
+            </div>
+            <div class="col-xs-2 text-center">
+              <button class="btn btn-brand pull-right margin-top-10" ng-click="co.calculate(true)">计算</button>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="row no-margin">
+          <div class="col-xs-12">
+            <table class="table table-bordered">
+              <thead>
+              <tr>
+                <th class="col-xs-1 text-center">申请人</th>
+                <th class="col-xs-1 text-center">损失金额</th>
+                <th class="col-xs-5 text-center">赔偿方</th>
+                <th class="col-xs-1 text-center">赔偿金额</th>
+                <th class="col-xs-1 text-center">交强险</th>
+                <th class="col-xs-1 text-center">商业险</th>
+                <th class="col-xs-2 text-center">自行承担金额</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="result in adjust.compensateTable">
+                <td ng-if="$index==0" rowspan="{{adjust.compensateTable.length}}" style="vertical-align:middle;">{{selectApplicantInArray()}}</td>
+                <td ng-if="$index==0" rowspan="{{adjust.compensateTable.length}}" style="vertical-align:middle;"><span ng-if="co.isAdjust">{{adjust.lawMoney | formatMoney}}</span><span ng-if="!co.isAdjust">{{adjust.applyTotal | formatMoney}}</span></td>
+                <td>{{result | result2Text}}</td>
+                <td>{{result.calcIndemnitySum}}</td>
+                <td><span ng-show="result.payType=='1'">{{result.calcIndemnitySum}}</span></td>
+                <td><span ng-show="result.payType=='2'">{{result.calcIndemnitySum}}</span></td>
+                <td><span ng-show="result.payType=='3'">{{result.calcIndemnitySum}}</span></td>
+              </tr>
+              <tr>
+                <td>合计</td>
+                <td></td>
+                <td></td>
+                <td><span ng-if="co.isAdjust">{{adjust.lawMoney}}</span><span ng-if="!co.isAdjust">{{adjust.applyTotal}}</span></td>
+                <td>{{calcTotal(adjust.compensateTable, '1')}}</td>
+                <td>{{calcTotal(adjust.compensateTable, '2')}}</td>
+                <td></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <br><br>
+        <div ng-show="co.isAdjust">
+          <div class="spacing_10"></div>
+          <div class="row" style="margin:0 20px;">
+            <div class="col-xs-12 tit_box">
+              <div class="col-lg-8 col-xs-6 no-padding">
+                <i class="iconfont icon-chaxunjieguo calc_icon"></i>
+                <div class="tit_personal">调解结果</div>
+              </div>
+              <div class="col-lg-4 col-xs-6" ng-show="adjust.adjustResult == 2||adjust.adjustResult == 3">
+                <div class="col-xs-12 flo-r" ng-click="signPage()">
+                  <div class="tit_personal pull-right brand-color cur-pointer" style="font-size:14px;">签字文书</div>
+                  <i class="iconfont icon-shangchuan pull-right brand-color"></i>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row" style="margin:0 15px;padding-left:20px;">
+            <div class="col-xs-6 padding_none">
+              <div class="form-group">
+                <label class="col-lg-2 col-xs-11 control-label no-padding"><span class="xing">*</span>调解日期</label>
+                <!--日期组件-->
+                <div class="col-lg-8 col-xs-11" ng-class="{'has-error':adjust.adjustDateError}">
+                  <div class="input-group">
+                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-readonly="true" show-button-bar="false" ng-model="adjust.adjustDate" is-open="adjustDateOpened"
+                           min-date="2010-01-01" max-date="currentTime" datepicker-options="dateOptions" ng-required="true" close-text="Close"/>
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openAdjustDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label class="col-lg-2 col-xs-11 control-label no-padding">付款日期</label>
+                <div class="col-lg-8 col-xs-11" ng-class="{'has-error':adjust.payDateError}">
+                  <div class="input-group">
+                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-readonly="true" show-button-bar="true" ng-model="adjust.payDate" is-open="payDateOpened"
+                           min-date="2010-01-01" max-date="'2020-06-22'" datepicker-options="dateOptions"
+                           ng-required="true" close-text="关闭" clear-text="清除" current-text="今天" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openPayDate($event)"><i
+                              class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="margin:0 15px;padding-left:20px;">
+            <div class="form-group">
+              <label class="col-lg-1 col-xs-12 control-label no-padding"><span class="xing">*</span>调解结果</label>
+              <div class="col-lg-11 col-xs-12">
+                <label class="radio-inline margin-right-15" ng-repeat="x in ajustResultArray">
+                  <input type="radio" value="{{x.id}}" name="result" ng-change="adjustResultChanged(x)" ng-model="adjust.adjustResult" ng-checked="adjust.adjustResult==x.id">{{x.text}}
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="margin:0 20px 50px;padding-left:20px;">
+            <div class="form-group">
+              <label class="col-lg-1 col-xs-0 control-label"></label>
+              <div class="col-lg-10 col-xs-12">
+                <textarea class="form-control" rows="8" ng-model="adjust.adjustResultRemark"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div ng-include="co.isAdjust?'views/pages/mediation_platform/litigation_mediation/'+co.step6Url+'.html':'views/pages/lawyer/processing_case/files/'+co.step6Url+'.html'" ng-show="false"></div>

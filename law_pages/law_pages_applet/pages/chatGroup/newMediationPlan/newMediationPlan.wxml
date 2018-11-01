@@ -1,0 +1,20 @@
+<view class='detail_bg'></view>
+<view class='bt'>机动车交通事故责任纠纷</view>
+<view class='cont_list'>
+  <view class='cont_list_e' wx:for="{{mediationPlan.feeArray}}" wx:for-item="fee" wx:for-index="idx">
+    <view class='cont_list_e_name'>{{fee.value}}</view>
+    <input type="digit" class='cont_list_e_input' placeholder='请输入' data-index="{{idx}}" value="{{fee.claimAmount}}" data-attribute="claimAmount" bindinput="inputChanged"></input>
+    <view class='cont_list_e_unit'>元</view>
+    <view class='clear'></view>
+  </view>
+</view>
+<view style='height:80px;'></view>
+
+<view class='bottom_box_btn'>
+  <view class='bottom_box_btn_e' bindtap="saveMediationPlan">
+    <view class='bottom_box_btn_e_l'><icon class='iconfont icon-iconset0237'></icon> 保存</view>
+  </view>
+  <view class='bottom_box_btn_e' bindtap="shareMediationPlan">
+    <view class='bottom_box_btn_e_r'><icon class='iconfont icon--fenxiang1'></icon> 分享</view>
+  </view>
+</view>

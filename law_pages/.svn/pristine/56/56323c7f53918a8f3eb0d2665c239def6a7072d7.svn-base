@@ -1,0 +1,150 @@
+<div class="modal-header">
+	<i class="iconfont icon-guanbi close" ng-click="cancel()"></i>
+	<h4 class="modal-title" id="myModalLabel">机动车信息</h4>
+</div>
+<div class="modal-body row">
+	<div class="col-xs-12">
+		<div class="col-xs-12 tit_box1" >
+			<span class="tit_line"></span>
+			<span class="tit_personal">机动车基本信息</span>
+		</div>
+		<div class="col-xs-12 no-padding">
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right ">机动车所有人：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.syr}}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">号牌种类：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.hpzl | id2Text:plateTypeList}}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">号牌号码：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.hphm}}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">VIN码：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.clsbdh}}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">身份证明名称：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.sfzmmc | id2Text:cardName}}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right no-padding">所有人身份证明号码：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.sfzmhm}}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">车辆型号：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.clxh}}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">使用性质：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.syxz | id2Text:useNature}}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">中文品牌：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.clpp1}}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">初次登记日期：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.ccdjrq}}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">发证日期：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.fzrq}}</div>
+			</div>
+
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">发动机号：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.fdjh}}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">保险终止日期：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.bxzzrq}}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">状态：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.zt | idText:vehicleStatus }}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">车辆类型：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.cllx | id2Text:carList }}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">邮寄地址：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.zzxxdz }}</div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<div class="col-xs-5 text-muted text-right">住所详细地址：</div>
+				<div class="col-xs-7 no-padding">{{vehicle.zsxxdz}}</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="col-xs-12" >
+		<div class="col-xs-12 tit_box1" >
+			<span class="tit_line"></span>
+			<span class="tit_personal">机动车检验记录</span>
+		</div>
+		<div class="col-xs-12">
+			<table class="table table-bordered margin-left">
+				<tr>
+					<td>检验日期</td>
+					<td>承检单位</td>
+				</tr>
+				<tr ng-repeat="vehcheck in vehicle.vehchecks">
+					<td>{{vehcheck.jyrq}}</td>
+					<td>{{vehcheck.cjdw}}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="col-xs-12" >
+		<div class="col-xs-12 tit_box1" >
+			<span class="tit_line"></span>
+			<span class="tit_personal">机动车车牌变更记录</span>
+		</div>
+		<div class="col-xs-12">
+			<table class="table table-bordered margin-left">
+				<tr>
+					<td>原号牌种类</td>
+					<td>变更时间</td>
+				</tr>
+				<tr ng-repeat="vehmodify in vehicle.vehmodifys">
+					<td>{{vehmodify.Bgnr}}</td>
+					<td>{{vehmodify.bgrq}}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="col-xs-12" >
+		<div class="col-xs-12 tit_box1" >
+			<span class="tit_line"></span>
+			<span class="tit_personal">机动车过户记录</span>
+		</div>
+		<div class="col-xs-12">
+			<table class="table table-bordered margin-left">
+				<tr>
+					<td>原号牌种类</td>
+					<td>原号牌号码</td>
+					<td>原所有人</td>
+					<td>变更时间</td>
+				</tr>
+				<tr  ng-repeat="vehownermodify in vehicle.vehownermodifys">
+					<td>{{vehownermodify.Yhpzl  | id2Text:plateTypeList}}</td>
+					<td>{{vehownermodify.yhphm}}</td>
+					<td>{{vehownermodify.ysyr}}</td>
+					<td>{{vehownermodify.bgrq}}</td>
+
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<div class="row">
+		<div class="col-xs-offset-3 col-xs-6 btn_center">
+			<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">关闭</button>
+		</div>
+	</div>
+</div>

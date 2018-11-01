@@ -1,0 +1,32 @@
+        <div class="modal-header">
+            分配权限
+            <i class="iconfont pull-right icon-guanbi close" ng-click="cancel()"></i>
+        </div>
+        <table class=" modal-body height_box_d" >
+             <tr class="form-group" ng-repeat="sysPermissions in sysPermissionsList">
+                <td class=" col-xs-3 height_box_d_l" >
+                    {{sysPermissions.value}}
+                </td>
+                <td class=" col-xs-8 height_box_d_r" >
+                   <table style="width:100%;">
+                       <tr ng-repeat="sysPermission in sysPermissions.subList">
+                           <td><input type="checkbox" ng-model="sysPermission.selected"> {{sysPermission.value}}</td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                       </tr>
+                   </table>
+                </td>
+            </tr>
+        </table>
+        <div class="modal-footer">
+             <div class="form-group">
+                <div class="col-xs-offset-5 col-xs-1">
+                    <button type="submit" class="btn btn-default " ng-click="cancel()">取消</button>
+                </div>
+                <div class=" col-xs-1">
+                    <button type="submit" class="btn btn-brand bg-brand-color" ng-click="savePermission()">保存</button>
+                </div>
+                
+            </div>
+        </div>

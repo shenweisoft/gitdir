@@ -1,0 +1,241 @@
+.detail_bg{
+  background: #ebf3f6;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: -1;
+  top: 0px;
+}
+.detail_list{
+  padding-bottom: 80px;
+}
+.detail_e{
+  width: 702rpx;
+  margin-left: 24rpx;
+  background: #ffffff;
+  border-radius: 8rpx;
+  margin-top: 15px;
+  font-size: 16px;
+}
+.detail_e_top{
+  height: 78rpx;
+  width: 100%;
+  background: #f7f7f7;
+  line-height: 78rpx;
+  color: #969696;
+}
+.detail_e_top_img{
+  width: 50rpx;
+  height: 50rpx;
+  margin-left: 30rpx;
+  margin-right: 20rpx;
+  position: relative;
+  top: 18rpx;
+}
+.detail_e_e{
+  width: 630rpx;
+  padding-bottom: 30rpx;
+  border-bottom: 1rpx solid #dcdcdc;
+  margin-left: 32rpx;
+}
+.detail_e_e view{
+  line-height: 45rpx;
+  text-indent: 10rpx;
+}
+.detail_e_e_t{
+  margin-top: 25rpx;
+  color: #000000;
+}
+.detail_e_e_t text{
+  float: right;
+}
+.detail_e_button{
+  display: flex;
+}
+.detail_e_button_e{
+  flex: 1;
+  height: 45rpx;
+  color: #4685f9;
+  text-align: center;
+  line-height: 45rpx;
+  margin-top: 14rpx;
+  margin-bottom: 14rpx;
+}
+.border_r{
+  border-right: 1rpx solid #dcdcdc;
+}
+.detail_e_bt{
+  background: #f7f7f7;
+  display: flex;
+  padding: 20rpx 40rpx;
+}
+.detail_e_bt_l{
+  flex: 1;
+  display: flex;
+}
+.iconfont_box{
+  width: 25px;
+  height: 25px;
+  background: #deeefd;
+  border-radius: 50%;
+  text-align: center;
+}
+.iconfont_box .iconfont{
+  color: #4685f9;
+  position: relative;
+  top: -5px;
+}
+.detail_e_bt_r{
+  flex: 1;
+  text-align: right;
+  color: #4088ff;
+}
+.detail_e_bt_l_r{
+  line-height: 25px;
+  margin-left: 10px;
+  color: #999999;
+}
+.comment{
+  text-align: center;
+  line-height: 50px;
+}
+.bt_img{
+  float: left;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.bt_img image{
+  width: 100%;
+  height: 100%;
+}
+.comment_e{
+   border-top: 1px solid #dcdcdc;
+   margin-bottom:40rpx;
+}
+.comment_e_bt{
+  padding: 10px;
+}
+.comment_e_bt .text{
+  line-height: 28px;
+  text-indent: 10px;
+}
+.comment_e_bt .time{
+  text-indent: 38px;
+  line-height: 20px;
+  font-size: 14px;
+  color: #989898;
+}
+.cont_text{
+  font-size: 15px;
+  display:-webkit-box;
+  -webkit-line-clamp:4;
+  overflow:hidden;
+  -webkit-line-break:auto;
+  -webkit-box-orient:vertical;
+  text-indent: 50px;
+}
+.botton_box{
+  position: fixed;
+  left: 0rpx;
+  bottom: 0rpx;
+  height: 100rpx;
+  background: #ffffff;
+  width: 100%;
+}
+.botton_box .input{
+  width: 574rpx;
+  height: 64rpx;
+  border-radius: 8rpx;
+  background: #ebebeb;
+  margin-left: 26rpx;
+  margin-top: 18rpx;
+  float: left;
+  padding-left: 20rpx;
+}
+.botton_box image{
+  width: 54rpx;
+  height: 54rpx;
+  float: right;
+  margin-right: 40rpx;
+  margin-top: 20rpx;
+}
+.botton_box .num{
+  padding: 2rpx 4rpx;
+  background: red;
+  position: absolute;
+  right: 30rpx;
+  top: 10rpx;
+  border-radius: 50%;
+  font-size: 18rpx;
+  color: #ffffff;
+}
+.audio_mask{
+  width: 400rpx;
+  height: 400rpx;
+  position: fixed;
+  left: 175rpx;
+  top: 50%;
+  margin-top: -400rpx;
+  border-radius: 18rpx;
+  text-align: center;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.5);  
+}
+
+.audio_mask image{
+  width: 122rpx;
+  height: 182rpx;
+  margin-top: 82rpx;
+  z-index: 2;
+}
+.audio_mask_text{
+  color: #ffffff;
+  text-align: center;
+  z-index: 2;
+}
+.loading2{
+    width: 60px;
+    height: 60px;
+    float: right;
+    margin-top: 65px;
+    margin-right: 30px;
+}
+.loading2 span{
+    display: inline-block;
+    width: 8px;
+    height: 100%;
+    margin-left: 3px;
+    border-radius: 1px;
+    background: #fff;
+    -webkit-animation: load2 1.04s ease infinite;
+}
+@-webkit-keyframes load2{
+    0%,100%{
+        height: 30px;
+        background: #ffffff;
+    }
+    50%{
+        height: 60px;
+        background: #cccccc;
+    }
+}
+.loading2 span:nth-child(2){
+    -webkit-animation-delay:0.2s;
+}
+.loading2 span:nth-child(3){
+    -webkit-animation-delay:0.4s;
+}
+.loading2 span:nth-child(4){
+    -webkit-animation-delay:0.6s;
+}
+.loading2 span:nth-child(5){
+    -webkit-animation-delay:0.8s;
+}
+.right_text{
+  text-align: right;
+  color: #0e9deb;
+  font-size: 18px;
+
+}

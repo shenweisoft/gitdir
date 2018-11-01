@@ -1,0 +1,48 @@
+<!-- <div class="left_top">
+    <div class="btn_style2 complete">完成</div>
+    <div class="btn_style1 lastStep">上一步</div>
+</div> -->
+<div class="left_top_tjyy ">
+    <div class="btn_style2" ng-click="wxchartShow()">调解预约</div>
+    <div class="ewm_yytj_box" ng-show="wxchart">
+        <img class="index_top_img_t" src="views/images/index_top_img_t.png">
+        <img src="views/images/ewm_yytj.png">
+        <p>如要预约调解，请扫码关注小程序后，在小程序端发起。</p>
+    </div>
+</div>
+
+<div class="AIOSetp_bt">
+    <div class="AIOSetp_bt_l"></div>计算结果
+</div>
+<!-- 财产损失 -->
+<div class="AIOChart">
+    <div class="AIOChart_l">
+        <div id="accidentTotalLoss" style="width: 600px;height:800px;"></div>
+    </div>
+    <div class="AIOChart_r">
+    	<div class="AIOChart_r_t">
+    		<div id="accidentTotalLoss2" style="width: 850px;height:400px;"></div>
+    	</div>
+    	<div class="AIOChart_r_b">
+    		<div id="accidentTotalLoss3" style="width: 850px;height:400px;"></div>
+    	</div>
+    </div>
+</div>
+<div class="AIOSetp_bt">
+    <div class="AIOSetp_bt_l"></div>申请赔偿明细
+    <div class="AIOSetp_bt_r">合计：
+        <span>{{lawCase.applyTotal}}</span>
+    </div>
+</div>
+<div class="AIOlist">
+    <div class="row" style="margin-top: 15px; padding-bottom: 50px;">
+        <div class="col-xs-6" ng-repeat="fee in lawCase.feeDetail track by $index"  ng-if="fee.applyAmount && fee.applyAmount > 0">
+            <label class="col-xs-4 text-right">
+                {{fee.value}}
+            </label>
+            <div class="col-xs-8 AIOlistNum">
+                ￥{{fee.applyAmount}}
+            </div>
+        </div>
+    </div>
+</div>

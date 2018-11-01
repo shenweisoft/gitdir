@@ -1,0 +1,34 @@
+<import src="/pages/template/template.wxml" />
+<!-- 提示信息 -->
+<template is="wetoast" data="{{content, toastType}}" wx:if="{{showToast}}"></template>
+
+<view class="bgcolor"></view>
+<view class='step1_cont' wx:for='{{flowList}}'>
+  <view class='step1_bt' >
+    <view class='step1_icon_bg'><icon class='iconfont icon--anjianxiangqing-peichangfeiyongmingxi'></icon> </view> 收款信息
+    <view class='step1_bt_r'>总金额：<span>{{}}</span></view>
+  </view>
+  <view class='step1_cont_list' wx:for='{{item.paymentlist}}'>
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l'>{{item.receiver}} <span class="title">收款账户 <span class='left_icon'></span></span></view>
+      <view class='step1_cont_list_e_r body-view' style='text-align:right; color:#999999;'>付款金额：<span style="color:#0c9eeb;" >{{item.amount}}</span></view>
+    </view>
+    <view class='step1_cont_list_c'>
+      <view class='step1_cont_list_c_l'>收款账号 <view class='spot'></view></view>
+      <view class='step1_cont_list_c_r'> {{item.accountNumber}}</view>
+      <view class='step1_cont_list_c_l'>开户行 <view class='spot'></view></view>
+      <view class='step1_cont_list_c_r'> {{item.openingBank}}</view>
+      <view class='step1_cont_list_c_l'>款项类别 <view class='spot'></view></view>
+      <view class="list_e_text_r" wx:if="{{item.paymentType == 1}}">交强险</view>
+      <view class="list_e_text_r" wx:if="{{item.paymentType == 2}}">商业险</view>
+      <view class="list_e_text_r" wx:if="{{item.paymentType == 3}}">其他</view>
+      <view class='step1_cont_list_c_l'>付款时间 <view class='spot'></view></view>
+      <view class='step1_cont_list_c_r'> {{item.payTime}}</view>
+      <view class='clear'></view>
+    </view>
+  </view>
+</view>
+<view wx:if='{{flowList.length == 0}}'>
+  暂无数据
+</view>
+

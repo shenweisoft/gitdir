@@ -1,0 +1,63 @@
+<import src="/pages/template/template.wxml" />
+<view class="bgcolor"></view>
+<view class='step1_cont' style="padding-bottom:10px;">
+<!-- 财产损失 -->
+  <view class='step1_bt' style='text-align:center;'> 事故总损失及交强险限额内外损失如下</view>
+  <view class='step1_cont_list display_flex'>
+    <view class='left_e_box'>
+      <view class='left_e_box_t'>{{lawCase.applyTotal}}</view>
+      <view class='left_e_box_b'>事故总损失</view>
+    </view>
+    <view class='right_e_box'>
+      <view class='right_e_box_t'>
+        <view class='right_e_box_t_t' style='color:#ff847d;'>{{lawCase.compulsoryInsuranceAmount}}元（{{lawCase.applyTotal == 0? 0 : lawCase.innerInsuracePrecent}}%）</view>
+        <view class='right_e_box_t_b'>交强险限额内损失</view>
+      </view>
+      <view class='right_e_box_b'>
+        <view class='right_e_box_t_t' style='color:#3acf8c;'>{{lawCase.compulsoryInsuranceOutterAmount}}元（{{lawCase.applyTotal == 0? 0 : lawCase.outterInsuracePrecent}}%）</view>
+        <view class='right_e_box_t_b'>交强险限额外损失</view>
+      </view>
+    </view>
+  </view>
+  <view class='step1_bt' style='text-align:center;'> 其中交强险限额内应承担的损失如下</view>
+  <view class='step1_cont_list' style='height:300px; margin-bottom:55px; position: relative;'>
+    <view class='step1_bt' style='text-indent: 15px;'> 交强险限额内承担损失：{{lawCase.compulsoryInsuranceAmount}}元</view>
+    <ec-canvas id="mychart-dom-bar" style="z-index:-1;" canvas-id="mychart-bar" ec="{{ ec }}"></ec-canvas>
+  </view>
+  
+  <view class='step1_bt' style='text-align:center;'> 交强险限额外应承担的损失如下</view>
+  <view class='step1_cont_list' style='height:300px; margin-bottom:55px;'>
+    <view class='step1_bt' style='text-indent: 15px;'> 交强险限额外承担损失：{{lawCase.compulsoryInsuranceOutterAmount}}元</view>
+    <ec-canvas id="mychart-dom-bar" style="z-index:-1;" canvas-id="mychart-bar" ec="{{ ec1 }}"></ec-canvas>
+  </view>
+
+
+  <!-- 申请赔偿明细 -->
+  <view class='step1_cont_list2'>
+    <view class='step1_bt' style='color:#272727; border-bottom:1rpx solid #bdbdbd;'><view class='step1_icon_bg2' style='background:#ebf3f6;'><icon style='color:#16a0eb;' class='iconfont icon--wugongfei'></icon> </view> 申请赔偿明细
+      <view style='float: right; color:#ff817d;o'>￥{{lawCase.applyTotal}}</view>
+    </view>
+    <view class='step1_cont_list2_e' wx:for="{{lawCase.feeDetail}}" wx:for-item="fee" wx:if="{{fee.applyAmount && fee.applyAmount > 0}}">
+      <view class='step1_cont_list2_e_l'>{{fee.value}}</view>
+      <view class='step1_cont_list2_e_r'>￥{{fee.applyAmount}}</view>
+    </view>
+  </view>
+</view>
+
+
+<view class='bottom_btn_box' style='position: relative;'>
+    <!-- 步数提示框 -->
+    <!-- <view class='progress_title'style='left:{{currentStep/5 * 100}}%;'>
+      {{currentStep}}/5
+      <view class='progress_title_b'></view>
+    </view> -->
+    <progress percent="{{currentStep/5 * 100}}" />
+    <view class='nextBtn'>
+          <view class='left_btn' bindtap='reservation'><icon class='iconfont icon--yuyuetiaojie' style='font-size:20px; position: relative; top: 1px;'></icon> 预约调解</view>
+          <!-- <view class='right_btn'><icon class='iconfont icon--fenxiang' style='font-size:20px; position: relative; top: 1px;'></icon> 分享</view> -->
+          <button class='right_btn' open-type="share">
+            <icon class='iconfont icon--fenxiang' style='font-size:20px; position: relative; top: 1px;'></icon> 分享
+          </button>
+          <view class='clear'></view>
+    </view>
+</view>

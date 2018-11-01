@@ -1,0 +1,54 @@
+<div class="modal-header" style="background:#fff;">
+	<h4 class="modal-title" id="myModalLabel">
+		<span ng-if="!sysOrgCourt.id">新建法庭</span>
+		<span ng-if="sysOrgCourt.id">编辑法庭</span>
+		<i class="iconfont icon-guanbi close" data-dismiss="modal" ng-click="cancel()"></i></h4>
+</div>
+<div class="modal-body">
+	<form class="form-horizontal" role="form">
+		<div class="form-group">
+			<div class="row">
+				<div class="col-xs-3 text-right">
+					<label class="control-label"><span class="xing">*</span>法庭名称</label>
+				</div>
+				<div class="col-xs-6">
+					<input class="form-control" placeholder="请输入法庭名称" ng-model="sysOrgCourt.courtName" name="courtName">
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-xs-3 text-right">
+					<label class="control-label"><span class="xing">*</span>排序</label>
+				</div>
+				<div class="col-xs-6">
+					<input class="form-control" placeholder="请输入排序" ng-model="sysOrgCourt.sort" name="sort">
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-xs-3 text-right">
+					<label class="control-label"><span class="xing">*</span>是否启用</label>
+				</div>
+				<div class="col-xs-6">
+					<label >
+						<input  type="radio" ng-model="sysOrgCourt.enable"  name="enable" value="1" ng-checked="sysOrgCourt.enable=='1'">是&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input  type="radio" ng-model="sysOrgCourt.enable"  name="enable" value="2" ng-checked="sysOrgCourt.enable=='2'" >否
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</form>
+</div>
+<div class="modal-footer">
+	<div class="row">
+		<div class="col-xs-3"></div>
+		<div class="col-xs-6 btn_center">
+			<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">取消</button>
+			<button type="button" class="btn btn-brand" ng-click="saveSysOrgCourt()">保存</button>
+		</div>
+		<div class="col-xs-3"></div>
+	</div>
+</div>

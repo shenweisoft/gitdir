@@ -1,0 +1,19 @@
+
+angular.module('sbAdminApp').controller('AIOCourtIndexCtrl', function (PoliceConfig,PoliceService,AdminConstant,$location,$scope, $stateParams, $state, $http, $log, AlgorithmConfig, AlgorithmService, DictionaryConfig, toaster, $filter,IdentityService) {
+  
+  $scope.showDemond = false;
+  
+  /**
+   * 赔付试算
+   */
+  $scope.prejudge = function(){
+    $state.go('AIOCourtSetpBox');
+  }
+  
+  /**
+   * 官方微信
+   */
+  $scope.weChat = function(){
+    $scope.showDemond = !$scope.showDemond
+  }
+});

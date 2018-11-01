@@ -1,0 +1,46 @@
+<div class="bg-default">
+    <div class="modal-header">
+        <h4 class="modal-title">
+            <span class="h1_line"></span>选择角色
+        </h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="form-group" ng-class="{'has-error':loginAccountError}" >
+                <div class="row  no-margin" style="line-height: 6px;">
+                    <div class="col-xs-3 text-right">
+                        <label class="control-label"> <i class="xing">*</i>案件类型</label>
+                    </div>
+                    <div class="col-xs-7 no-padding">
+                        <label class="control-label">{{law.operateType == '0' ? law.adjustResult == '0'?"司法确认":law.adjustResult == '4'?"调解":law.adjustResult == '0' ? "达成调解":"未选择" : '诉讼'}}</label>
+                    </div>
+                </div>
+                <div class="row  no-margin" style="line-height: 60px;">
+                    <div class="col-xs-3 text-right">
+                        <label class="control-label"> <i class="xing">*</i>案件所在流程</label>
+                    </div>
+                    <div class="col-xs-7 no-padding">
+                        <label class="control-label">{{law.state | stateText:lawStateList}}（{{law.state}}）</label>
+                    </div>
+                </div>
+                <div class="row  no-margin">
+                    <div class="col-xs-3 text-right">
+                        <label class="control-label"> <i class="xing">*</i>选择角色</label>
+                    </div>
+                    <div class="col-xs-7 no-padding">
+                        <select class="form-control" ng-model="userId" ng-change="roleChange(userId)" ng-options="x.id as x.name for x in roleList">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="modal-footer ">
+        <div class="text-center">
+            <button type="button" class="btn btn-brand " ng-click="ok()">确认登录</button>
+        </div>
+    </div>
+</div>

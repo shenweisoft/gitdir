@@ -1,0 +1,165 @@
+<view  id='chatDetailBg' class="{{menuShow?'chatDetailBg2':'chatDetailBg'}}" bindtap="hideKeyboard">
+  <view>
+    <view wx:for="{{messageArray}}" wx:for-item="message" wx:for-index="idx">
+      <!-- 其他人 -->
+      <view class='chatDetai_bsqr' wx:if="{{message.userId != userInfo.id && message.type != 'notice'}}">
+        <!-- 被申请人头像 -->
+        <image class='chatDetaiImg hide' src='../../../images/index_header_sqr.png'></image>
+        <!-- 调解员头像 -->
+        <image class='chatDetaiImg' src='../../../images/index_header_tjy.png'></image>
+        <view class='chatDetaiCont'>
+          <view class='chatDetaiContName'>{{JuduserType}}：{{message.userName}} <text>{{message.createDate}}</text></view>
+          <!-- 文字 -->
+          <view class='chatDetaiContText' wx:if="{{message.type=='text'}}">
+            <view class='chatDetaiContTextIcon'></view>
+            {{message.text}}
+          </view>
+          <!-- 音频 -->
+          <audio class='chatDetaiContText' style='width:{{message.length*6+100}}rpx;' wx:if="{{message.type=='voice'}}" data-index="{{idx}}" data-src="{{message.text}}" catchtap="play">
+            <view class='chatDetaiContTextIcon'></view>
+            <view class='red_news' wx:if="{{!message.isPlay}}"></view>
+            <view>{{message.length}}" <image class='audioImg' src='../../../images/chat_pic65.png' ></image></view>
+          </audio>
+          <!-- 图片 -->
+          <view class='chatDetaiContimg' wx:if="{{message.type=='picture'}}"  >
+            <view class='chatDetaiContTextIcon'></view>
+            <image style='width:280rpx; height:{{280/message.styleWidth}}rpx;' src='{{message.text}}' data-height ='{{message.styleWidth}}'  data-val='{{message.text}}' catchtouchstart="bigImage"></image>
+          </view>
+          <!-- 文件 -->
+          <view class='chatDetaiContText' wx:if="{{message.type=='link'}}" data-id="{{message.planId}}" catchtap="viewPlan">
+            <view class='chatDetaiContTextIcon'></view>
+            <image class='chatDetaiContText_img' src='../../../images/chat_pic8.png'></image>
+            {{message.text}}
+            <view class='clear'></view>
+          </view>
+        </view>
+        <view class='clear'></view>
+      </view>
+      <!-- 本人 -->
+      <view class='chatDetai_bsqr' wx:if="{{message.userId == userInfo.id && message.type != 'notice'}}">
+        <image class='chatDetaiImg vis_hidden' src='../../../images/index_header_sqr.png'></image> 
+        <view class='chatDetaiCont'>
+          <view class='chatDetaiContName_r'><text>{{message.createDate}}</text></view>
+          <!-- 文字 -->
+          <view class='chatDetaiContText_r' wx:if="{{message.type=='text'}}">
+            <view class='chatDetaiContTextIcon_r'></view>
+            {{message.text}}
+          </view>
+          <!-- 音频 -->
+          <audio class='chatDetaiContText_r' style='width:{{message.length*6+100}}rpx;'  wx:if="{{message.type=='voice'}}" data-src="{{message.text}}" data-index="{{idx}}" catchtap="play">
+            <view class='chatDetaiContTextIcon_r'></view>
+            <view>{{message.length}}" <image class='audioImg' src='../../../images/chat_pic27.png'></image></view> 
+          </audio>
+          <!-- 图片 -->
+          <view class='chatDetaiContimg_r' wx:if="{{message.type=='picture'}}">
+            <view class='chatDetaiContTextIcon_r'></view>
+            <image style='width:280rpx; height:{{280/message.styleWidth}}rpx;' src='{{message.text}}' data-height ='{{message.styleWidth}}' data-val='{{message.text}}' catchtouchstart="picTouchStart" catchtouchmove='picTouchMove' catchtouchend='picTouchEnd'></image>
+          </view>
+          <!-- 文件 -->
+          <view class='chatDetaiContText' wx:if="{{message.type=='link'}}" data-id="{{message.planId}}" catchtap="viewPlan">
+            <view class='chatDetaiContTextIcon_r2'></view>
+            <image class='chatDetaiContText_img' src='../../../images/chat_pic8.png'></image>
+            {{message.text}}
+            <view class='clear'></view>
+          </view>
+        </view>
+        <image class='chatDetaiImg' src='../../../images/index_header_sqr.png'></image>
+        <view class='clear'></view>
+      </view> 
+      <!-- 提示信息 -->
+      <view class='system' wx:if="{{message.type == 'notice'}}">
+        <view class='time'><text>{{message.createDate}}</text></view>
+        <!-- 文字 -->
+        <view>
+          <text class='prompt'>{{message.text}}</text>
+        </view>
+      </view> 
+    </view>
+  </view>
+  <view class='clear' style='height:160rpx; width:100%;'></view>
+</view>
+<!-- 输入框 -->
+<view class='bottom_input_box'>
+  <view class='bottom_input_box_top'>
+    <view class='bottom_input_box_top_e'>
+      <!-- 键盘按钮 -->
+      <image src='../../../images/chat_pic1.png' wx:if="{{speakMode}}" catchtap='toggleBtn'></image>
+      <!-- 语音按钮 -->
+      <image src='../../../images/chat_pic3.png' wx:if="{{!speakMode}}" catchtap='toggleBtn'></image>
+    </view>
+    <view class='bottom_input_box_top_c'>
+      <!-- 输入框 -->
+      <input type='text'  placeholder='请输入内容' confirm-type="发送" adjust-position="true" bindconfirm='speakWord' value="{{speakWork}}" wx:if="{{!speakMode}}"></input>
+      <!-- 语音button -->
+      <view wx:if="{{speakMode}}" catchtouchstart='touchStart' catchtouchend='touchEnd' catchtouchmove="touchMove" bindlongpress='record'>按住说话</view>
+    </view>
+    <view class='bottom_input_box_top_e'><image src='../../../images/chat_pic2.png' catchtap='toggleMenu'></image></view>
+    <view class='clear'></view>
+  </view>
+  <!-- 隐藏内容 -->
+  <view class='bottom_input_box_bottom' wx:if="{{menuShow}}">
+    <view class='bottom_input_box_bottom_e' catchtap="sendImage">
+      <image src='../../../images/chat_pic5.png'></image>
+      <view>照片</view>
+    </view>
+    <view class='bottom_input_box_bottom_e' catchtap='liveChat'>
+      <image src='../../../images/chat_pic6.png'></image>
+      <view>视频聊天</view>
+    </view>
+    <view class='bottom_input_box_bottom_e' catchtap='mediationPlan'>
+      <image src='../../../images/chat_pic7.png'></image>
+      <view>调解方案</view>
+    </view>
+  </view>
+</view>
+<!-- 语音图片 -->
+<view class='audio_mask' hidden='{{voiceShow}}'>
+   <view class='loading2'>
+     <span></span>
+     <span></span>
+     <span></span>
+     <span></span>
+     <span></span>
+   </view>
+   <image src='../../../images/chat_pic4.png'></image> 
+   <view class='audio_mask_text'>手指上滑  取消发送</view>
+</view>
+<!-- 相册 -->
+<view class='{{bigImgsrc?"":"hide"}}' bindtap="PicHide"> 
+  <view class='Mask'><icon class='MaskPurple' color='#fff' type="cancel" size="40" bindtap="PicHide"/> 
+    <swiper style="height:1100rpx; line-height:1100rpx;" current="{{imgIndex}}">
+      <block>
+        <swiper-item style="text-align: center;">
+          <image src="{{bigImgsrc}}" class="slide-image" style='vertical-align: middle;' style='vertical-align: middle; width:720rpx; height:{{720/bigImgHeight}}rpx;' mode='widthFix'/>
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+</view>
+
+<!-- 群成员 -->
+<view class='group_box {{showUsersList? "open":(showUsersList == undefined? "normal": "close")}}'>
+<!-- <view class='group_box' style='right:0'> -->
+  <image class='group_box_img' src='../../../images/peo_lis.png' bindtap='toggleUserList'></image>
+  <view class='group_list' >
+    <view wx:for='{{usersList}}'>
+      <view  style='position:relative;'>
+        <image class='GroupOwner' src='../../../images/qz.png' wx:if="{{item.userType == '调解员'}}"></image>
+        <!-- 被申请人 -->
+        <image class='group_box_l' wx:if="{{item.userType == '被申请人'}}" src='../../../images/index_header_bsqr.png'></image>
+        <!-- 法官 -->
+        <image class='group_box_l' wx:if="{{item.userType == '法官'}}" src='../../../images/index_header_fg.png'></image>
+        <!-- 申请人 -->
+        <image class='group_box_l' wx:if="{{item.userType == '申请人'}}" src='../../../images/index_header_sqr.png'></image>
+        <!-- 调解员 -->
+        <image class='group_box_l' wx:if="{{item.userType == '调解员'}}" src='../../../images/index_header_tjy.png'></image>
+        <view class='group_box_r max_len'>{{item.userType}}：{{item.name}}</view>
+      </view>
+      <view class='clear'></view>
+    </view>
+  </view>
+  <view class='button-wp' wx:if="{{userInfo.userType == '2'}}">
+    <view class='btn' bindtap='toMediationUsers' data-flag='0'><icon class='iconfont icon-icon02'></icon> 添加</view>
+    <view class='btn' bindtap='toMediationUsers' data-flag='1'><icon class='iconfont icon-del'></icon> 删除</view>
+  </view>
+</view>

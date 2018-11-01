@@ -1,0 +1,147 @@
+<import src="/pages/template/template.wxml" />
+<template is="wetoast" data="{{content}}" hidden="{{showToast}}"></template>
+<view class="bgcolor"></view>
+<view class='step1_cont'>
+  <view class='step1_bt'><view class='step1_icon_bg'><icon class='iconfont icon--shigujibenxinxi'></icon> </view> 事故基本信息</view>
+  <view class='step1_cont_list'>
+
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l'>事故发生时间</view>
+      <view class='step1_cont_list_e_r'>
+        <picker mode="date" value="{{lawCase.createDate}}" start="2000-09-01" end="{{currentDate}}" data-attribute="createDate" bindchange="lawCaseDataChange">
+          <view class="picker">
+           {{lawCase.createDate}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l'><view class=''>事故发生地</view></view>
+      <view class='step1_cont_list_e_r' style='padding-bottom: 10px; padding-top: 10px; flex:8'>
+          <view class='icon_box'>
+            <icon class='iconfont icon-xiangyou'></icon>
+          </view> 
+          <picker mode="region" bindchange="lawCaseDataChange" data-attribute="regionName" value="{{region}}" style='float: right; width:85%;'>
+            <view class="picker" style='word-break: break-all; line-height:26px;'>
+              {{region[0]+'-'+region[1]+'-'+region[2]}}
+            </view>
+          </picker>
+      </view>
+     
+    </view>
+
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l' bindtap='opentitle' data-title='{{accidentTypeRemark[accidentTypeIndex]}}'>事故类型 <icon class='iconfont icon--bangzhuqipao'></icon></view>
+      <view class='step1_cont_list_e_r' style='flex: 9;'>
+        <picker bindchange="lawCaseDataChange" data-attribute="accidentType" value="{{accidentTypeIndex}}" range="{{accidentTypeArray}}">
+          <view class="picker">
+            {{accidentTypeArray[accidentTypeIndex]}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l'>受害性质</view>
+      <view class='step1_cont_list_e_r'>
+        <picker bindchange="lawCaseDataChange" data-attribute="caseType" value="{{caseTypeIndex}}" range="{{caseTypeArray}}">
+          <view class="picker">
+            {{caseTypeArray[caseTypeIndex]}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e' wx:if="{{lawCase.caseType == '2'}}">
+      <view class='step1_cont_list_e_l'>是否当场死亡</view>
+      <view class='step1_cont_list_e_r' style='text-align:right;'>
+        <switch checked="{{lawCase.isDeadAtTheScene=='1'}}" color="#0d9deb" data-attribute="isDeadAtTheScene" bindchange="lawCaseDataChange"/>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e' wx:if="{{lawCase.caseType == '2' && !lawCase.isDeadAtTheScene}}"><!--非当场死亡-->
+      <view class='step1_cont_list_e_l'>死亡时间</view>
+      <view class='step1_cont_list_e_r'>
+        <picker mode="date" value="{{lawCase.deathDate}}" start="2000-09-01" end="{{currentDate}}" data-attribute="deathDate" bindchange="lawCaseDataChange">
+          <view class="picker">
+           {{lawCase.deathDate}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e' wx:if="{{lawCase.accidentType != '2'}}">
+      <view class='step1_cont_list_e_l border0'>{{responsibilityLabel}}</view>
+      <view class='step1_cont_list_e_r border0'>
+        <picker bindchange="lawCaseDataChange" data-attribute="responsibility" value="{{responsibilityIndex}}" range="{{responsibility}}">
+          <view class="picker">
+            {{responsibility[responsibilityIndex]}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view> 
+
+  </view>
+
+  <view class='step1_bt' wx:if="{{lawCase.caseType != '3'}}"><view class='step1_icon_bg'><icon class='iconfont icon--shouhairenxinxi'></icon> </view> 受害人信息</view>
+  <view class='step1_cont_list' wx:for="{{lawCase.applicantArray}}" wx:for-item="applicant" wx:for-index="idx" wx:if="{{applicant.personType=='0' && lawCase.caseType != '3'}}">
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l'>户籍性质</view>
+      <view class='step1_cont_list_e_r' style='text-align: right;'>
+      <radio-group class="radio-group" data-attribute="household" bindchange="lawCaseDataChange">
+        <label class="radio">
+          <!--城镇-->
+           <view style='float:right;'>城镇</view>
+           <view style='float:right;' class='radioIconBg iocnfontActive' wx:if="{{lawCase.household =='2'}}">
+             <icon class='iconfont icon--chengzhen '></icon>
+           </view>
+           <view style='float:right;' class='radioIconBg' wx:if="{{lawCase.household == '1'}}">
+             <icon class='iconfont icon--chengzhen'></icon>
+           </view>
+          <radio class='hide' value="2" checked="{{item.checked}}"/>
+        </label>
+        <label class="radio">
+          <!--农村-->
+          <view style='float:right;'>农村</view> 
+          <view style='float:right;' class='radioIconBg' wx:if="{{lawCase.household == '2'}}">
+            <icon class='iconfont icon--nongcun'></icon>
+          </view>
+          <view style='float:right;' class='radioIconBg iocnfontActive' wx:if="{{lawCase.household == '1'}}">
+            <icon class='iconfont icon--nongcun '></icon>
+          </view>
+          <radio class='hide'  value="1" checked="{{item.checked}}"/>
+        </label>
+      </radio-group>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l border0'>出生日期</view>
+      <view class='step1_cont_list_e_r border0'>
+        <picker mode="date" value="{{applicant.birthDay}}" start="1900-09-01" end="{{currentDate}}" id="{{idx}}" data-attribute ="birthDay" bindchange="applicantDataChange">
+          <view class="picker">
+           {{applicant.birthDay}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view> 
+
+  </view>
+
+  <view class='step1_cont_list'>
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l border0' bindtap='opentitle' data-title='默认使用最新的人身损害赔偿标准，可手动进行修改。'>赔偿年度 <icon class='iconfont icon--bangzhuqipao'></icon></view>
+      <view class='step1_cont_list_e_r border0'>
+        <picker bindchange="lawCaseDataChange" data-attribute="standardYear" value="{{standardYearArrayIndex}}" range="{{standardYearArray}}">
+          <view class="picker">
+            {{lawCase.standardYear}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+  </view>
+</view>
+
+<template is="footInfo" data="{{currentStep}}"></template>

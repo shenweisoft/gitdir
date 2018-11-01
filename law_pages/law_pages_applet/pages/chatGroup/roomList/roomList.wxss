@@ -1,0 +1,84 @@
+.caseCommunication_e_box{
+  width: 750rpx;
+  height: 146rpx;
+}
+.caseCommunication_e{
+  width: 750rpx;
+  position: relative;
+}
+.caseCommunication_e_l{
+  width: 750rpx;
+  height: 146rpx;
+  position: absolute;
+  z-index: 99;
+  transition:left 0.2s ease-in-out;
+  background: #ffffff;
+}
+.caseCommunication_e_r{
+  width: 162rpx;
+  height: 146rpx;
+  background: red;
+  text-align: center;
+  line-height: 146rpx;
+  color: #ffffff;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  z-index: 1;
+}
+.border_bottom{
+  border-bottom: 1rpx solid #dddddd;
+  width: 670rpx;
+  margin-left: 40rpx;
+}
+.caseCommunication_e_l .left_img{
+  width: 100rpx;
+  height: 100rpx;
+  margin-top: 30rpx;
+  margin-left: 40rpx;
+  float: left;
+}
+.caseCommunication_e_l_r{
+  width: 560rpx;
+  height: 90rpx;
+  float: left;
+  margin-top: 25rpx;
+  margin-left: 20rpx;
+}
+.caseCommunication_e_l_r text{
+  float: right;
+  color: #9b9b9b;
+}
+.caseCommunication_e_l_r_text{
+  color: #9b9b9b;
+  width: 100%;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+.red_dot{
+  width: 20rpx;
+  height: 20rpx;
+  position: absolute;
+  background: red;
+  border-radius: 50%;
+  top: 35rpx;
+  left: 115rpx;
+}
+.add_group{
+  width: 150rpx;
+  height: 150rpx;
+  position: fixed;
+  bottom: 50rpx;
+  right: 50rpx;
+}
+.empty-img{
+  width:428rpx;
+  height:360rpx;
+  margin:200rpx 25% 100rpx;
+}
+.empty-text{
+  text-align:center;
+  font-size:16px;
+  color:#666;
+}

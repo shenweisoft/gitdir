@@ -1,0 +1,113 @@
+<import src="/pages/template/template.wxml" />
+<view class="bgcolor"></view>
+<view class='step1_cont'>
+  <view class='step1_bt'><view class='step1_icon_bg'><icon class='iconfont icon--zhiliaoqingkuang'></icon> </view> 请选择治疗情况</view>
+
+  <view class='step1_cont_list' style='display: flex;'>
+    <view class='step1_cont_list_select_e {{lawCase.treatmentType=="1"?"active":""}}' data-mode="1" bindtap='selectTreatmentType'>
+      <view class='step1_cont_list_select_e_icon_bg'><icon class='iconfont icon--menzhenzhiliao'></icon></view>
+      <view class='text'>门诊治疗</view>
+    </view>
+    <view class='step1_cont_list_select_e {{lawCase.treatmentType=="2"?"active":""}}' data-mode="2" bindtap='selectTreatmentType'>
+      <view class='step1_cont_list_select_e_icon_bg'><icon class='iconfont icon--zhuyuanzhiliao'></icon></view>
+      <view class='text'>住院治疗</view>
+    </view>
+    <view class='step1_cont_list_select_e {{lawCase.treatmentType=="3"?"active":""}}' data-mode="3" bindtap='selectTreatmentType'>
+      <view class='step1_cont_list_select_e_icon_bg'><icon class='iconfont icon--menzhenzhuyuan'></icon></view>
+      <view class='text'>门诊+住院治疗</view>
+    </view>
+  </view>
+  <view class='step1_cont_list' wx:if="{{lawCase.treatmentType == '1' || lawCase.treatmentType == '3'}}">
+    <view class='step1_cont_list_e ' style='color:#999999;'>门诊</view>
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l' bindtap='opentitle' data-title='填写实际门诊就医次数，每就医一次，计算为一日。'>门诊次数 <icon class='iconfont icon--bangzhuqipao'></icon></view>
+      <view class='step1_cont_list_e_r'>
+        <input placeholder='请输入' type="number" maxlength='3' data-attribute="outPatientTimes" value="{{lawCase.applicantArray[0].outPatientTimes}}" bindinput='lawCaseDataChange'></input>
+      </view>
+    </view>
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l' bindtap='opentitle' data-title='根据医院要求的休息时间填写。'>医嘱休息天数 <icon class='iconfont icon--bangzhuqipao'></icon></view>
+      <view class='step1_cont_list_e_r'>
+        <input placeholder='请输入' type="number" maxlength='5' data-attribute="restDaysOfOutPatient" value="{{lawCase.applicantArray[0].restDaysOfOutPatient}}" bindinput='lawCaseDataChange'></input>
+      </view>
+    </view>
+  </view>
+  <view class='step1_cont_list' wx:if="{{lawCase.treatmentType == '2' || lawCase.treatmentType == '3'}}" wx:for="{{lawCase.applicantArray[0].hospitalizationArray}}" wx:for-item="hospital" wx:for-index="idx">
+    <view class='step1_cont_list_e '><view class='text_l'>住院</view> <view class='text_r' wx:if="{{idx > 0}}" data-index="{{idx}}" bindtap='removeHospitalized'>删除</view> </view>
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l'>入院时间</view>
+      <view class='step1_cont_list_e_r'>
+        <picker mode="date" value="{{hospital.hospitalizedDate}}" start="2015-09-01" end="{{currentDate}}" data-attribute="hospitalizedDate" data-index='{{idx}}' bindchange="lawCaseDataChange">
+          <view class="picker">
+           {{hospital.hospitalizedDate}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l'>出院时间</view>
+      <view class='step1_cont_list_e_r'>
+        <picker mode="date" value="{{hospital.leaveHospitalDate}}" start="{{hospital.hospitalizedDate}}" end="{{currentDate}}" data-attribute="leaveHospitalDate" data-index='{{idx}}' bindchange="lawCaseDataChange">
+          <view class="picker">
+           {{hospital.leaveHospitalDate}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l'>医嘱休息天数 <icon class='iconfont icon--bangzhuqipao' bindtap='opentitle' data-title='根据医院要求的休息时间填写。'></icon></view>
+      <view class='step1_cont_list_e_r'>
+        <input placeholder='请输入' type="number" maxlength='5' value="{{hospital.restDaysOfHospitalization}}" data-attribute="restDaysOfHospitalization" data-index='{{idx}}' bindchange="lawCaseDataChange"></input>
+      </view>
+    </view>
+  </view>
+
+  <view class='step1_cont_list_e' wx:if="{{lawCase.treatmentType == '2' || lawCase.treatmentType == '3'}}">
+    <view style='width:100%; color:#0d9deb;' bindtap='addHospitalization'>
+      <icon class='iconfont icon--tianjia'></icon> 添加住院
+    </view>
+  </view>
+
+  <!-- 伤残模块 -->
+  <view class='step1_bt' wx:if="{{lawCase.caseType=='1'}}">
+    <view class='step1_icon_bg'><icon class='iconfont icon--shangcanpingding'></icon></view> 伤残评定信息
+  </view>
+  <view class='step1_cont_list' wx:if="{{lawCase.caseType=='1'}}">
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l border0'>伤残评定时间 <icon class='iconfont icon--bangzhuqipao' bindtap='opentitle' data-title='以鉴定机构出具鉴定报告的评定时间为准。'></icon></view>
+      <view class='step1_cont_list_e_r border0'>
+        <picker mode="date" value="{{lawCase.deathDate}}" start="1900-09-01" end="{{currentDate}}" data-attribute="deathDate" bindchange='lawCaseDataChange'>
+          <view class="picker">
+            {{lawCase.deathDate}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view>
+  </view>
+  
+  <view class='step1_cont_list' wx:if="{{lawCase.caseType=='1'}}">
+    <view class='step1_cont_list_e' wx:for="{{lawCase.disabledLevelArray}}" wx:for-item="disabledLevel" wx:for-index="idx">
+      <view class='step1_cont_list_e_l'>伤残等级 <icon class='iconfont icon--bangzhuqipao' bindtap='opentitle' data-title='根据鉴定报告实际情况填写。'></icon></view>
+      <view class='step1_cont_list_e_r'>
+        <view class="picker">
+          <picker mode="multiSelector" data-index="{{idx}}" bindchange="doublePickerChange" value="{{disabledLevel.index}}" range="{{disabledLevelArray}}" placeholder="请选择">
+            <view class="picker">
+              {{disabledLevelArray[0][disabledLevel.index[0]]}}，{{disabledLevelArray[1][disabledLevel.index[1]]}}
+              <!-- <icon class='iconfont icon-xiangyou'></icon> -->
+            </view>
+          </picker>
+        </view>
+      </view>
+      <view class='remove_e' data-index="{{idx}}" bindtap='addDisabledLevel' wx:if="{{idx==0}}"><icon class='iconfont icon--tianjia1'style=' font-size:28px;'></icon> </view>
+      <view class='remove_e' data-index="{{idx}}" bindtap='removeDisabledLevel' wx:if="{{idx > 0}}"><icon class='iconfont icon--shanchu1'style=' font-size:28px; color:red;'></icon> </view>
+    </view>
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l'>赔偿系数 </view>
+      <view class='step1_cont_list_e_r' style='text-align:right;'>
+        {{lawCase.compensateRate}}%
+      </view>
+    </view>
+  </view>
+</view>
+
+<template is="footInfo" data="{{currentStep}}"></template>

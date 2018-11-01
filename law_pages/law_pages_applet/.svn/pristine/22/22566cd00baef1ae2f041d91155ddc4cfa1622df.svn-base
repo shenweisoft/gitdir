@@ -1,0 +1,8 @@
+<view class='list-wp'>
+  <view class='list' wx:for='{{listArray}}'>
+    <view bindtap='checkImg' data-path='{{item.path}}'>
+      {{item.userType == '0'? '当事人':'调解员'}}{{item.title}}
+      <icon class='iconfont icon-xiangyou icon'></icon>
+    </view>
+  </view>
+</view>

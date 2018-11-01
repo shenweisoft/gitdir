@@ -1,0 +1,84 @@
+<div class="role_management_d relative_top">
+    <div class="row bg-default">
+        <div class="col-xs-12 role_management_right_d">
+            <div class="role_management_right_t_d ">
+                <div class="col-xs-2 role_management_right_t_l_d no-padding">接口列表</div>
+                <div class="col-xs-10 margin-top-6 navbar-form" style="width: 83%;">
+                    <div class="col-lg-3 col-xs-4 no-padding ">
+                        <button class="btn btn-brand " ng-click="queryJudgeInterfaceConfig()"><i
+                                class="iconfont icon-tianjia"></i>新建审判接口
+                        </button>
+                       <!-- <button class="btn btn-default mar-le-10" type="button" ng-click="delInterfaceConfig()"><i
+                                class="iconfont icon-iconfont19 icon-blue"></i> 删除
+                        </button>-->
+                    </div>
+                   <!-- <div class="col-lg-5 col-xs-4">
+                        <select ng-model="interfaceConfigInfo.companyCode" class="form-control input-sm"
+                                ng-options="x.code as x.text for x in insuranceList">
+                            <option value=""> 请选择保险公司</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-3 col-xs-3">
+                        <div class="search_box">
+                            <select ng-model="interfaceConfigInfo.interfaceCode" class="form-control input-sm"
+                                    ng-options="x.id as x.value for x in interfaceItemArray">
+                                <option value=""> 请选择接口类型</option>
+                            </select>
+                        </div>
+                    </div>-->
+                   <!-- <div class="col-lg-1 col-xs-1 no-padding">
+                        <button type="submit" class="btn btn-brand mar-v-3" ng-click="getDataInfo()">搜索</button>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th class="col-xs-1"><input type="checkbox" name="orgCheckbox"
+                                                    ng-change="interfaceToggleSelectAll()" ng-model="interfaceSelectAll"
+                                                    ng-checked="orgSelectAll"></th>
+                        <th class="col-xs-2">接口商名称</th>
+                     <!--   <th class="col-xs-2">接口类型</th>-->
+                        <th class="col-xs-2">接口URL</th>
+                        <th class="col-xs-2">是否禁用</th>
+                        <th class="col-xs-2">接口编号</th>
+                        <th class="col-xs-2">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-if="pageData.showList.length != 0 ">
+                    <tr ng-repeat="interfaceObj in pageData.showList">
+                        <td>
+                            <input type="checkbox" name="orgCheckbox" ng-change="interfaceChxChange()"
+                                   ng-checked="interfaceObj.checked" ng-model="interfaceObj.checked">
+                        </td>
+                        <td>{{interfaceObj.platformName}}</td>
+                     <!--   <td>{{interfaceObj.interfaceType}}</td>-->
+                        <td>{{interfaceObj.address}}</td>
+                        <td>{{interfaceObj.delFlag == '0' ? '否' : '是'}}</td>
+                        <td>{{interfaceObj.platformNo}}</td>
+                        <td class="action_bar">
+                            <i class="iconfont icon-bianji" ng-click="queryJudgeInterfaceConfig(interfaceObj)"></i>
+                            <i class="iconfont icon-iconfont19" ng-click="delJudgeInterfaceConfig(interfaceObj)"></i>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center" ng-if="pageData.showList.length != 0 ">
+                <pagination previous-text="<" next-text=">" first-text="<<" last-text=">>"
+                            items-per-page="pageData.itemNum" class="pagination-custom"
+                            total-items="pageData.totalItems" ng-model="pageData.currentPage" ng-change="pageChanged()"
+                            max-size="7" boundary-links="true" rotate="false"></pagination>
+            </div>
+
+            <div ng-show="pageData.showList.length == 0" class="text-center">
+                <img src="views/images/search_null.png"><br>
+                抱歉，未找到相关内容！
+            </div>
+        </div>
+    </div>
+</div>

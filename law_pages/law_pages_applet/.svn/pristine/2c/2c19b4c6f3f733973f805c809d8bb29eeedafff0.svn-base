@@ -1,0 +1,6 @@
+<view class='selectCharacter'>
+  <image src='../../images/index_header_tjy.png' data-type="1" bindtap='login'></image>
+  <view data-type="1" bindtap='login'>我是调解员</view>
+  <image style='margin-top:65px;' src='../../images/index_header_sqr.png' data-type="2" bindtap='login'></image>
+  <view data-type="2" bindtap='login'>我是当事人</view>
+</view>

@@ -1,0 +1,436 @@
+<import src="/pages/template/template.wxml" />
+<view class="bgcolor"></view>
+<view class='step1_cont'>
+  <view class='step1_bt'><view class='step1_icon_bg'><icon class='iconfont icon--yiliaofeiyongxiangguan'></icon> </view> 医疗相关费用</view>
+  <view class='step1_cont_list'>
+    <view class='step1_cont_list_e' wx:for="{{feeArray}}" wx:for-item="fee">
+      <view class='step1_cont_list_e_l' bindtap='opentitle' data-title='{{fee.remark}}'>{{fee.value}} <icon class='iconfont icon--bangzhuqipao'></icon></view>
+      <view class='step1_cont_list_e_r' wx:if="{{fee.template == '1'}}">
+        <input placeholder='请输入' type="digit" maxlength='9' data-attribute="applyAmount" data-id="{{fee.id}}" id="{{idx}}" bindinput="onFeeChanged" value="{{fee.applyAmount}}"></input>
+      </view>
+      <view class='step1_cont_list_e_r' wx:if="{{fee.template == '2'}}">
+        <view style='line-height:25px; text-align: right;'>{{fee.applyAmount || '0'}}</view>
+        <view style='line-height:25px; text-align: right; font-size:12px; color:#999999;'>
+          {{fee.applyPerUnit}}元/天 X {{fee.applyUnit}}天
+        </view>
+      </view>
+      <view class='step1_cont_list_e_r' wx:if="{{fee.template == '3'}}">
+        <view style='line-height:25px; text-align: right;'>{{fee.applyAmount || '0'}}</view>
+        <view style='line-height:25px; text-align: right; font-size:12px; color:#999999;'>
+          {{fee.applyPerUnit}}元/月 X {{fee.applyUnit}}月
+        </view>
+      </view>
+      <view class='step1_cont_list_e_r' wx:if="{{fee.template == '4'}}">
+        <view style='line-height:25px; text-align: right;'>{{fee.applyAmount || '0'}}</view>
+        <view style='line-height:25px; text-align: right; font-size:12px; color:#999999;'>
+          {{fee.applyPerUnit}}元/年 X {{fee.applyUnit}}年
+        </view>
+      </view>
+      <view class='step1_cont_list_e_r' wx:if="{{fee.template == '5'}}">
+        <view style='line-height:25px; text-align: right;'>{{fee.applyAmount || '0'}}</view>
+        <view style='line-height:25px; text-align: right; font-size:12px; color:#999999;'>
+          {{fee.applyPerUnit}}元/年 X {{fee.applyUnit}}年 X {{lawCase.compensateRate}}% 
+        </view>
+      </view>
+      <view class='step1_cont_list_e_r' wx:if="{{fee.template == '6'}}">
+        <view style='line-height:25px; text-align: right;'>{{fee.applyAmount || '0'}}</view>
+        <view style='line-height:25px; text-align: right; font-size:12px; color:#999999;'>
+          {{fee.applyPerUnit}}元/级 x 10 X {{lawCase.compensateRate}}%
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 误工费 -->
+  <view class='step1_bt' wx:if="{{lawCase.isDeadAtTheScene == '0'}}">
+    <view class='step1_icon_bg'><icon class='iconfont icon--wugongfei'></icon> </view> 误工费
+  </view>
+  <view class='step1_cont_list' wx:for="{{lawCase.feeDetail}}" wx:for-item="fee" wx:if="{{fee.id == '08' && lawCase.isDeadAtTheScene == '0'}}">
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l'>是否有固定收入 </view>
+      <view class='step1_cont_list_e_r body-view' style='text-align:right;'>
+        <switch checked="{{fee.isFixedIncome}}" color="#0d9deb" data-id="{{fee.id}}"
+         data-attribute="isFixedIncome" bindchange="onFeeChanged"/>
+      </view>
+    </view>
+    
+    <view class='step1_cont_list_e' wx:if="{{!fee.isFixedIncome}}">
+      <view class='step1_cont_list_e_l'>证明类型 </view>
+      <view class='step1_cont_list_e_r'>
+        <picker bindchange="onFeeChanged" data-attribute="incomeEvidence"
+         data-id="{{fee.id}}" value="{{fee.incomeEvidence-1}}" range="{{incomeEvidenceArray}}" custom-item="请选择">
+          <view class="picker">
+            {{incomeEvidenceArray[fee.incomeEvidence-1]}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e' wx:if="{{fee.incomeEvidence == '1'}}">
+      <view class='step1_cont_list_e_l'>行业类型 </view>
+      <view class='step1_cont_list_e_r'>
+        <picker bindchange="onFeeChanged" data-attribute="industryType"
+         data-id="{{fee.id}}" value="{{fee.industryType}}" range="{{industryTypeArray}}" custom-item="请选择">
+          <view class="picker">
+            {{industryTypeArray[fee.industryType]}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e' wx:if="{{fee.isFixedIncome}}">
+      <view class='step1_cont_list_e_l'>工资收入 </view>
+      <view class='step1_cont_list_e_r'>
+        <input placeholder='元/天' type="digit" maxlength='9' data-attribute="applyPerUnit"
+         data-id="{{fee.id}}" id="{{idx}}" bindinput="onFeeChanged" value="{{fee.applyPerUnit}}"></input>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l border0'>误工费 </view>
+      <view class='step1_cont_list_e_r border0'>
+        <view style='line-height:25px; text-align: right;'>{{fee.applyAmount || '0'}}</view>
+        <view style='line-height:25px; text-align: right; font-size:12px; color:#999999;'>
+          {{fee.applyPerUnit}}元/天 X {{fee.applyUnit}}天
+        </view>
+      </view>
+    </view>
+  </view>
+
+<!-- 处理事故人员误工费,只有死亡时存在 -->
+  <view class='step1_bt' wx:if="{{lawCase.caseType == '2'}}">
+    <view class='step1_icon_bg'>
+      <icon class='iconfont icon--wugongfei'></icon> 
+    </view> 处理事故人员误工费
+    <icon class='iconfont icon--tianjia' bindtouchstart="addOtherLostIncome"></icon>
+  </view>
+  <view class='step1_cont_list' style='margin-bottom:20rpx;' wx:for="{{handlePersonArray}}" wx:for-item="person" wx:for-index="idx" wx:if="{{lawCase.caseType == '2'}}">
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l'>是否有固定收入 </view>
+      <view class='step1_cont_list_e_r body-view' style='text-align:right;'>
+        <switch checked="{{person.isFixedIncome}}" color="#0d9deb"
+         data-id="19" data-index="{{idx}}" data-attribute="isFixedIncome" bindchange="onOtherLostIncomeChanged"/>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e' wx:if="{{person.isFixedIncome}}">
+      <view class='step1_cont_list_e_l'>工资收入 </view>
+      <view class='step1_cont_list_e_r'>
+        <input placeholder='元/天' type="digit" maxlength='9' data-attribute="applyPerUnit"
+         data-id="19" data-index="{{idx}}" bindinput="onOtherLostIncomeChanged" value="{{person.applyPerUnit}}"></input>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e' wx:if="{{!person.isFixedIncome}}">
+      <view class='step1_cont_list_e_l'>证明类型 </view>
+      <view class='step1_cont_list_e_r'>
+        <picker bindchange="onOtherLostIncomeChanged" data-attribute="incomeEvidence" data-id="19"
+         data-index="{{idx}}" value="{{person.incomeEvidence-1}}" range="{{incomeEvidenceArray}}" custom-item="请选择">
+          <view class="picker">
+            {{incomeEvidenceArray[person.incomeEvidence-1]}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e' wx:if="{{!person.isFixedIncome && person.incomeEvidence == '1'}}">
+      <view class='step1_cont_list_e_l'>行业类型 </view>
+      <view class='step1_cont_list_e_r'>
+        <picker bindchange="onOtherLostIncomeChanged" data-attribute="industryType" data-id="19"
+         data-index="{{idx}}" value="{{person.industryType}}" range="{{industryTypeArray}}" custom-item="请选择">
+          <view class="picker">
+            {{industryTypeArray[person.industryType]}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l'>误工天数 </view>
+      <view class='step1_cont_list_e_r'>
+       <input placeholder='请输入' type="number" data-id="19" data-attribute="applyUnit" data-index="{{idx}}" value="{{person.applyUnit}}" bindinput="onOtherLostIncomeChanged"></input>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l'>误工费 </view>
+      <view class='step1_cont_list_e_r'>
+        <view style='line-height:25px; text-align: right;'>{{person.applyAmount || '0'}}</view>
+        <view style='line-height:25px; text-align: right; font-size:12px; color:#999999;'>{{person.applyPerUnit || '0'}}元/天 X {{person.applyUnit}}天</view>
+      </view>
+    </view>
+    
+    <view class='step1_cont_list_e remove_btn' data-index="{{idx}}" bindtap='delOtherLostIncome'>
+      删除
+    </view>
+  </view>
+
+  
+<!-- 护理费 -->
+  <view class='step1_bt' wx:if="{{lawCase.isDeadAtTheScene=='0'}}"><view class='step1_icon_bg'><icon class='iconfont icon--hulifei'></icon> </view> 护理费</view>
+  <view class='step1_cont_list' wx:for="{{lawCase.feeDetail}}" wx:for-item="fee" wx:if="{{lawCase.isDeadAtTheScene=='0' && fee.id == '09'}}">
+    <view wx:for="{{fee.nursingArray}}" wx:for-item="nurse" wx:for-index="idx" >
+      <view wx:if="{{lawCase.treatmentType != '1' && nurse.type == '1'}}"><!--住院护理费,只有门诊时没有-->
+        <view class='step1_cont_list_e'>
+          <view style='color:#999999;'>{{nurse.title}} </view>
+        </view>
+        <view class='step1_cont_list_e'>
+          <view class='step1_cont_list_e_l'>是否有固定收入 </view>
+          <view class='step1_cont_list_e_r body-view' style='text-align:right;'>
+            <switch checked color="#0d9deb" checked="{{nurse.isFixedIncome}}"
+             data-index="{{idx}}" data-attribute="isFixedIncome" bindchange="onNurseFeeChanged"/>
+          </view>
+        </view>
+
+        <view class='step1_cont_list_e' wx:if="{{!nurse.isFixedIncome && nurse.type == '1'}}"><!--住院护理-->
+          <view class='step1_cont_list_e_l'>证明类型 </view>
+          <view class='step1_cont_list_e_r'>
+            <picker bindchange="onNurseFeeChanged" data-attribute="incomeEvidence"
+             data-index="{{idx}}" value="{{nurse.incomeEvidence-1}}" range="{{incomeEvidenceArray}}">
+              <view class="picker">
+                {{incomeEvidenceArray[nurse.incomeEvidence-1]}} <icon class='iconfont icon-xiangyou'></icon>
+              </view>
+            </picker>
+          </view>
+        </view>
+
+        <view class='step1_cont_list_e' wx:if="{{!nurse.isFixedIncome && nurse.incomeEvidence == '1' && nurse.type == '1'}}"><!--住院护理-->
+          <view class='step1_cont_list_e_l'>行业类型 </view>
+          <view class='step1_cont_list_e_r'>
+            <picker bindchange="onNurseFeeChanged" data-attribute="industryType"
+             data-index="{{idx}}" value="{{nurse.industryType}}" range="{{industryTypeArray}}">
+              <view class="picker">
+                {{industryTypeArray[nurse.industryType]}} <icon class='iconfont icon-xiangyou'></icon>
+              </view>
+            </picker>
+          </view>
+        </view>
+
+        <view class='step1_cont_list_e' wx:if="{{nurse.isFixedIncome}}">
+          <view class='step1_cont_list_e_l'>工资收入 </view>
+          <view class='step1_cont_list_e_r'>
+            <input type='number' placeholder='请输入' bindinput="onNurseFeeChanged" data-attribute="applyPerUnit"
+             data-index="{{idx}}" value="{{nurse.applyPerUnit}}" maxlength='10'></input>
+          </view>
+        </view>
+
+        <view class='step1_cont_list_e'>
+          <view class='step1_cont_list_e_l'>护理人数 </view>
+          <view class='step1_cont_list_e_r'>
+            <input type='number' placeholder='请输入' bindinput="onNurseFeeChanged" data-attribute="nursingNum"
+             data-index="{{idx}}" value="{{nurse.nursingNum}}" maxlength='2'></input>
+          </view>
+        </view>
+
+        <view class='step1_cont_list_e'>
+          <view class='step1_cont_list_e_l border0'>{{nurse.title}} </view><!--护理费-->
+          <view class='step1_cont_list_e_r border0'>
+            <view style='line-height:25px; text-align: right;'>{{nurse.applyAmount || 0}}</view>
+            <view style='line-height:25px; text-align: right; font-size:12px; color:#999999;'>
+            {{nurse.applyPerUnit || 0}}元/天 X {{nurse.applyUnit || 0}}天 X {{nurse.nursingNum || 0}}人
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{nurse.type == '2'}}"><!--出院护理费-->
+        <view class='step1_cont_list_e'>
+          <view style='color:#999999;'>{{nurse.title}} </view>
+        </view>
+        <view class='step1_cont_list_e'>
+          <view class='step1_cont_list_e_l' style='flex:3;'>护理类型 </view>
+          <view class='step1_cont_list_e_r' style='flex:9;'>
+            <picker bindchange="onNurseFeeChanged" data-attribute="nursingType" value="{{nurse.nursingType -1}}"
+             data-index="{{idx}}" range="{{nursingTypeArray}}">
+              <view class="picker">
+                {{nursingTypeArray[nurse.nursingType-1]}} <icon class='iconfont icon-xiangyou'></icon>
+              </view>
+            </picker>
+          </view>
+        </view>
+        
+        <view class='step1_cont_list_e'>
+          <view class='step1_cont_list_e_l'>是否有固定收入 </view>
+          <view class='step1_cont_list_e_r body-view' style='text-align:right;'>
+            <switch checked color="#0d9deb" checked="{{nurse.isFixedIncome}}"
+             data-index="{{idx}}" data-attribute="isFixedIncome" bindchange="onNurseFeeChanged"/>
+          </view>
+        </view>
+
+        <view class='step1_cont_list_e' wx:if="{{!nurse.isFixedIncome}}"><!--出院护理-->
+          <view class='step1_cont_list_e_l'>证明类型 </view>
+          <view class='step1_cont_list_e_r'>
+            <picker bindchange="onNurseFeeChanged" data-attribute="incomeEvidence" data-index="{{idx}}"
+             value="{{nurse.incomeEvidence-1}}" range="{{incomeEvidenceArray}}">
+              <view class="picker">
+                {{incomeEvidenceArray[nurse.incomeEvidence-1]}} <icon class='iconfont icon-xiangyou'></icon>
+              </view>
+            </picker>
+          </view>
+        </view>
+
+        <view class='step1_cont_list_e' wx:if="{{!nurse.isFixedIncome && nurse.incomeEvidence == '1'}}"><!--出院护理-->
+          <view class='step1_cont_list_e_l'>行业类型 </view>
+          <view class='step1_cont_list_e_r'>
+            <picker bindchange="onNurseFeeChanged" data-attribute="industryType" data-index="{{idx}}"
+             value="{{nurse.industryType}}" range="{{industryTypeArray}}">
+              <view class="picker">
+                {{industryTypeArray[nurse.industryType]}} <icon class='iconfont icon-xiangyou'></icon>
+              </view>
+            </picker>
+          </view>
+        </view>
+
+        <view class='step1_cont_list_e' wx:if="{{nurse.isFixedIncome}}">
+          <view class='step1_cont_list_e_l'>工资收入 </view>
+          <view class='step1_cont_list_e_r'>
+            <input type='number' placeholder='请输入' bindinput="onNurseFeeChanged" data-attribute="applyPerUnit"
+             data-index="{{idx}}" value="{{nurse.applyPerUnit}}" maxlength='10'></input>
+          </view>
+        </view>
+
+        <view class='step1_cont_list_e' wx:if="{{nurse.nursingType == '1' || nurse.nursingType == '3'}}">
+          <view class='step1_cont_list_e_l'>医嘱护理天数 </view>
+          <view class='step1_cont_list_e_r'>
+            <input type="number" bindinput="onNurseFeeChanged" placeholder='请输入' maxlength='5' data-attribute="restDays"
+             data-index="{{idx}}"></input>
+          </view>
+        </view>
+
+        <view class='step1_cont_list_e' wx:if="{{nurse.nursingType == '1' || nurse.nursingType == '3'}}">
+          <view class='step1_cont_list_e_l'>护理人数 </view>
+          <view class='step1_cont_list_e_r'>
+            <input type="number" placeholder='请输入' bindinput="onNurseFeeChanged" data-attribute="nursingNum"
+             data-index="{{idx}}" value="{{nurse.nursingNum}}" maxlength='2'></input>
+          </view>
+        </view>
+
+        <view class='step1_cont_list_e' wx:if="{{nurse.nursingType == '2' || nurse.nursingType == '3'}}">
+          <view class='step1_cont_list_e_l'>护理依赖系数 </view>
+          <view class='step1_cont_list_e_r' style="flex:2;">
+            <picker bindchange="onNurseFeeChanged" data-attribute="dependentRate" data-index="{{idx}}"
+             value="{{nurse.dependentRateIndex-1}}" range="{{dependentRateArray}}">
+              <view class="picker">
+                {{dependentRateArray[nurse.dependentRateIndex-1]}} <icon class='iconfont icon-xiangyou'></icon>
+              </view>
+            </picker>
+          </view>
+        </view>
+
+        <view class='step1_cont_list_e' wx:if="{{nurse.nursingType == '2' || nurse.nursingType == '3'}}">
+          <view class='step1_cont_list_e_l'>有无护理鉴定 </view>
+          <view class='step1_cont_list_e_r' style='text-align:right;'>
+            <switch checked="{{nurse.isNurseIdentification}}" color="#0d9deb" data-index="{{idx}}"
+             data-attribute="isNurseIdentification" bindchange="onNurseFeeChanged"/>
+          </view>
+        </view>
+
+        <view class='step1_cont_list_e' wx:if="{{nurse.isNurseIdentification}}">
+          <view class='step1_cont_list_e_l'>护理年限 </view>
+          <view class='step1_cont_list_e_r'>
+            <input type="number" placeholder='请输入' maxlength='2' data-index="{{idx}}" data-attribute="nursingYear"
+             data-index="{{idx}}" bindinput="onNurseFeeChanged"></input>
+          </view>
+        </view>
+
+        <view class='step1_cont_list_e' wx:if="{{nurse.nursingType}}">
+          <view class='step1_cont_list_e_l border0'>{{nurse.title}} </view><!--护理费-->
+          <view class='step1_cont_list_e_r border0'>
+            <view style='line-height:25px; text-align: right;'>{{nurse.applyAmount || 0}}</view>
+            <view style='line-height:25px; text-align: right; font-size:12px; color:#999999;' wx:if="{{nurse.nursingType == '1'}}">
+              {{nurse.applyPerUnit || 0}}元/天 X {{nurse.applyUnit || 0}}天 X {{nurse.nursingNum || 0}}人
+            </view>
+            <view style='line-height:25px; text-align: right; font-size:12px; color:#999999;' wx:if="{{nurse.nursingType == '2'}}">
+              {{nurse.applyPerUnit || 0}}元/天 X {{nurse.dependentRate || 0}}% X {{nurse.nursingYear || 0}}年 x 365
+            </view>
+            <view style='line-height:25px; text-align: right; font-size:12px; color:#999999;' wx:if="{{nurse.nursingType == '3'}}">
+              {{nurse.applyPerUnit || 0}}元/天 X {{nurse.applyUnit || 0}}天 X {{nurse.nursingNum || 0}}人
+              +
+              {{nurse.applyPerUnit || 0}}元/天 X {{nurse.dependentRate || 0}}% X {{nurse.nursingYear || 0}}年 x 365
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 被抚养人生活费 -->
+  <view class='step1_bt' wx:if="{{lawCase.caseType == '1' || lawCase.caseType == '2'}}"><!--受害性质：死亡/伤残-->
+    <view class='step1_icon_bg'><icon class='iconfont icon--beifuyangrenshenghuofei'></icon> </view> 
+    被抚养人生活费 
+    <icon class='iconfont icon--tianjia' bindtap='addDepenDent'></icon> 
+  </view>
+  <view wx:if="{{lawCase.caseType == '1' || lawCase.caseType == '2'}}"><!--受害性质：死亡/伤残-->
+    <view wx:for="{{lawCase.feeDetail}}" wx:for-item="fee" wx:if="{{fee.id == '14'}}">
+      <view class='step1_cont_list' wx:for="{{fee.dependents.apply}}" wx:for-item="dependent" wx:for-index="idx">
+        <view class='step1_cont_list_e'>
+          <view class='step1_cont_list_e_l'>出生日期 <icon class='iconfont icon--bangzhuqipao' bindtap='opentitle' data-title='{{fee.remark}}'></icon></view>
+          <view class='step1_cont_list_e_r'>
+            <picker mode="date" start="1900-09-01" end="{{currentDate}}" data-attribute="birthDate" data-index='{{idx}}' value="{{dependent.birthDate}}" bindchange="dependentChange">
+              <view class="picker">
+                {{dependent.birthDate}}
+                <icon class='iconfont icon-xiangyou'></icon>
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class='step1_cont_list_e'>
+          <view class='step1_cont_list_e_l'>抚养年限 </view>
+          <view class='step1_cont_list_e_r' style='text-align:right;'>
+            {{dependent.fyAge}}年
+          </view>
+        </view>
+        <view class='step1_cont_list_e'>
+          <view class='step1_cont_list_e_l'>共同抚养人数 </view>
+          <view class='step1_cont_list_e_r'>
+            <input type="number" placeholder='请输入' data-attribute="count" data-index='{{idx}}' maxlength='2' value="{{dependent.count}}" bindinput="dependentChange"></input>
+          </view>
+        </view>
+        <view class='step1_cont_list_e'>
+          <view class='step1_cont_list_e_l'>赔偿标准 </view>
+          <view class='step1_cont_list_e_r'>
+            <radio-group class="radio-group" data-attribute="household" data-index='{{idx}}'>
+              <label class="radio">
+                <!--城镇-->
+                <view style='float:right;'>城镇</view>
+                <view style='float:right;' class='radioIconBg iocnfontActive' wx:if="{{lawCase.household =='2'}}">
+                  <icon class='iconfont icon--chengzhen '></icon>
+                </view>
+                <view style='float:right;' class='radioIconBg' wx:if="{{lawCase.household == '1'}}">
+                  <icon class='iconfont icon--chengzhen'></icon>
+                </view>
+                <radio class='hide' value="2" checked="{{item.checked}}"/>
+              </label>
+              <label class="radio">
+                <!--农村-->
+                <view style='float:right;'>农村</view> 
+                <view style='float:right;' class='radioIconBg' wx:if="{{lawCase.household == '2'}}">
+                  <icon class='iconfont icon--nongcun'></icon>
+                </view>
+                <view style='float:right;' class='radioIconBg iocnfontActive' wx:if="{{lawCase.household == '1'}}">
+                  <icon class='iconfont icon--nongcun '></icon>
+                </view>
+                <radio class='hide'  value="1" checked="{{item.checked}}"/>
+              </label>
+            </radio-group>
+          </view>
+        </view>
+        <view class='step1_cont_list_e'>
+          <view class='step1_cont_list_e_r' bindtap='removeDependent'>
+            <view class='step1_cont_list_e_r_num'>删除</view>
+          </view>
+        </view>
+      </view>
+      <view class='step1_cont_list_e' wx:if="{{fee.dependents.apply && fee.dependents.apply.length > 0}}">
+        <view class='step1_cont_list_e_l0'> </view>
+        <view class='step1_cont_list_e_r'>
+          <view style="text-align:right; color:#939393; font-size:17px;">
+            抚养费合计：<span class='step1_cont_list_e_r_num'>￥{{fee.applyAmount}}</span>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<template is="footInfo" data="{{currentStep}}"></template>

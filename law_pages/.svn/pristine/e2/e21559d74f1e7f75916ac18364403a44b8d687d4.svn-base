@@ -1,0 +1,29 @@
+<div class="modal-header">
+	<i class="iconfont icon-guanbi close" ng-click="cancel()"></i>
+	<h4 class="modal-title" id="myModalLabel">休庭设置</h4>
+</div>
+<div class="modal-body">
+	<form class="form-horizontal">
+		<div class="form-group">
+			<label class="col-xs-3 control-label">下次开庭时间：</label>
+			<div class="col-xs-6">
+				<p class="input-group">
+          <input type="text" readonly class="form-control" datetime-picker="yyyy-MM-dd HH:mm:ss" ng-model="nextCourtDate" enable-date="true" enable-time="true" is-open="nextCourtDateOpened" close-text="确定" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="openNextCourtDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+				</p>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<div class="row">
+		<div class="col-xs-3"></div>
+		<div class="col-xs-6 btn_center">
+			<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">取消</button>
+			<button type="button" class="btn btn-brand save_btn" ng-click="ok()">确定</button>
+		</div>
+		<div class="col-xs-3"></div>
+	</div>
+</div>

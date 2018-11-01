@@ -1,0 +1,19 @@
+<div class="modal-header">
+    我要回复
+    <i class="iconfont pull-right icon-guanbi close" ng-click="cancel()"></i>
+</div>
+<div class="modal-body row">
+    <form class="form-horizontal col-xs-10 col-xs-offset-1">
+       <textarea class="form-control" rows="6"  ng-model="gudgeDes" maxlength="100" placeholder="请输入内容"></textarea>
+    </form>
+</div>
+<div class="modal-footer">
+     <div class="form-group">
+        <div class="col-xs-offset-5 col-xs-1">
+            <button type="submit" class="btn btn-default " ng-click="cancel()">取消</button>
+        </div>
+        <div class=" col-xs-1">
+            <button type="submit" class="btn btn-brand bg-brand-color" ng-click="save()" >提交</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+<div>
+    <img src="../../../views/images/AIO_bg.jpg" style="position: fixed;z-index: -5" alt="">
+    <aio-header></aio-header>
+    <div class="col-xs-12" style="padding: 0 32px 32px; ">
+        <div style="background-color: #fff;height: 950px;">
+            <div class="AIO-table-box" ng-show="!checkCaseFlag && caseList.length > 0">
+                <table class="table AIO-table" style="margin-bottom: 0px;">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>当事人姓名</th>
+                            <th>事故发生时间</th>
+                            <th>事故责任认定书编号</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="case in caseList" ng-class="{'table-even': $index % 2 == 0}" ng-click="checkCaseDetail(case)">
+                            <td width="10%">{{$index+1}}</td>
+                            <td width="20%" title="{{case.partyName}}">{{case.partyName}}</td>
+                            <td width="15%">{{case.accidentTime | formatDate}}</td>
+                            <td width="45%" title="{{case.accidentCode}}">{{case.accidentCode}}</td>
+                            <td>
+                                <a href="javascript:;" style="padding: 25px 30px;">查看</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="caseListJumpWp" ng-show="searchVO.pageTotal > searchVO.pageSize">
+                    <span ng-show="searchVO.pageNo > 1" ng-click="jumpPage('prev')" ng-mousedown="press='prevPage'" ng-mouseup="press=''" ng-class="press=='prevPage'? 'press': ''" class="caseListJump prev">上一页</span>
+                    <span ng-show="searchVO.pageTotal > searchVO.pageSize * searchVO.pageNo" ng-click="jumpPage('next')" ng-mousedown="press='nextPage'" ng-mouseup="press=''" ng-class="press=='nextPage'? 'press': ''" class="caseListJump next">下一页</span>
+                </div>
+            </div>
+            <div ng-show="checkCaseFlag">
+                <!--正在加载样式-->
+                <div class="main">
+                    <div class="loadEffect">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <p style="text-align: center;font-size: 32px;padding-top: 50px;">正在查询案件，请耐心等待！</p>
+            </div>
+            <div class="caseListNullImg" ng-show="!checkCaseFlag && caseList.length == '0'">
+                <img src="../../../views/images/AIO_case_list_null.png" alt="">
+                <p>没有相关案件！</p>
+            </div>
+        </div>
+    </div>
+</div>

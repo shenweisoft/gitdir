@@ -1,0 +1,133 @@
+<import src="/pages/template/template.wxml" />
+<view class='bg'></view>
+<!-- 提示信息 -->
+<template is="wetoast" data="{{content, toastType}}" wx:if="{{showToast}}"></template>
+<!-- 头部步骤 -->
+<template is="lawCaseHeader" data="{{stepArray, step}}"></template>
+<!-- 标题 -->
+<view class='bt_box'>
+  被申请人信息
+  <view class='add_btn' bindtap="addRespondent"><icon class='iconfont icon--jiahao'></icon> 添加被申请人</view>
+</view>
+
+
+<view class='step1_cont'>
+  <view class='step1_cont_list' wx:for="{{lawCase.applicantArray}}" wx:for-item="applicant" wx:for-index="index" wx:if="{{applicant.personType == '1'}}">
+
+    <view class='step1_cont_list_e'>
+      <view class='step1_cont_list_e_l'>身份类型</view>
+      <view class='step1_cont_list_e_r'>
+        <picker value="" range="{{idTypeArr}}" data-index="{{index}}" data-data-type="idType" bindchange="setApplicantData">
+          <view class="picker">
+            {{idTypeArr[applicant.idType]}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e' wx:if="{{applicant.idType == '0'}}">
+      <view class='step1_cont_list_e_l'>被申请人姓名</view>
+      <view class='step1_cont_list_e_r'>
+       <input type='text' class="required_input" value="{{applicant.personName}}" data-index="{{index}}" data-data-type="personName" bindinput="setApplicantData" placeholder="请输入"/>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e' wx:if="{{applicant.idType == '0'}}">
+      <view class='step1_cont_list_e_l'>证件类型</view>
+      <view class='step1_cont_list_e_r'>
+        <picker data-index="{{index}}" data-data-type="certificatesType" bindchange="setApplicantData" range="{{certificatesTypeArr}}">
+          <view class="picker">
+            {{(applicant.certificatesType || applicant.certificatesType=='0')? certificatesTypeArr[applicant.certificatesType] : '请选择'}} <icon class='iconfont icon-xiangyou'></icon>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e' wx:if="{{applicant.idType == '0' && applicant.certificatesType != '5'}}">
+      <view class='step1_cont_list_e_l'>证件号码</view>
+      <view class='step1_cont_list_e_r'>
+       <input type='idcard' class="required_input" data-index="{{index}}" data-data-type="idNo" maxlength="18" bindinput="setApplicantData" value="{{applicant.idNo}}" placeholder="请输入"/>
+      </view>
+    </view>
+
+    <view class='step1_cont_list_e' wx:if="{{applicant.idType == '0'}}">
+      <view class='step1_cont_list_e_l'>手机号码</view>
+      <view class='step1_cont_list_e_r'>
+       <input type='number' class="required_input" data-index="{{index}}" data-data-type="telephone" maxlength="11" bindinput="setApplicantData" value="{{applicant.telephone}}" placeholder="请输入"/>
+      </view>
+    </view>  
+    <view style='padding:10px 15px;'  wx:if="{{applicant.idType == '0' && applicant.certificatesType != '5'}}">
+      <view class='step1_cont_list_e_img'>
+        <image data-index="{{index}}" data-data-type="idFacePicture" bindtap="uploadImg" src="{{applicant.idFacePicture? imageAddress+applicant.idFacePicture : '../../../images/id_img_bg_rw.png'}}"></image>
+      </view>
+      <view class='step1_cont_list_e_img_r'>
+        <image data-index="{{index}}" data-data-type="idBackPicture" bindtap="uploadImg" src="{{applicant.idBackPicture?imageAddress+applicant.idBackPicture : '../../../images/id_img_bg_gh.png'}}"></image>
+      </view>
+      <view class='clear'></view>
+    </view>
+    <!-- 法人，其他组织 -->
+    <view wx:if="{{applicant.idType != '0'}}">
+      <view class='step1_cont_list_e' wx:if="{{applicant.idType == '1'}}">
+        <view class='step1_cont_list_e_l'>类型</view>
+        <view class='step1_cont_list_e_r' style='text-align: right; flex:8;'>
+        <radio-group class="radio-group" bindchange="selectedValue" data-index="{{index}}" data-data-type="enterpriseType">
+          <label class="radio">
+            <!--其它-->
+            <view style='float:right;'>其它</view> 
+            <view style='float:right;' class="{{applicant.enterpriseType == '2'? 'radioIconBg iocnfontActive' : 'radioIconBg'}}">
+              <icon class='iconfont icon--qita position_t2'></icon>
+            </view>
+            <!-- <view style='float:right;' class='radioIconBg iocnfontActive'>
+              <icon class='iconfont icon--qita position_t2'></icon>
+            </view> -->
+            <radio class='hide' value='2' checked="{{applicant.enterpriseType == '2'}}"/>
+          </label>
+          <label class="radio">
+            <!--保险公司-->
+            <view style='float:right;'>保险公司</view>
+            <view style='float:right;' class="{{applicant.enterpriseType == '1'? 'radioIconBg iocnfontActive' : 'radioIconBg'}}">
+              <icon class='iconfont icon--baoxiangongsi position_t2'></icon>
+            </view>
+            <!-- <view style='float:right;' class='radioIconBg'>
+              <icon class='iconfont icon--baoxiangongsi position_t2'></icon>
+            </view> -->
+            <radio class='hide' value='1' checked="{{applicant.enterpriseType == '1'}}"/>
+          </label>
+          
+        </radio-group>
+        </view>
+      </view>
+      <view class='step1_cont_list_e'>
+        <view class='step1_cont_list_e_l'>名称</view>
+        <view class='step1_cont_list_e_r'>
+          <input type='text' class="required_input" maxlength="11" value="{{applicant.orgName}}" data-index="{{index}}" data-data-type="orgName" bindinput="setApplicantData" placeholder="请输入"/>
+        </view>
+      </view>
+      <view class='step1_cont_list_e'>
+        <view class='step1_cont_list_e_l'>联系电话</view>
+        <view class='step1_cont_list_e_r'>
+          <input type='number' class="required_input" maxlength="11" value="{{applicant.telephone}}" data-index="{{index}}" data-data-type="telephone" bindinput="setApplicantData" placeholder="请输入"/>
+        </view>
+      </view>
+      <view style='padding:10px 15px;' wx:if="{{applicant.idType == '1'}}">
+        <view class='step1_cont_list_e_img'>
+          <image data-index="{{index}}" data-data-type="businessLicensePicture" bindtap="uploadImg" src="{{applicant.businessLicensePicture? imageAddress+applicant.businessLicensePicture : '/images/yyzz.png'}}"></image>
+        </view>
+        <view class='step1_cont_list_e_img_r'>
+          <image data-index="{{index}}" data-data-type="legalPersonPicture" bindtap="uploadImg" src="{{applicant.legalPersonPicture? imageAddress+applicant.legalPersonPicture : '/images/frdb.png'}}"></image>
+        </view>
+        <view class='clear'></view>
+        <view class='step1_cont_list_e_text'>营业执照</view>
+        <view class='step1_cont_list_e_text'>法人代表情况说明</view>
+        <view class='clear'></view>
+      </view>
+    </view>
+    <view class='delete_btn' data-index="{{index}}" bindtap="deleteRespondent">删除</view>
+  </view>
+</view>
+
+<view class='bottom_box_btn'>
+  <view class='bottom_box_btn_e'><view class='bottom_box_btn_e_l' bindtap='prev'>上一步</view></view>
+  <view class='bottom_box_btn_e'><view class='bottom_box_btn_e_r' bindtap='next'>下一步</view></view>
+</view>
+

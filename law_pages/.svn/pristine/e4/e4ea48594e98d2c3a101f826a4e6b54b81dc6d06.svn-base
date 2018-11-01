@@ -1,0 +1,14 @@
+<div class="row">
+	<div class="col-xs-4 col-xs-offset-4 PromptPage_border-left">
+		<p class="p1">当前环节：<span>补充证据</span></p>
+		<p class="p2">补充时间：<span>2017-3-14 15:30:20</span></p>
+		<p class="p2">补充人员：<span>姚国锋</span></p>
+		<p class="p3">下一环节：<span>xxxxx</span></p>
+		<p class="p4"><span>10s</span> 后自动跳转转至证据列表页</p>
+		<p class="p2">如页面未跳转，请点击按钮</p>
+		<button type="button" class="btn btn-brand margin-left-70">查看证据</button>
+		<button type="button" class="btn btn-brand">继续补充证据</button>
+		<i class="iconfont icon-duihao"></i>
+		<img src="views/images/lian_icon.png">
+	</div>
+</div>

@@ -1,0 +1,17 @@
+
+<import src="/pages/template/template.wxml" />
+<view class="bgcolor"></view>
+<view class='step1_cont'>
+<!-- 财产损失 -->
+  <view class='step1_bt'><view class='step1_icon_bg'><icon class='iconfont icon--caichansunshi'></icon> </view> 财产损失</view>
+  <view class='step1_cont_list'>
+    <view class='step1_cont_list_e' wx:for="{{lawCase.feeDetail}}" wx:for-item="fee" wx:for-index="idx" wx:if="{{fee.group == '7'}}">
+      <view class='step1_cont_list_e_l' bindtap='opentitle' data-title='{{fee.remark}}'>{{fee.value}} <icon class='iconfont icon--bangzhuqipao'></icon></view>
+      <view class='step1_cont_list_e_r'>
+        <input type="digit" maxlength='9' data-attribute="applyAmount" data-id="{{fee.id}}" bindinput='dataChange' value="{{fee.applyAmount}}" placeholder='请输入'></input>
+      </view>
+    </view>
+  </view>
+</view>
+
+<template is="footInfo" data="{{currentStep}}"></template>

@@ -1,0 +1,28 @@
+<div class="AIOCourtSetpLeft" role="navigation">
+	<div class="AIOCourtSetpLeftCont">
+		<dl class="active">
+			<dd>1</dd>
+			<dt>基本信息</dt>
+		</dl>
+		<div class="solid"></div>
+		<dl class="success">
+			<dd>2</dd>
+			<dt>治疗情况和伤残</dt>
+		</dl>
+		<div class="solid"></div>
+		<dl>
+			<dd>3</dd>
+			<dt>医疗相关费用</dt>
+		</dl>
+		<div class="solid"></div>
+		<dl>
+			<dd>4</dd>
+			<dt>财产损失</dt>
+		</dl>
+		<div class="solid"></div>
+		<dl>
+			<dd>5</dd>
+			<dt>赔付结果</dt>
+		</dl>
+	</div>
+</div>

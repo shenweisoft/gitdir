@@ -1,0 +1,66 @@
+<div class="bg-default row" style="border:1px solid #999; box-shadow: 10px 10px 10px #999; ">
+    <div class="modal-header">
+        <h4 class="modal-title">
+            <span class="h1_line"></span>
+            留言板&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp流水号：{{items.serialNo}}&nbsp;&nbsp;
+            <span style="color:red;font-size:13px;">(请使用谷歌或IE11及以上版本浏览器，以达到更好的体验效果)</span>
+            <i class="iconfont icon-guanbi close" ng-click="closeModal()"></i>
+        </h4>
+    </div>
+    <div id="info" class="modal-body" style="overflow: auto; height: 450px;">
+        <div  ng-repeat="message in messageList ">
+            <!--别人信息 左侧显示-->
+            <div class="message-wp" ng-if="sysUser.id != message.personId">
+                <div class="message pull-left">
+                    <div class="message-left pull-left">
+                        <img ng-src="{{message.headPortrait?codeFilePath+message.headPortrait:'views/images/message-fg.png'}}" class="img-rounded">
+                        <!--<img src="views/images/message-fg.png" alt="" ng-if="!message.head">-->
+                        <!--<img src="views/images/message-tjy.png" alt="">-->
+                        <!--<img src="views/images/message-sqr.png" alt="">-->
+                        <!--<img src="views/images/message-bsqr.png" alt="">-->
+                    </div>
+                    <div style="max-width: 500px;" class="message-right pull-left">
+                        <div class="info" style="text-align: left;">
+                            <span>{{message.personName}}</span>
+                            <span class="time">{{message.createDate}}</span>
+                        </div>
+                        <div class="text">
+                            <i class="icon"></i>
+                            {{message.content}}
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+            <!--个人信息-右侧显示-->
+            <div class="message-wp self" ng-if="sysUser.id == message.personId">
+                <div class="message pull-right">
+                    <div class="message-left pull-right">
+                        <img ng-src="{{message.headPortrait?codeFilePath+message.headPortrait:'views/images/message-fg.png'}}" class="img-rounded">
+                        <!--<img src="views/images/message-fg.png" alt="">-->
+                        <!--<img src="views/images/message-tjy.png" alt="" ng-if="!message.head">-->
+                        <!--<img src="views/images/message-sqr.png" alt="">-->
+                        <!--<img src="views/images/message-bsqr.png" alt="">-->
+                    </div>
+                    <div style="max-width: 500px;" class="message-right pull-right">
+                        <div class="info" style="text-align: right;">
+                            <span>{{message.personName}}{{head}}</span>
+                            <span class="time">{{message.createDate}}</span>
+                        </div>
+                        <div class="text">
+                            <i class="icon"></i>
+                            {{message.content}}
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12" style="padding-bottom: 10px;">
+        <textarea class="col-xs-11 message-input" ng-class="{'has-error':messageError}" ng-keyup="keyDown($event)" ng-model="message" cols="2" rows="2" placeholder="请输入内容" maxlength="100"></textarea>
+        <button type="button" class="col-xs-1 btn btn-brand" ng-click="submitMessage()"  style="height: 54px;background-color: #368bff;border: none;">发送</button>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+<!--pages/me/winCode/winCode.wxml-->
+<view class="litigant_bottom">
+  <view class="input_box" wx:if='{{nowPhone}}'>
+    <image class="icon_img" src="../../../images/2r1_c1.png"></image>
+    <input class="phone" type="number" data-attribute="telephone" auto-focus='true' bindinput="userBindData" placeholder="请输入手机号码" />
+  </view>
+  <view class="input_box" style="margin-top:20rpx;" wx:if='{{nowPhone}}'>
+    <image class="icon_img" src="../../../images/2r3_c1.png"></image>
+    <input class="phone" type="number" maxlength='10' data-attribute="code" bindinput="userBindData" placeholder="请输入验证码" />
+    <view style='font-size:14px; line-height:86rpx;color:#0D9DEB' bindtap='winCode'>{{winCode}}</view>
+  </view>
+
+  <view style="margin-top:20rpx;" wx:if='{{!nowPhone}}'>
+    <view class="phoneNow">您当前绑定的手机号：<text>{{sysUser.telephone}}</text></view>
+    <view class="input_box" style="margin-top:20rpx;">
+      <image class="icon_img" src="../../../images/2r3_c1.png"></image>
+      <input class="phone" type="number" maxlength='10' data-attribute="code" bindinput="userBindData" placeholder="请输入验证码" />
+      <view style='font-size:14px; line-height:86rpx;color:#0D9DEB' bindtap='winCode'>{{winCode}}</view>
+    </view>
+  </view>
+  <view class="btn" bindtap="doLogin">{{btnText}}</view>
+</view>

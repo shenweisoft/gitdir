@@ -1,0 +1,5 @@
+<div style="position: relative;  padding-bottom: 50px;" role="navigation">
+	<left-step-left></left-step-left>
+	<div ui-view class="AIOCourtSetpRight"></div>
+	<div class="clear"></div>
+</div>

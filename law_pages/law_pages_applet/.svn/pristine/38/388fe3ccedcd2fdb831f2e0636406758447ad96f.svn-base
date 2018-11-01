@@ -1,0 +1,37 @@
+.bg{
+  background: #f2f2f2;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: -1;
+}
+.evidence_box{
+  width: 156rpx;
+  height: 156rpx;
+  margin-left: 18rpx;
+  margin-top: 25rpx;
+  float: left;
+}
+.evidence_box_img{
+  width: 100%;
+  height: 100%;
+}
+.submit_btn_box{
+  width: 750rpx;
+  height: 60px;
+  background: #ffffff;
+  border-top: 15px solid #f2f2f2;
+  position: fixed;
+  bottom: 0px;
+}
+.submit_btn{
+  width: 690rpx;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  background: #0e9deb;
+  color: #ffffff;
+  border-radius: 4px;
+  margin-left: 30rpx;
+  margin-top: 10px;
+}

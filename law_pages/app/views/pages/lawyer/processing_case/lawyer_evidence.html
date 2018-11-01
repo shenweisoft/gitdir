@@ -1,0 +1,218 @@
+<div class="row">
+	<div class="bg-default">
+		<div class="row no-margin tit_box" style="margin:0 15px;">
+			<div class="col-xs-12 padding_none">
+				<div class="col-xs-8 padding_none">
+					<div class="col-xs-3 padding_none">
+						<span class="tit_personal cur-pointer" ng-click="goHadEvidence()">已有证据</span>
+					</div>
+					<div class="col-xs-3 padding_none">
+						<span class="tit_personal cur-pointer" ng-click="goAddEvidence()">补充证据</span>
+					</div>
+				</div>
+				<div class="col-xs-4 text-right">
+					<button class="btn btn-brand" ng-click="addEvidence()" ng-show="addEvidenceBtnShow"><i
+									class="iconfont icon-tianjia"></i> 添加证据
+					</button>
+				</div>
+			</div>
+		</div>
+		<!--<hr style="margin:0;">-->
+		<!--已有证据-->
+		<div class="had_evidence" ng-hide="hadEvidenceShow">
+			<div class="row no-margin">
+				<div class="col-xs-12">
+					<ul class="list-inline" style="line-height:40px;">
+						<li>分类：</li>
+						<li class="slide-active">全部</li>
+						<li>医疗费</li>
+						<li>整容费</li>
+						<li>误工费</li>
+						<li>住院费</li>
+					</ul>
+				</div>
+			</div>
+			<div class="row no-margin">
+				<div class="col-xs-3">
+					<div class="evidence_picture"><img class="id_img" src="views/images/evidence.jpg"></div>
+				</div>
+				<div class="col-xs-9">
+					<h4>申请人（张德）举证：</h4>
+					<div class="row_margin">证据名称：<span>01</span></div>
+					<div class="row_margin">举证时间：<span>2016-12-28 12:30:29</span></div>
+					<div class="row_margin">证据描述：<span>张德的住院病历</span></div>
+					<div class="row_margin">提交环节：<span>调解阶段</span></div>
+					<div class="row_margin"><span style="float:left;">证据标签：</span>
+					<ul class="evidence_classify" style="float:left;margin-top:-8px;">
+						<li>医疗费</li>
+						<li>误工费</li>
+						<li>抚养费</li>
+						<li>护理费</li>
+					</ul>
+					</div>
+				</div>
+			</div>
+			<hr style="border:1px dashed #dddddd;">
+			<div class="row no-margin">
+				<div class="col-xs-3">
+					<div class="evidence_picture"><img class="id_img" src="views/images/evidence.jpg"></div>
+				</div>
+				<div class="col-xs-9">
+					<h4>申请人（张德）举证：</h4>
+					<div class="row_margin">证据名称：<span>01</span></div>
+					<div class="row_margin">举证时间：<span>2016-12-28 12:30:29</span></div>
+					<div class="row_margin">证据描述：<span>张德的住院病历</span></div>
+					<div class="row_margin">提交环节：<span>调解阶段</span></div>
+					<div class="row_margin"><span style="float:left;">证据标签：</span>
+					<ul class="evidence_classify" style="float:left;margin-top:-8px;">
+						<li>医疗费</li>
+						<li>误工费</li>
+						<li>抚养费</li>
+						<li>护理费</li>
+					</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--补充证据-->
+		<div ng-show="startShow" class="empty_evidence_list">
+			<i class="iconfont icon-renzheng"></i>
+			<span>还没有证据，请点击按钮添加证据哦！</span>
+		</div>
+		<br>
+		<div class="add_evidence" ng-show="addEvidenceShow">
+			<div class="row no-margin">
+				<div class="col-xs-3">
+					<div class="evidence_picture">
+						<img src="views/images/evidence.jpg">
+						<div class="delete_picture"><i class="iconfont icon-iconfont19"></i>删除</div>
+						<i class="iconfont icon-duihao selected_icon-duihao"></i>
+					</div>
+				</div>
+				<div class="col-xs-9">
+					<br>
+					<form class="form-horizontal" role="form">
+					<div class="row">
+							<div class="col-xs-2 text-right">
+								<label class="control-label">证据名称</label>
+							</div>
+							<div class="col-xs-5">
+								<input class="form-control" placeholder="请输入">
+							</div>
+							<div class="col-xs-5"></div>
+					</div>
+					<br>
+					<div class="row">
+							<div class="col-xs-2 text-right">
+								<label class="control-label">证据描述</label>
+							</div>
+							<div class="col-xs-10">
+								<textarea class="form-control" rows="3"></textarea>
+							</div>
+					</div>
+					<div class="row">
+							<div class="col-xs-2 text-right">
+								<label class="control-label">证据分类</label>
+							</div>
+							<div class="col-xs-10">
+								<ul class="evidence_classify">
+									<li>医疗费<i class="iconfont icon-guanbi"></i></li>
+									<li>误工费<i class="iconfont icon-guanbi"></i></li>
+									<li>抚养费<i class="iconfont icon-guanbi"></i></li>
+									<li>护理费<i class="iconfont icon-guanbi"></i></li>
+									<li class="li_tab cur-pointer">编辑标签</li>
+								</ul>
+							</div>
+					</div>
+					</form>
+				</div>
+			</div>
+			<hr style="border:1px dashed #dddddd;">
+			<div class="row no-margin">
+				<div class="col-xs-3">
+					<div class="evidence_picture">
+						<img src="views/images/evidence.jpg">
+						<div class="delete_picture"><i class="iconfont icon-iconfont19"></i>删除</div>
+						<i class="iconfont icon-duihao"></i>
+					</div>
+				</div>
+				<div class="col-xs-9">
+					<br>
+					<form class="form-horizontal" role="form">
+					<div class="row">
+							<div class="col-xs-2 text-right">
+								<label class="control-label">证据名称</label>
+							</div>
+							<div class="col-xs-5">
+								<input class="form-control" placeholder="请输入">
+							</div>
+							<div class="col-xs-5"></div>
+					</div>
+					<br>
+					<div class="row">
+							<div class="col-xs-2 text-right">
+								<label class="control-label">证据描述</label>
+							</div>
+							<div class="col-xs-10">
+								<textarea class="form-control" rows="3"></textarea>
+							</div>
+					</div>
+					<div class="row">
+							<div class="col-xs-2 text-right">
+								<label class="control-label">证据分类</label>
+							</div>
+							<div class="col-xs-10">
+								<ul class="evidence_classify">
+									<li>医疗费<i class="iconfont icon-guanbi"></i></li>
+									<li>误工费<i class="iconfont icon-guanbi"></i></li>
+									<li>抚养费<i class="iconfont icon-guanbi"></i></li>
+									<li>护理费<i class="iconfont icon-guanbi"></i></li>
+									<li class="li_tab cur-pointer">保存标签</li>
+								</ul>
+							</div>
+					</div>
+					</form>
+					<br>
+					<div class="row">
+						<div class="col-xs-2"></div>
+						<div class="col-xs-10">
+							<ul class="all_classify">
+								<li>全部标签：</li>
+								<li class="slide-active">医疗费</li>
+								<li>|</li>
+								<li class="slide-active">整容费</li>
+								<li>|</li>
+								<li class="slide-active">误工费</li>
+								<li>|</li>
+								<li>护理费</li>
+								<li>|</li>
+								<li class="slide-active">抚养费</li>
+								<li>|</li>
+								<li>住院费</li>
+								<li>|</li>
+								<li>诊断费</li>
+								<li>|</li>
+								<li>xxxx费</li>
+								<li>|</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br>
+		</div>
+	</div>
+	<br>
+	<div class="row bg-default no-margin panel-heading">
+		<div class="col-xs-6">
+			<h4 class="col-xs-4 flo-l"><i class="iconfont icon-yiwancheng"></i> 全选</h4>
+			<h4 class="col-xs-4 flo-l">已选中<span class="error_color">8</span>个</h4>
+			<h4 class="col-xs-4 flo-l error_color cur-pointer">批量删除</h4>
+		</div>
+		<div class="col-xs-6 text-right">
+			<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">上一步</button>
+			<button type="button" class="btn btn-brand" ng-click="ok()">保存</button>
+			<button type="button" class="btn btn-brand" ng-click="ok()">下一步</button>
+		</div>
+	</div>
+</div>

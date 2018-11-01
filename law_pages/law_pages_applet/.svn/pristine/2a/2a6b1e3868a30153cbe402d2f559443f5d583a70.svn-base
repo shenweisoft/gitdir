@@ -1,0 +1,53 @@
+<view class='detail_bg'></view>
+<view class='detail_list'>
+  <view class='detail_e' >
+    <view class='detail_e_bt'>
+      <view class='detail_e_bt_l'>
+        <view class='iconfont_box'><icon class='iconfont icon--shigujibenxinxi'></icon></view>
+        <view class='detail_e_bt_l_r'>{{mediationPlan.name}}</view>
+      </view>
+      <view class='detail_e_bt_r'>{{mediationPlan.createDate}}</view>
+    </view>
+    <view class='detail_e_e' wx:for="{{mediationPlan.feeArray}}" wx:for-item="fee" wx:if="{{fee.claimAmount}}">
+      <view class='detail_e_e_t'>{{fee.value}} <text>￥ {{fee.claimAmount}} 元</text></view>
+    </view>
+    <view class='detail_e_e'>
+      <view class='detail_e_e_t right_text'>总计： ￥ {{mediationPlan.claimAmount}} 元</view>
+    </view>
+  </view>
+  <!-- 评论列表 -->
+  <view class='detail_e' style=' padding: 0rpx 35rpx 30rpx 35rpx; width:635rpx;'>
+    <view class='comment'>评论列表</view>
+    <view class='comment_e' wx:for="{{mediationPlan.evalList}}" wx:for-item="eval">
+      <view class='comment_e_bt'>
+        <view class='bt_img'><image src="{{eval.headIcon}}"></image></view>
+        <view class='text'>{{eval.createName}}</view>
+        <view class='time'>{{eval.createDate}}</view>
+        <view class='clear'></view>
+      </view>
+      <view class='cont_text'>{{eval.content}}</view>
+    </view>
+  </view>
+</view>
+
+<loading hidden="{{hidden}}">
+  加载中...
+</loading>
+
+<!-- 语音图片 -->
+<view class='audio_mask' hidden='{{voiceShow}}'>
+   <view class='loading2'>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+   </view>
+   <image src='../../../images/chat_pic4.png'></image> 
+   <view class='audio_mask_text'>手指上滑  取消发送</view>
+</view>
+
+<view class='botton_box'>
+  <input class='input' value="{{content}}" bindinput='setContent' bindconfirm='commit' confirm-type='send' placeholder='我要回复' ></input>
+  <image src='../../../images/chat_pic3.png' catchtouchend="streamRecordEnd" catchtouchstart="streamRecord" catchtouchmove="streamRecordMove"></image>
+</view>

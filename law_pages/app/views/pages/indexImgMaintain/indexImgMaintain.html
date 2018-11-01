@@ -1,0 +1,85 @@
+<div class="homePage_banner" style="height: 360px;">
+
+	<div class=" slider" style="width: 960px;height: 360px;">
+		<button type="button" class="btn btn-brand pull-right" style="position: absolute; z-index: 999;" ng-click="editImg()">编辑</button>
+		<div>
+			<img  ng-repeat="slide in slides" class="slide slide-animation nonDraggableImage" ng-swipe-right="nextSlide()" ng-swipe-left="prevSlide()" ng-hide="!isCurrentSlideIndex($index)" ng-src="{{slide.image}}">
+		</div>
+		<span class="slide-arrow prev"  ng-click="nextSlide()"><i class="iconfont icon-zuoyoujiantou-copy-copy-copy"></i></span>
+		<span class="slide-arrow next"  ng-click="prevSlide()"><i class="iconfont icon-zuoyoujiantou-copy-copy"></i></span>
+		<nav class="slide-nav">
+			<div class="wrapper">
+				<ul class="slide-dots">
+					<li class="dot" ng-repeat="slide in slides">
+						<a href="javascript:void(0)" ng-class="{'active':isCurrentSlideIndex($index)}" ng-click="setCurrentSlideIndex($index);">{{slide.description}}</a></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+ </div>
+<div class="homePage_cont">
+	<div class="homePage_cont_left">
+		<div class="pull-left cont_left_btn cont_left_btn1"><a></a></div>
+		<div class="pull-left cont_left_btn cont_left_btn2" style="margin: 0 11px;"><a></a></div>
+		<div class="pull-left cont_left_btn cont_left_btn3"><a ></a></div>
+		<div class="clearfix"></div>
+		<div class="homePage_cont_left_e"><img src="views/images/1-_03.png"></div>
+		<div class="homePage_cont_left_e"><img src="views/images/1-03.png"></div>
+		<div class="homePage_cont_left_e">
+			<div class="homePage_cont_left_e_bt"><i class="iconfont icon-shudao" style="font-size: 28px; color: #3F65D6; position: relative; bottom: -5px;"></i><span style="font-size: 16px;">常见问题</span><a class="pull-right" style="color: #3F65D6; margin-right: 20px; cursor: pointer;">更多</a></div>
+		</div>
+		<div class="homePage_cont_left_e_box" >
+		</div>
+	</div>
+	<div class="homePage_cont_right">
+		<div class="homePage_cont_left_e_bt"><i class="iconfont icon-shudao" style="font-size: 28px; color: #3f65d6; position: relative; bottom: -5px;"></i><span style="font-size: 16px;">常用工具</span></div>
+		<div class="homePage_cont_right_box">
+			<dl>
+				<dt class="text-center"><span class="home-tool home-tool1"></span></dt>
+				<dd class="text-center margin-top-6">司法邮箱</dd>
+			</dl>
+			<dl>
+				<dt class="text-center"><span class="home-tool home-tool2"></span></dt>
+				<dd class="text-center margin-top-6">赔付试算</dd>
+			</dl>
+			<dl>
+				<dt class="text-center"><span class="home-tool home-tool3"></span></dt>
+				<dd class="text-center margin-top-6" >在线庭审</dd>
+			</dl>
+			<dl>
+				<dt class="text-center"><span class="home-tool home-tool4"></span></dt>
+				<dd class="text-center margin-top-6">文书模板</dd>
+			</dl>
+			<dl>
+				<dt class="text-center"><span class="home-tool home-tool5"></span></dt>
+				<dd class="text-center margin-top-6">诉讼指南</dd>
+			</dl>
+			<div class="clearfix"></div>
+		</div>
+		<div class="homePage_cont_left_e_bt margin-top-6"><i class="iconfont icon-shudao" style="font-size: 28px; color: #3f65d6; position: relative; bottom: -5px;"></i><span style="font-size: 16px;">法律法规</span><a class="pull-right" style="color: #3F65D6; margin-right: 20px; cursor: pointer;">更多</a></div>
+		<div class="homePage_cont_left_e_box">
+            <div ng-if="data.statuteList.length != 0" ng-repeat="statute in data.statuteList">
+                <div><a href="{{statute.linkUrl}}" target="_blank">{{statute.title}}</a></div>
+            </div>
+		</div>
+		<div class="homePage_cont_left_e_bt margin-top-6"><i class="iconfont icon-shudao" style="font-size: 28px; color: #3f65d6; position: relative; bottom: -5px;"></i><span style="font-size: 16px;">司法解释</span><a class="pull-right" style="color: #3F65D6; margin-right: 20px; cursor: pointer;">更多</a></div>
+		<div class="homePage_cont_left_e_box">
+            <div ng-if="data.judicialList.length != 0" ng-repeat="judicial in data.judicialList">
+                <div><a href="{{judicial.linkUrl}}" target="_blank">{{judicial.title}}</a></div>
+                <div class="border_b_das"></div>
+            </div>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</div>
+<div class="tel-mg-box">
+	<div class="tel-img">
+		<div class="tel-img-big" >
+			<div style="line-height: 47px; border-bottom: 1px solid rgba(255, 255, 255, 0.67);"> 道交一体化客服</div>
+			<div style="font-size: 26px; margin-bottom: -10px; line-height: 63px; color: #fff;">400-618-0508</div>
+			<div style="font-size: 14px;">工作日 9:00-18:00</div>
+			<b></b>
+		</div>
+	</div>
+	<div class="ma-img"><div class="ma-img-big"></div></div>
+</div>

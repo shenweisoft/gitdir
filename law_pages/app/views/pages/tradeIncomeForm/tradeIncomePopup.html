@@ -1,0 +1,109 @@
+<div class="modal-header">
+    {{industryType.tradeTitle}}
+    <i class="iconfont pull-right icon-guanbi close" ng-click="cancel()"></i>
+</div>
+<div class="modal-body">
+    <div class="form_box">
+        <form class="form-horizontal" >
+            <div class="form-group margin_top_popup row">
+                <label class="col-xs-offset-1 col-xs-2"><i class="Required">*</i> 区域名称</label>
+                <div class="col-xs-6" ng-class="{'has-error':nameErrorMessage}">
+                    <input name="region_name" autocomplete="off" ng-model="tradeIncomeFormObj.regionName" type="text" class="form-control input-sm ng-pristine ng-valid"  ng-keyup="regionNameSearch()" placeholder="请输入区域名称">
+                    <ul class="regionName search-list" ng-show="industryType.regionNameList" >
+                        <li ng-repeat="data in industryType.regionSearchList" value="data.regionCode" ng-click="selectRegionName(data)"  >{{data.regionFullName}}</li>
+                        <li ng-show="industryType.searchRegionNull">暂不存在满足条件的项</li>
+                    </ul>
+                </div>
+                <div class="error-message ng-binding" ng-bind="nameErrorMessage"></div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-xs-offset-1 col-xs-2"><i class="Required">*</i> 起始时间</label>
+                <div class="col-xs-6" ng-class="{'has-error':startDateErrorMessage}">
+                    <p class="input-group">
+                        <input  type="text" name="start_date" class="form-control input-sm ng-pristine ng-valid" placeholder="请选择起始时间" datepicker-popup="yyyy-MM-dd" show-button-bar="false" ng-readonly="true" ng-model="tradeIncomeFormObj.startDate" is-open="industryType.calendarIsOpenStartDate" max-date="minDate" max-date="'2200-06-22'" datepicker-options="{startingDay: 1}" close-text="Close" />
+                        <span class="input-group-btn">
+                             <button  type="button" class="btn btn-default btn-default-padding" ng-click="openStartDate($event, tradeIncomeFormObj)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                    <div class="error-message ng-binding" ng-bind="startDateErrorMessage"></div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-xs-offset-1 col-xs-2"><i class="Required">*</i> 终止时间</label>
+                <div class="col-xs-6" ng-class="{'has-error':endDateErrorMessage}">
+                    <p class="input-group">
+                        <input  type="text" name="end_date" class="form-control input-sm ng-pristine ng-valid" placeholder="请选择终止时间" datepicker-popup="yyyy-MM-dd" show-button-bar="false" ng-readonly="true" ng-model="tradeIncomeFormObj.endDate" is-open="industryType.calendarIsOpenEndDate" max-date="minDate" max-date="'2200-06-22'" datepicker-options="{startingDay: 1}" close-text="Close" />
+                        <span class="input-group-btn">
+                             <button  type="button" class="btn btn-default btn-default-padding" ng-click="openEndDate($event, tradeIncomeFormObj)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                    <div class="error-message ng-binding" ng-bind="endDateErrorMessage"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label  class="col-xs-offset-1 col-xs-2"><i>*</i> 行业类别</label>
+                <div class="col-xs-6" >
+                    <input name="industry_type_name" autocomplete="off" type="text" class="form-control input-sm" ng-model="tradeIncomeFormObj.industryTypeName" ng-keyup="getIndustryType()" ng-focus="showSearchList()" ng-blur="hideSearchList()" placeholder="请输入行业类别" >
+                    <ul class="regionName" ng-show="industryType.industryTypeList" >
+                        <li ng-repeat="data in industryType.searchList" value="data.dictCode" ng-click="selectTradeName(data)">{{data.dictName}}</li>
+                        <li ng-show="industryType.searchNull">暂不存在满足条件的项</li>
+                    </ul>
+                </div>
+                <div class="error-message" ng-bind="industryTypeNameErrorMessage"></div>
+            </div>
+
+            <!--<div class="form-group">
+                <label  class="col-xs-offset-1 col-xs-2"><i>*</i> 行业类别名称</label>
+                <div class="col-xs-6" >
+                    <input name="name" type="text" class="form-control input-sm" >
+                </div>
+                <div class="error-message" ng-bind="typeErrorMessage"></div>
+            </div>-->
+
+            <!--<div class="form-group">
+                <label  class="col-xs-offset-1 col-xs-2"><i>*</i> 具体行业名称</label>
+                <div class="col-xs-6" >
+                    <input name="industry_name" type="text" class="form-control input-sm" ng-model="tradeIncomeFormObj.industryName" placeholder="请输入具体行业名称">
+                </div>
+                <div class="error-message" ng-bind="industryNameErrorMessage"></div>
+            </div>-->
+
+            <div class="form-group">
+                <label  class="col-xs-offset-1 col-xs-2"><i>*</i> 平均年收入水平</label>
+                <div class="col-xs-6" >
+                    <input name="year_income" type="text" class="form-control input-sm" ng-model="tradeIncomeFormObj.yearIncome" placeholder="请输入平均年收入水平">
+                </div>
+                <div class="error-message" ng-bind="yearIncomeErrorMessage"></div>
+            </div>
+
+            <div class="form-group">
+                <label  class="col-xs-offset-1 col-xs-2"><i>*</i> 平均月收入水平</label>
+                <div class="col-xs-6" >
+                    <input name="avg_income" type="text" class="form-control input-sm" ng-model="tradeIncomeFormObj.avgIncome" placeholder="请输入平均月收入水平">
+                </div>
+                <div class="error-message" ng-bind="avgIncomeErrorMessage"></div>
+            </div>
+
+            <div class="form-group">
+                <label  class="col-xs-offset-1 col-xs-2"> 备注</label>
+                <div class="col-xs-6" ng-class="{'has-error':contentErrorMessage}">
+                    <textarea style="resize: none;" class="form-control ng-pristine ng-valid" rows="5" ng-model="tradeIncomeFormObj.remark" placeholder="请输入备注"></textarea>
+                </div>
+                <div class="error-message" ng-bind="contentErrorMessage"></div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="form-group">
+        <div class="col-xs-offset-4 col-xs-1">
+            <button type="submit" class="btn btn-default " ng-click="cancel()">取消</button>
+        </div>
+        <div class=" col-xs-1">
+            <button type="submit" class="btn btn-brand bg-brand-color" ng-click="save()" >保存</button>
+        </div>
+    </div>
+</div>

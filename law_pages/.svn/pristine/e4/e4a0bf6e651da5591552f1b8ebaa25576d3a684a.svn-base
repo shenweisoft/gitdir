@@ -1,0 +1,317 @@
+<div class="relative_top" >
+	<div class="row bg-default">
+		<div class="col-xs-3 border_right">
+			<h1 class="page-header list_tit">
+			<span class="h1_line"></span>
+			<span class="dsp_title">组织管理</span>
+			<span class="clear"></span>
+			</h1>
+			<div class="search_box">
+				<input class="search_input" type="text" ng-model="searchInput" placeholder="输入关键词搜索">
+				<i class="iconfont search_img">&#xe600;</i>
+			</div>
+			<!--组织管理列表-->
+			<div class="panel">
+				<div class="panel-body overflow-hidden" >
+					<div js-tree="treeConfig" should-apply="true" tree="treeInstance" ng-model="showData" ng-click="clickTree()" tree-events="ready:readyCB"></div>
+					<hr>
+				</div>
+			</div>
+		</div>
+		<!--右边-->
+		<div class="admin-content col-xs-9">
+			<!--组织详情页-->
+			<div ng-show="selectedNode && selectedNode.type=='top'">
+				<div class="row list-title line-height2">
+					<div class="col-xs-8">
+						<h4 class="col-xs-5">
+							<span class="h1_line"></span>
+							<span>组织管理 - {{selectedNode.text}}</span>
+						</h4>
+						<div class="search_box col-xs-6">
+							<input class="search_input ng-pristine ng-valid" type="text" ng-model="searchInputVale" placeholder="输入关键词搜索">
+							<i style="top:0px; left: 24px;" class="iconfont search_img"></i>
+						</div>
+						<div class="col-xs-1 vertical-m">
+							<div class="pull-left">
+								<button type="button" class="btn btn-brand pull-right"  style="margin-right: 15px; margin-left: 20px; margin-top: 3px;" ng-click="seekSysOrgs()">搜索</button>
+							</div>
+						</div>
+					</div>
+					<div ng-show="delOrgFlag == '1'" class="col-xs-4">
+						<div class=" col-xs-9 vertical-m">
+							<div class="pull-right">
+								<button type="button" class="btn btn-default btn-brand" ng-click="createOrUpdateSysOrg()">
+									<i class="iconfont icon-tianjia"></i> 新建组织
+								</button>
+							</div>
+						</div>
+						<div class="vertical-m col-xs-3">
+							<div class="pull-left">
+								<button type="button" class="btn btn-default brand-color" ng-click="delSysOrgs()">
+									<i class="iconfont icon-iconfont19 icon-blue" ></i> 删除
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row" ng-show="delOrgFlag == '1'">
+					<div class="row list-title line-height2" style="margin-top: 15px;">
+						<div class="col-xs-2"></div>
+						<div class="vertical-m col-xs-2">
+							<div class="pull-right">
+								<a name="file" class="post_picture" style="text-decoration:none; cursor: pointer;">
+									<input id="file" name="file" type="file" class="btn btn-default brand-color" ngf-select="importCourtExcel($file)"  style="filter:alpha(opacity=0);opacity:0;position:absolute;left:0;top:0;"/>法院机构导入
+								</a>
+							</div>
+						</div>
+						<div class="vertical-m col-xs-2">
+							<div class="pull-right">
+								<a name="file" class="post_picture" style="text-decoration:none; cursor: pointer;">
+									<input id="file" name="file" type="file" class="btn btn-default brand-color" ngf-select="importIdentificationExcel($file)"  style="filter:alpha(opacity=0);opacity:0;position:absolute;left:0;top:0;"/>鉴定机构导入
+								</a>
+							</div>
+						</div>
+						<div class="vertical-m col-xs-2">
+							<div class="pull-right">
+								<a name="file" class="post_picture" style="text-decoration:none; cursor: pointer;">
+									<input id="file" name="file" type="file" class="btn btn-default brand-color" ngf-select="importCourtUserInfoExcel($file)"  accept=".xls,.xlsx" style="filter:alpha(opacity=0);opacity:0;position:absolute;left:0;top:0;"/>法院人员导入
+								</a>
+							</div>
+						</div>
+						<div class="vertical-m col-xs-2">
+							<div class="pull-right">
+								<a name="file" class="post_picture" style="text-decoration:none; cursor: pointer;">
+									<input id="file" name="file" type="file" class="btn btn-default brand-color" ngf-select="importMediateUserInfoExcel($file)" accept=".xls,.xlsx" style="filter:alpha(opacity=0);opacity:0;position:absolute;left:0;top:0;"/>调解人员导入
+								</a>
+							</div>
+						</div>
+						<div class="vertical-m col-xs-2">
+							<div class="pull-right">
+								<a name="file" class="post_picture" style="text-decoration:none; cursor: pointer;">
+									<input id="file" name="file" type="file" class="btn btn-default brand-color" ngf-select="importApplyerUserInfoExcel($file)" accept=".xls,.xlsx" style="filter:alpha(opacity=0);opacity:0;position:absolute;left:0;top:0;"/>当事人导入
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--组织表格-->
+				<table class="table" id="table-organize">
+					<tr>
+						<td class="col-xs-4"><input type="checkbox" name="orgCheckbox" ng-change="orgToggleSelectAll()"  ng-model="orgSelectAll" ng-checked="orgSelectAll">组织名称</td>
+						<td class="col-xs-2">组织代码</td>
+						<td class="col-xs-2">组织类型</td>
+						<td class="col-xs-2" ng-show="delOrgFlag == '1'">操作</td>
+					</tr>
+					<tr ng-repeat="sysOrg in originalOrgList | filter:{parent:selectedNode.id}" ng-if="newOrgList.length == 0">
+						<td><input type="checkbox" name="orgCheckbox" ng-change="orgChxChange()" ng-checked="sysOrg.checked" ng-model="sysOrg.checked"> <i class="iconfont tree-icon icon-jianzhu" ></i>{{sysOrg.text}}</td>
+						<td>{{sysOrg.orgCode}}</td>
+						<td>{{sysOrg.category | orgType2Const}}</td>
+						<td ng-show="delOrgFlag == '1'">
+							<i class="iconfont brand-color cur-pointer icon-bianji" ng-click="createOrUpdateSysOrg(sysOrg)" data-toggle="tooltip" data-placement="bottom" title="点击编辑"></i>
+							<i class="iconfont brand-color cur-pointer icon-iconfont19" ng-click="delSysOrgs(sysOrg.id)"></i>
+						</td>
+					</tr>
+					<tr ng-repeat="sysOrg in newOrgList | filter:{parent:selectedNode.id}" ng-if="newOrgList.length != 0">
+						<td><input type="checkbox" name="orgCheckbox" ng-change="orgChxChange()" ng-checked="sysOrg.checked" ng-model="sysOrg.checked"> <i class="iconfont tree-icon icon-jianzhu" ></i>{{sysOrg.text}}</td>
+						<td>{{sysOrg.orgCode}}</td>
+						<td>{{sysOrg.category | orgType2Const}}</td>
+						<td ng-show="delOrgFlag == '1'">
+							<i class="iconfont brand-color cur-pointer icon-bianji" ng-click="createOrUpdateSysOrg(sysOrg)" data-toggle="tooltip" data-placement="bottom" title="点击编辑"></i>
+							<i class="iconfont brand-color cur-pointer icon-iconfont19" ng-click="delSysOrgs(sysOrg.id)"></i>
+						</td>
+					</tr>
+				</table>
+			</div>
+			
+			<!--部门和个人都有-->
+			<!--组织详情页-->
+			<div ng-show="selectedNode && selectedNode.type=='dept'">
+				<div class="row list-title line-height2">
+					<div class="col-xs-8">
+						<h4>
+							<span class="h1_line"></span>
+							<span>部门管理 - {{selectedNode.id | deptId2Text:originalData}}</span>
+						</h4>
+					</div>
+					<div class="col-xs-2 column padding_none">
+						<div class="btn-group pull-right">
+							<button class="btn btn-default brand-color" type="button" ng-click="delSysDepts()"><i class="iconfont icon-iconfont19 icon-blue"></i> 删除</button>
+							<!-- <button class="btn btn-default brand-color" type="button"><i class="iconfont icon-tingyongzhiyuan icon-blue"></i>停用</button>
+							<button class="btn btn-default brand-color" type="button"><i class="iconfont icon-geren icon-blue"></i>激活</button> -->
+						</div>
+					</div>
+					<div class="col-xs-2 btn-group" dropdown >
+							<button type="button" class="btn btn-brand dropdown-toggle " dropdown-toggle ng-disabled="disabled">新建 <span class="caret"></span></button>
+							<ul class="dropdown-menu dropdown-menu-left" role="menu">
+								<li ng-show="selectedNode.category"><a ng-click="createOrUpdateSysDept()">新建部门</a></li>
+								<li ng-show="!selectedNode.category"><a ng-click="createOrUpdateSysUser()">新建人员</a></li>
+							</ul>
+					</div>
+				</div>
+				<!--组织表格-->
+				<table class="table">
+					<tr>
+						<td class="col-xs-1"><input type="checkbox" name="deptCheckbox" ng-change="deptToggleSelectAll()"  ng-model="deptSelectAll" ng-checked="deptSelectAll"></td>
+						<td class="col-xs-8">名称</td>
+						<td class="col-xs-3">操作</td>
+					</tr>
+					<tr ng-repeat="deptOrPerson in originalData | filter:{id:selectedNode.id+'.'}">
+						<td>
+							<input type="checkbox" name="deptCheckbox" ng-change="deptChxChange()"  ng-model="deptOrPerson.checked" ng-checked="deptOrPerson.checked">
+						</td>
+						<td>
+							<i ng-class="treeConfig.types[deptOrPerson.type].icon"></i>{{deptOrPerson.text}}
+						</td>
+						<td>
+							<i class="iconfont  brand-color cur-pointer icon-bianji" ng-click="createOrUpdateSysDeptOrPerson(deptOrPerson)" data-toggle="tooltip" data-placement="bottom" title="点击编辑"></i>
+							<i class="iconfont  brand-color cur-pointer icon-iconfont19" ng-click="delSysDepts(deptOrPerson.id)" data-toggle="tooltip"  data-placement="bottom" title="点击删除"></i>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div ng-show="selectedNode && selectedNode.type=='default'">
+				<div class="row">
+					<div class="tit_box">
+						<div class="col-xs-10 row_margin">
+							<h4 class="row_margin">人员信息 | {{selectedNode.id | deptId2Text:originalData}}</h4>
+						</div>
+						<div class="col-xs-2 text-right blue_color cur-pointer" onclick="javascript:history.go(-1)"><i class="iconfont icon-fanhui"></i></div>
+					</div>
+				</div>
+				<br>
+				<div class="staff_infor">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="col-xs-4">
+								<h4>个人信息</h4>
+							</div>
+							<div class="col-xs-4"></div>
+							<div class="col-xs-4 text-right">
+								<h4 class="blue_color cur-pointer" ng-click="createOrUpdateSysUser(selectedNode)"><i class="iconfont icon-bianji"></i>编辑</h4>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 no-padding">
+							<div class="col-xs-2 text-right padding_none margin-bottom-10">姓名：</div>
+							<div class="col-xs-3 text-left margin-bottom-10">{{selectedNode.text}}</div>
+							<div class="col-xs-2 text-right padding_none margin-bottom-10">证件类型: </div>
+							<div class="col-xs-3 text-left margin-bottom-10">{{selectedNode.certificateType | certType2Text:certTypeConstant}}</div>
+						</div>
+						<div class="col-xs-12 no-padding">
+							<div class="col-xs-2 text-right padding_none margin-bottom-10">账号：</div>
+							<div class="col-xs-3 text-left margin-bottom-10">{{selectedNode.loginAccount}}</div>
+							<div class="col-xs-2 text-right padding_none margin-bottom-10">证件号: </div>
+							<div class="col-xs-3 text-left margin-bottom-10">{{selectedNode.certificateNumber}}</div>
+						</div>
+						<div class="col-xs-12 no-padding">
+							<div class="col-xs-2 text-right padding_none margin-bottom-10">电话：</div>
+							<div class="col-xs-3 text-left margin-bottom-10">{{selectedNode.mobile}}</div>
+						</div>
+					</div>
+					<br/>
+				</div>
+				<div class="staff_infor">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="col-xs-4">
+								<h4>机构信息</h4>
+							</div>
+							<div class="col-xs-4"></div>
+							<div class="col-xs-4 text-right"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 no-padding">
+							<div class="col-xs-2 text-right padding_none margin-bottom-10">用户类型: </div>
+							<div class="col-xs-3 text-left margin-bottom-10">{{selectedNode.userType | userType2Text:userTypeConstant}}</div>
+						</div>
+						<div class="col-xs-12 no-padding">
+							<div class="col-xs-2 text-right padding_none margin-bottom-10">角色: </div>
+							<div class="col-xs-3 text-left margin-bottom-10">{{selectedNode.roleid | roleType2Text:roleTypeData}}</div>
+						</div>
+						<div class="col-xs-12 no-padding">
+							<div class="col-xs-2 text-right padding_none margin-bottom-10">部门管理者: </div>
+							<div class="col-xs-3 text-left margin-bottom-10">{{selectedNode.isSelf | int2BoolText}}</div>
+						</div>
+						<!--法官时显示-->
+						<div class="col-xs-12 no-padding" ng-show="selectedNode.userType == '1'">
+							<div class="col-xs-2 text-right padding_none margin-bottom-10">岗位: </div>
+							<div class="col-xs-3 text-left margin-bottom-10">{{selectedNode.postType | userType2Text:postTypeList}}</div>
+						</div>
+						<div class="col-xs-12 no-padding" ng-show="selectedNode.userType == '3'">
+							<div class="col-xs-2 text-right padding_none margin-bottom-10">岗位: </div>
+							<div class="col-xs-3 text-left margin-bottom-10">{{selectedNode.postType | userType2Text:appraisalPostTypeList}}</div>
+						</div>
+					</div>
+					<br/>
+				</div>
+				<br>
+				<div class="staff_infor">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="col-xs-4">
+								<h4>角色列表</h4>
+							</div>
+							<div class="col-xs-4"></div>
+							<div class="col-xs-4 text-right">
+								<button class="btn btn-brand btn-add_role" ng-click="addRole()"><i class="iconfont icon-tianjia"></i> 添加角色</button>
+							</div>
+						</div>
+					</div>
+					<table class="table" id="table-organize">
+						<tr>
+							<td class="col-xs-1">序号</td>
+							<td class="col-xs-4">所属部门</td>
+							<td class="col-xs-2">部门管理者</td>
+							<td class="col-xs-3">角色</td>
+							<td class="col-xs-2">操作</td>
+						</tr>
+						<tbody>
+							<tr ng-repeat="sysOrg in selectedNode.id | getRoleList:originalUserList" >
+								<td>{{$index+1}}</td>
+								<td>{{sysOrg.parent | deptId2Text:originalData}}</td>
+								<td>{{sysOrg.isSelf | int2BoolText}}</td>
+								<td>{{sysOrg.roleid | roleType2Text:roleTypeData}}</td>
+								<td class="action_bar">
+									<i ng-show="(selectedNode.id | getRoleList:originalUserList).length > 1" class="iconfont icon-iconfont19" ng-click="deleteRole(sysOrg)" data-toggle="tooltip"  data-placement="bottom" title="点击删除"></i>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+        <br>
+        <div class="staff_infor" ng-if="selectedNode.userType == '4'">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="col-xs-4">
+                <h4>数据查询权限列表</h4>
+              </div>
+              <div class="col-xs-4"></div>
+              <div class="col-xs-4 text-right">
+                <button class="btn btn-brand btn-add_role" ng-click="setDataPermission()"><i class="iconfont icon-tianjia"></i> 设置权限</button>
+              </div>
+            </div>
+          </div>
+          <table class="table" id="table-organize">
+            <tr>
+              <td class="col-xs-1">序号</td>
+              <td class="col-xs-3">调解中心名称</td>
+              <td class="col-xs-2">操作</td>
+            </tr>
+            <tbody>
+            <tr ng-repeat="dp in dataPermissionList | filter:{userId:selectedNode.id.substr(selectedNode.id.lastIndexOf('.') + 1)}">
+              <td>{{$index+1}}</td>
+              <td>{{dp.orgName}}</td>
+              <td class="action_bar">
+                <i class="iconfont icon-iconfont19"  data-index="{{$index}}" ng-click="deletePermission(dp, $event)" data-toggle="tooltip" data-placement="bottom" title="点击删除"></i>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+			</div>
+		</div>
+	</div>
+</div>

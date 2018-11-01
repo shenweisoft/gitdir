@@ -1,0 +1,89 @@
+<div class="row header_e no-margin" ng-hide="isSelf=='1'">
+	<div class="col-xs-11 no-padding">
+		<div class="col-xs-1 text-align-center">
+			<img class="Court_logo"  src="views/images/logo.png">
+		</div>
+		<!--  <p class="col-xs-11 Court_name no-padding">{{law.lawOrgName}}<span> | </span><span>签字文书 </span></p>-->
+	</div>
+</div>
+<div class="case-details-head bg-default font-size13" ng-hide="isSelf=='1'">
+	<div head-detail></div>
+</div>
+<div class="row no-margin" style="background:#ecf0f3; min-height: 500px;" ng-class="isSelf==1?'trafficPolice':''">
+<div class="col-xs-12 bg-default row_margin " style="min-height: 400px;padding: 0px 20px 10px" ng-show="fileList.length > 0 || imageList.length > 0" >
+	<div class="border-bottom" ng-if="law.state =='1000' || law.state =='1001'">
+		<h4  style="height: 40px;line-height: 40px; margin: 10px 0;">
+			<span class="h1_line" style="margin-top: 10px;"></span>
+			签字文书
+			<button class="btn btn-brand flo-r"  ngf-select="uploadFile($files)" ngf-multiple="true" > <i class="iconfont icon-tianjia"></i> 添加签字文书</button>
+		</h4>
+	</div>
+
+	<div class="col-xs-12">
+		<div style="padding:26px 0 20px;border-bottom: 1px dashed #ccc;">
+			<table class="table table-bordered text-center" >
+				<tr class="bg-color">
+					<th class="text-center">文件名称</th>
+					<th class="text-center">上传时间</th>
+					<th class="text-center" ng-if="law.state =='1000' || law.state =='1001'">上传</th>
+					<th class="text-center">下载</th>
+					<th class="text-center" ng-if="law.state =='1000' || law.state =='1001'" >删除</th>
+				</tr>
+				<tr ng-repeat="file in fileList">
+					<td>{{file.name}}</td>
+					<td>{{file.createDate}}</td>
+					<td ng-if="law.state =='1000' || law.state =='1001'"><i ngf-select="uploadFileWord($file,file)" class="iconfont icon-shangchuan brand-color cur-pointer"  ></i></td>
+					<td><a ng-href="{{downloadEvidenceFile(file)}}"><i class="iconfont icon-xiazai brand-color"></i></a></td>
+					<td ng-if="law.state =='1000' || law.state =='1001'"><i  ng-hide="file.wordType == 0" class="iconfont icon-iconfont19 error-color" ng-click="deleteFile(file.id)"></i> </td>
+				</tr>
+			</table>
+		</div>
+		<div style="padding: 40px 0;margin: 0 -15px;">
+			<div ng-repeat="img in imageList" class="col-xs-2" style="min-height: 200px;margin-bottom: 44px;width: 159px;">
+				<div class="po-relative">
+					<div ng-show="!img.path"  class="border-default" style="min-height:100px;"></div>
+					<img ng-src="{{imageAddress+ img.path}}" ng-show="img.path"  ng-click="zoomImage(bigPictureUrl+ img.path)" style="width: 100%;">
+					<progressbar  ng-show="img.progressPercentage" value="img.progressPercentage" type="warning" style="width: 100%; position: absolute;top: 35%;" >{{img.progressPercentage}}</progressbar>
+					<div class="text-center line-height-34 text-overflow-ellipsis">{{img.name}}</div>
+					<div class="text-center" ng-show="img.id"  >
+						<span class="brand-color" ng-click="deleteFile(img.id)" ><i class="iconfont icon-iconfont19 mar-ri-8">删除</i></span>
+						<span class="brand-color" ><a ng-href="{{downloadEvidenceFile(img)}}"><i class="iconfont icon-xiazai brand-color">下载</i></a></span>
+						<!--<span class="brand-color" ng-click="printFile(img.id)"><i class="iconfont icon-wenjianguanli mar-ri-8">打印</i></span>-->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+<div class="col-xs-12 text-center bg-default row_margin " style="min-height: 500px;padding: 10px 20px" ng-show="fileList.length == 0 && imageList.length == 0">
+	<img src="/views/images/empty.png" alt="" style="margin: 40px 0;">
+	<p>还没有签字文书 </p>
+	<button class="btn btn-brand"  ngf-select="uploadFile($files)" ngf-multiple="true" > <i class="iconfont icon-tianjia"></i> 添加签字文书</button>
+</div>
+
+	<!-- 图片放大旋转 -->
+	<div id="big_img_box">
+		<div class="big_img_box_bj"></div>
+		<div class="big_img_box_img_box">
+			<div id="big_img_box_img_f" style="position: absolute;">
+				<div id="big_img_box_img_bar" style="width: 100%; height: 100%;" title="图片可以拖拽移动"></div>
+				<img id="big_img_box_img" src="imgSrc">
+			</div>
+			<div class="big_img_box_bottom">
+				<div class="big_img_box_bottom_bg"></div>
+				<i class="iconfont icon-qiepian30" onclick="rotateImg();"></i>
+				<i class="iconfont icon-iconfontfangda" onclick="enlargeimg();"></i>
+				<i class="iconfont icon-iconfontsuoxiao" onclick="narrowimg();"></i>
+			</div>
+			<i class="iconfont icon--tingqiantiaojieduihao-Xhao" onclick="hideImg();"></i>
+		</div> 
+	</div>
+
+</div>
+<script type="text/javascript">
+    var oBox = document.getElementById("big_img_box_img_f");
+    var oBar = document.getElementById("big_img_box_img_bar");
+    startDrag(oBar, oBox);
+</script>
+

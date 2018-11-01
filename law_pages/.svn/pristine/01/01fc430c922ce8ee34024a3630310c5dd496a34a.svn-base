@@ -1,0 +1,44 @@
+<div class="login-bg" ng-class="{'testingEnvironment': environmentalAllocation == '1','baiduCloud': environmentalAllocation == '2', 'capitelCloud': environmentalAllocation =='3'}">
+	<img class="login-bg-img" src="views/images/background.png">
+	<div class="heaer-back">
+		<span ui-sref="home_page.homeContent">回到首页&nbsp;&nbsp;<i class="iconfont icon-iconset0416"></i></span>
+	</div>
+	<div class="login-box">
+		<div class="login-form">
+			<form role="form" name="loginForm" ng-submit="submitForm()" novalidate>
+				<div class="login-logo col-xs-12"></div>
+				<div class="form-group ">
+					<div class="input-group" ng-class="{'has-error':isUsernameError}">
+						<span class="input-group-addon"><i class="iconfont icon-yonghu font20 "></i></span>
+						<input type="text" name="username" ng-model="username" minlength="3" maxlength="22" class="form-control form-con-h" placeholder="{{loginTip}}" required>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="input-group"  ng-class="{'has-error':isPasswordError}">
+						<span class="input-group-addon"><i class="iconfont icon-key font20 "></i></span>
+						<input type="password" name="password" ng-model="password" class="form-control form-con-h" minlength="6" maxlength="16"   placeholder="输入密码" required>
+					</div>
+				</div>
+				<div class="form-group" ng-show="showVeriCode">
+					<div class="input-group veri-code">
+					<span class="input-group-addon">
+						<i class="iconfont icon-yanzhengma font20"></i>
+					</span>
+						<input type="text" name="verificationCode" ng-model="verificationCode" class="form-control form-con-h" maxlength="4" placeholder="输入验证码" >
+					</div>
+					<div class="veri-code-img">
+						<img class="veri-size" ng-src="{{chaptcha}}" ng-click="chaptchaClick()">
+					</div>
+				</div>
+				<div class="error-message" ng-bind="errorMessage"></div>
+				<div class="forget-password">
+					<!-- <a ui-sref="forget_password" class="brand-color">忘记密码?</a> -->
+				</div>
+				<button class="login-submit" type="submit" value="登录">登录</button>
+				<!-- <div class="login-go-register">还没有账号，
+					<a ui-sref="register">立即注册</a>
+				</div> -->
+			</form>
+		</div>
+	</div>
+</div>

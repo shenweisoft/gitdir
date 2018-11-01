@@ -1,0 +1,138 @@
+<div style="margin-bottom: 55px; font-size: 14px;" id="algorithmStep3">
+    <form class="form-horizontal form-input">
+        <!--案件基本信息开始-->
+        <div class="row bg-default">
+            <div class="row" style="margin:0 20px;">
+                <div class="col-xs-12 tit_box">
+                    <i class="iconfont icon-jibenxinxi calc_icon"></i>
+                    <div class="tit_personal">案件基本信息</div>
+                </div>
+            </div>
+            <br>
+            <div class="row no-margin">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 col-xs-11 control-label text-right"><span class="Required">*</span>案由</label>
+                        <div class="col-lg-8 col-xs-11">
+                            <select class="form-control" ng-model="algorithmInfo.reason" ng-options="x.id as x.value for x in factTypeList" ></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group form-group-sm">
+                        <label class="col-lg-3 col-xs-11 control-label text-right"><span class="Required">*</span> 赔偿年度</label>
+                        <div class="col-lg-8 col-xs-11">
+                            <select class="form-control" ng-model="algorithmInfo.standardYear" ng-options="x as x for x in yearList">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row bg-default" style="padding-bottom: 25px;">
+          <button style="margin: 15px 0px 15px 2%;" class="btn btn-sm btn-brand pull-left" ng-click="showClaimDemage()">添加索赔方</button>
+          <table id="dalist" style="border:1px solid grey;collapse:collapse;width:96%;margin-left: 2%;">
+            <tr class="table_th_bg">
+              <td>序号</td>
+              <td>索赔方</td>
+              <td>赔偿地</td>
+              <td>赔偿标准</td>
+              <td>赔偿方</td>
+              <td>操作</td>
+            </tr>
+            <tr class="table_tb"  ng-repeat = "applyer in algorithmInfo.listJyAlgorithmClaimantInfoBySeria">
+              <td>{{$index+1}}</td>
+              <td>{{applyer.personName}}</td>
+              <td >{{applyer.regionname}}</td>
+              <td ng-if="applyer.compensatestandard==1">农村</td>
+              <td ng-if="applyer.compensatestandard==2">城镇</td>
+              <td>{{applyer.compenName}}</td>
+              <td>
+                <span style="color: #00007f;cursor: pointer;" ng-click="editapplyer(applyer)">编辑</span>
+                <span  style="color: #00007f;cursor: pointer;" ng-click="removapplyer(applyer)">删除</span> 
+              </td>
+            </tr>
+          </table>
+        </div>
+        <!-- 调解赔偿信息 -->
+        <div class="spacing_10"></div>
+        <div class="row bg-default">
+          <div class="row" style="margin:0 20px;">
+            <div class="col-xs-12 tit_box">
+              <div class="col-xs-10 no-padding">
+                <i class="iconfont icon-qian-copy calc_icon" style="font-size:16px;"></i>
+                <div class="tit_personal"><span >调解赔偿信息</span></div>
+              </div>
+              <div class="col-xs-2 text-center">
+                <button class="btn btn-brand pull-right margin-top-10" ng-click="calculatorService()">计算</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row bg-default">
+          <div class="row no-margin bg-default">
+            <div class="col-xs-12">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th class="col-xs-1 text-center">索赔方</th>
+                    <th class="col-xs-1 text-center">损失金额</th>
+                    <th class="col-xs-5 text-center">赔偿方</th>
+                    <th class="col-xs-1 text-center">赔偿金额</th>
+                    <th class="col-xs-1 text-center">交强险</th>
+                    <th class="col-xs-1 text-center">商业险</th>
+                    <th class="col-xs-2 text-center">自行承担金额</th>
+                  </tr>
+                </thead>
+                <tbody ng-repeat="result in calculist">
+                  <tr ng-repeat="clam in result.curentextratotal">
+                    <td ng-if="$index==0" rowspan="{{result.curentextratotal.length}}" style="vertical-align:middle;">{{result.username}}</td>
+                    <td ng-if="$index==0" rowspan="{{result.curentextratotal.length}}" style="vertical-align:middle;"><span>{{result.claminsum.counttotal}}</span></td>
+                    <td>{{clam.clamname}}</td>
+                    <td>{{clam.curenttotal}}</td>
+                    <td><span >{{clam.jiaoqiang}}</span></td>
+                    <td><span >{{clam.shangye}}</span></td>
+                    <td><span >{{clam.zixing}}</span></td>
+                  </tr>
+                  <!-- <tr ng-if="result.claminsum.type==2">
+                    <td>合计</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{result.claminsum.counttotal}}<span ></span><span ></span></td>
+                    <td>{{result.claminsum.jiaoqiangtotal}}</td>
+                    <td>{{result.claminsum.shangyetotal}}</td>
+                    <td>{{result.claminsum.zixingtotal}}</td>
+                  </tr> -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- 调解结果 -->
+        <div class="spacing_10"></div>
+        <div class="row bg-default">
+          <div class="row" style="margin:0 20px;">
+            <div class="col-xs-12 tit_box">
+              <div class="col-xs-10 no-padding">
+                <i class="iconfont icon-qian-copy calc_icon" style="font-size:16px;"></i>
+                <div class="tit_personal"><span >调解结果</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row bg-default" style="padding: 15px 0px;">
+          <div class="row no-margin bg-default">
+            <div class="col-xs-12" style="">
+              <label class="radio-inline margin-right-15 ng-scope ng-binding" style="margin-left: 20px;">
+                  <input type="radio" value="0" name="result"  class="ng-pristine ng-valid"> 达成调解
+              </label>
+              <label class="radio-inline margin-right-15 ng-scope ng-binding">
+                  <input type="radio" value="0" name="result"  class="ng-pristine ng-valid"> 未达成调解
+              </label>
+            </div>
+          </div>
+        </div>
+
+    </form>
+</div>

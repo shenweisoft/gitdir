@@ -1,0 +1,12 @@
+.selectCharacter{
+  text-align: center;
+  padding-top: 80px;
+}
+.selectCharacter image{
+  width: 100px;
+  height: 100px;
+}
+.selectCharacter view{
+  height: 40px;
+  line-height: 40px;
+}    

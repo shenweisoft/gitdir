@@ -1,0 +1,27 @@
+<div class="row bg-default relative_top" style="overflow-x:hidden;">
+	<div class="row panel-heading">
+		<h4 class="col-xs-12"><span class="h1_line"></span>
+		选择受诉法院
+		</h4>
+	</div>
+	<div class="row " >
+		<div class="col-xs-6 padding-20">
+			<div class="search_box ">
+				<input class="search_input" type="text" ng-model="searchInput" placeholder="输入关键词搜索">
+				<i class="iconfont search_img">&#xe600;</i>
+			</div>
+		</div>
+		<div class="col-xs-11" style="height: 350px;overflow-y: scroll">
+			<!--组织管理列表-->
+			<div class="panel">
+				<div class="panel-body overflow-hidden" >
+					<div js-tree="treeConfig" should-apply="true" tree="treeInstance" ng-model="showData" ng-click="clickTree()" tree-events="ready:readyCB"></div>
+					<hr>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12 line-height-45 text-center">
+			<button class="btn btn-brand" ng-click="submitLaw()">提交法院</button>
+		</div>
+	</div>
+</div>

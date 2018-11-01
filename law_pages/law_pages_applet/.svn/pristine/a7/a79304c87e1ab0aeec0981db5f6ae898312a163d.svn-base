@@ -1,0 +1,70 @@
+<view class='bg'></view>
+<view class='top_box'>
+  <swiper indicator-dots="{{indicatorDots}}" style='height:400rpx;'
+  autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+    <block wx:for="{{imgUrls}}">
+      <swiper-item>
+        <image style="width:100%; height:100%;" src="{{item.url}}" mode="widthFix" class="slide-image" wx:if="{{item.type==0}}"/>
+        <!-- <video src="{{item.url}}" controls="true" poster='{{item.face}}' wx:if="{{item.type==1}}" mode="widthFix"/> -->
+      </swiper-item>
+    </block>
+  </swiper>
+</view>
+<view class='cont_e'>
+  <view class='cont_e_t'>
+     <view class='iconfont_bg'><icon class='iconfont icon--tesegongneng1'></icon></view>
+    特色功能
+  </view>
+  <view class='cont_e_c'>
+    <view class='cont_e_c_e' bindtap="preJudge">
+      <image class='img' src='../../images/index_pfss.png'></image>
+      <image class='img_h' src='../../images/index_pfss_h.png'></image>
+      <view>赔付试算</view>
+    </view>
+    <view class='cont_e_c_e' bindtap='chatInCase'>
+      <image class='img' src='../../images/index_aqgt.png'></image>
+      <image class='img_h' src='../../images/index_aqgt_h.png'></image>
+      <view>案件沟通</view>
+    </view>
+    <view class='cont_e_c_e' bindtap='videoMediation'>
+      <image class='img' src='../../images/index_sptj_h.png'></image>
+      <image class='img_h' src='../../images/index_sptj.png'></image>
+      <view>视频调解</view>
+    </view>
+  </view>
+</view>
+<view class='cont_e'>
+  <view class='cont_e_t'>
+     <view class='iconfont_bg'><icon class='iconfont icon--xinwen1'></icon></view>
+    帮助说明
+  </view>
+  <view class='cont_e_c'>
+    <view class='cont_e_c_e'>
+      <image class='header_img' bindtap='toHelps' data-user-type='2' src='../../images/index_header_tjy.png'></image>
+      <view style='color:#000000;'>调解员</view>
+      <view style='font-size:13px;'>高效调解   息诉止争</view>
+    </view>
+    <view class='cont_e_c_e'>
+      <image class='header_img' bindtap='toHelps' data-user-type='0' src='../../images/index_header_sqr.png'></image>
+      <view style='color:#000000;'>当事人</view>
+      <view style='font-size:13px;'>线上调解  维护权益</view>
+    </view>
+  </view>
+</view>
+<view class='cont_e'>
+  <view class='cont_e_t'>
+     <view class='iconfont_bg'><icon class='iconfont icon--xinwenxiangqing'></icon></view>
+    新闻公告
+    <view class='cont_e_t_right' bindtap="noticeList">更多</view>
+  </view>
+  <view class='cont_e_c border_b' wx:for="{{noticeList}}" wx:for-item="notice" data-value="{{notice}}" bindtap="viewNoticeDetail">
+    <view class='cont_e_c_e2' style=' float:left; width:440rpx;'>
+      <view class='cont_e_c_e2_text'>{{notice.title}}</view>
+      <view class='cont_e_c_e2_text_b'>{{notice.createDate}}</view>
+    </view>
+    <view class='cont_e_c_e img_box_r' style='float:right; width:200rpx; height:150rpx;'>
+      <image style='width:100%; height:100%;' src='{{notice.imgSrc}}'></image>
+    </view>
+  </view>
+</view>
+<view class='bottom_bg'></view>

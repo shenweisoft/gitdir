@@ -1,0 +1,36 @@
+<view class='detail_bg'></view>
+<view class='detail_list'>
+  <view class='detail_e' wx:for="{{mediationArray}}" wx:for-item="mediationPlan" wx:for-index="idx">
+    <view class='detail_e_bt'>
+      <view class='detail_e_bt_l'>
+        <view class='iconfont_box'><icon class='iconfont icon--anjianxiangqing-peichangfeiyongmingxi'></icon></view>
+        <view class='detail_e_bt_l_r'>{{mediationPlan.name}}{{idx +1}}</view>
+      </view>
+      <!-- <view class='detail_e_bt_r'>￥ {{mediationPlan.claimAmount}} 元</view> -->
+      <view class='detail_e_bt_r'>{{mediationPlan.createDate}}</view>
+    </view>
+    
+    <view class='detail_e_e' wx:for="{{mediationPlan.feeArray}}" wx:for-item="fee" wx:if="{{fee.claimAmount}}">
+      <view class='detail_e_e_t'>{{fee.value}} <text>￥ {{fee.claimAmount}} 元</text></view>
+    </view>
+    <view class='detail_e_e'>
+      <view class='detail_e_e_t right_text'>总计： ￥ {{mediationPlan.claimAmount}} 元</view>
+    </view>
+    <!-- 底部按钮 -->
+    <view class='detail_e_button'>
+      <view class='detail_e_button_e border_r' data-id="{{mediationPlan.id}}" bindtap="reply">回复</view>
+      <view class='detail_e_button_e border_r' data-value="{{mediationPlan}}" bindtap="edit" wx:if="{{userInfo.userType=='2'}}">编辑</view>
+      <view class='detail_e_button_e border_r' data-id="{{mediationPlan.id}}" bindtap="detail">详情</view>
+      <view class='detail_e_button_e ' data-id="{{mediationPlan.id}}" bindtap="shareMediation">分享</view>
+    </view>
+  </view>
+</view>
+
+<view class='empty' wx-if="{{mediationArray.length <=0 || !mediationArray}}">
+  <image class="empty-img" src='/images/empty.png'></image>
+  <view class="empty-text">还没有调解方案哦！</view>
+</view>
+
+<view class='add_box' bindtap="addMediation" wx:if="{{userInfo.userType=='2'}}">
+  <icon class='iconfont icon--jiahao'></icon>
+</view>

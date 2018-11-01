@@ -1,0 +1,183 @@
+<div class="help-box">
+	<div class="help-tab">
+		<span ng-class="{'active':page == 1}" ng-click="page = 1">我要注册 <b></b></span>
+		<span ng-class="{'active':page == 2}" ng-click="page = 2">赔付试算 <b></b></span>
+		<span ng-class="{'active':page == 3}" ng-click="page = 3">我是原告 <b></b></span>
+		<span ng-class="{'active':page == 4}" ng-click="page = 4">我是被告 <b></b></span>
+		<span ng-class="{'active':page == 5}" ng-click="page = 5">在线庭审<b></b></span>
+	</div>
+	<!--我要注册-->
+	<div class="page1 page" ng-show="page == 1">
+		<p>1.在首页点击“注册”按钮，即可打开注册页面</p>
+		<img src="views/images/help_page1_1.png" alt="">
+		<p>2.只需要填写以下信息，并点击“”注册按钮，注册完成</p>
+		<p>> 真实姓名：请填写和证件号相符的真实姓名；如不相符，可能会造成您无法找到与您相关的案件信息</p>
+		<p>> 证件信息：从“身份证”“军官证”“护照”任选其一，确保真实姓名和证件信息相符</p>
+		<p>> 密码：密码为6～16位，且必须包含字母和数字</p>
+		<p>>验证码：系统随机生成的码</p>
+		<img src="views/images/help_page1_2.png" alt="">
+	</div>
+	<!-- 赔付试算-->
+	<div class="page2 page" ng-show="page == 2">
+		<p>1.在首页点击“赔付试算”导航标签，即可打开试算界面,只需4步，即可快速了解赔付明细</p>
+		<div class="step-box">
+			<div class="step"><b>1</b>第一步：填写基本信息</div>
+			<p>> 被侵权方：指权益受损害的一方，且只能添加一个被侵权方</p>
+			<p>> 侵权方：指侵害他人权益的一方，可添加多个侵权方</p>
+			<p>> 赔偿地信息：是指按哪个地方的标准赔偿</p>
+			<img src="views/images/help_page2_1.png" alt="">
+			<div class="step"><b>2</b>第二步：赔偿项目</div>
+			<p>> 根据上一步填写的基本信息，自动勾选赔偿项目；</p>
+			<p>> 根据户籍信息和事故发生日期，系统自动提供赔偿标准信息</p>
+			<p>> 法条：是对赔偿标准的相关解释</p>
+			<p>> 诉请金额：是您要求被告赔付的金额</p>
+			<p>> 证据确认金额：实际产生的费用</p>
+			<img src="views/images/help_page2_2.png" alt="">
+			<div class="step"><b>3</b>第三步：自动生成赔付清单</div>
+			<p>> 根据上两步填写的信息，系统会自动计算出一份赔偿清单，计算出每个人的赔付明细</p>
+			<p>> 同时会生成一个查询码，下次在“查询历史试算”中，直接输入被侵权人身份证号和查询码，即可查询历史试算信息</p>
+			<img src="views/images/help_page2_3.png" alt="">
+			<div class="step"><b>4</b>第四步：查看历史试算</div>
+			<p>>输入被侵权方的身份证号和上次试算生产的查询码，系统会自动调取以往的试算记录</p>
+			<img src="views/images/help_page2_4.png" alt="">
+		</div>
+	</div>
+ 	<!--	我是原告-->
+	<div class="page3 page" ng-show="page == 3">
+		<p>原告，是指为维护自己或自己所管理的他人的民事权益，而以自己的名义向法院起诉，请求法院保护其权益，从而引起民事诉讼发生的人。</p>
+		<div class="plaintiff-box margin-top-15">
+			<div class="plaintiff-list" ng-init="type = 1">
+				<span ng-class="{'active':type == 1}" ng-click="type = 1">绑定案件 <b></b></span>
+				<span ng-class="{'active':type == 2}" ng-click="type = 2">发起起诉 <b></b></span>
+				<span ng-class="{'active':type == 3}" ng-click="type = 3">举证/质证 <b></b></span>
+				<span ng-class="{'active':type == 4}" ng-click="type = 4">庭前调解 <b></b></span>
+			</div>
+			<!--绑定案件-->
+			<div class="plaintiff1" ng-show="type == 1">
+				<p>对于首次登录的用户，用户需要输入“流水号”“手机号码”“手机验证码”才能绑定案件到该账号，绑定后的案件会在“进行中的”列表中显示</p>
+				<p>> 流水号：是调解完成后系统自动生成的，已发送至申请人手机上或在调解告知书中</p>
+				<p>> 手机号：手机号是您在调解时向调解人员所提供的申请人/代理人的手机号</p>
+				<img src="views/images/help_page3_1.png" alt="">
+			</div>
+			<!--发起起诉-->
+			<div class="plaintiff2" ng-show="type == 2">
+				<p>在“进行中的案件”列表里，找到案件信息，点击“发起起诉”按钮，即可进入起诉环节，只需6步即可完成起诉。</p>
+				<img src="views/images/help_page3_2_1.png" alt="">
+				<div class="step-box1">
+					<div class="step"><b>1</b>第一步：填写“原告”信息</div>
+					<p>一次起诉可以有多个原告，原告可以是公民、法人、其他组织，每个原告可以添加2个代理人。</p>
+					<p>	代理人：是只代理人在代理权限内，以被代理人的名义与第三人实施民事法律行为。被代理人对代理人的代理行为，承担民事责任。</p>
+					<img src="views/images/help_page3_2_2.png" alt="">
+					<div class="step"><b>2</b>第二步：填写“被告”信息</div>
+					<p>一次起诉可以有多个被告，被告可以是公民、法人、其他组织，每个被告可以添加2个代理人。</p>
+					<img src="views/images/help_page3_2_3.png" alt="">
+					<div class="step"><b>3</b>第三步：填写“事实与理由”</div>
+					<p>事实与理由：是描述整个案件过程的文字，需要写明什么时间、什么地点、发生了什么事等具体内容。</p>
+					<img src="views/images/help_page3_2_4.png" alt="">
+					<div class="step"><b>4</b>第四步：添加证据</div>
+					<p>发起起诉环节，需要提供证据信息。添加的证据要保证真实、有效。</p>
+					<p>一次可添加多个证据，需要对每个证据填写名称、描述。并根据用途将证据分类。对证据进行分类主要是方便法官判案</p>
+					<img src="views/images/help_page3_2_5.png" alt="">
+					<div class="step"><b>5</b>第五步：调解信息	</div>
+					<p>调解信息是我（原告）申请赔偿的明细，以及赔偿的相关依据。</p>
+					<p>我（原告）只需填写基本信息、责任承担及被告保单信息，系统自动勾选赔偿项目。</p>
+					<p>为了防止原告申请的赔偿金额过高，系统会根据赔偿地和赔偿年度，提供出赔偿标准。</p>
+					<p>根据填写的费用条目和金额，系统自动算出赔偿信息</p>
+					<img src="views/images/help_page3_2_6.png" alt="">
+
+					<div class="step"><b>6</b>第六步：诉状信息</div>
+					<p>根据前5步填写的信息，系统提取相关的字段自动生成起诉状；支持下载和上传起诉状。</p>
+					<img src="views/images/help_page3_2_7.png" alt="">
+				</div>
+
+		</div>
+			<!--举证/质证-->
+			<div class="plaintiff3" ng-show="type == 3">
+				<p>在“进行中的案件”列表里，点击“流水号”文字链接进入到详情，</p>
+				<img src="views/images/help_page3_3_1.png" alt="">
+				<p>进入到详情后，点击“查看证据”链接，进入到证据界面；作为原告有查看证据、举证和质证功能。</p>
+				<img src="views/images/help_page3_3_2.png" alt="">
+
+				<div class="step-box1">
+					<div class="step"><b>1</b>第一步：查看证据</div>
+					<p>对于我（原告）的举证，被告需要进行质证；质证后，法官可以就证据的相关信息给予回复。</p>
+					<img src="views/images/help_page3_3_3.png" alt="">
+					<div class="step"><b>2</b>第二步：我要举证</div>
+					<p>我要举证:：提供新的证据信息</p>
+					<p>举证环节：需要填写证据名称、证据描述、证据分类</p>
+					<img src="views/images/help_page3_3_4.png" alt="">
+					<div class="step"><b>3</b>第三步：我要质证</div>
+					<p>我要质证：是针对被告提供的证据进行核对；质证主要从真实性、合法性、关联性三方面进行核对</p>
+					<img src="views/images/help_page3_3_5.png" alt="">
+					<img src="views/images/help_page3_3_6.png" alt="">
+
+				</div>
+			</div>
+			<!--庭前调解-->
+			<div class="plaintiff1" ng-show="type == 4">
+				<p>庭前调解是指双方当事人在开庭前进行的一次沟通；庭前调解采取线上即时消息的方式进行沟通。如果双方达成调解，则不需要开庭；如未达成调解，下一步将进行开庭审理。</p>
+				<p>庭前调解的过程中，可申请法官介入</p>
+				<img src="views/images/help_page3_4.png" alt="">
+			</div>
+
+	</div>
+	</div>
+	<!--我是被告-->
+	<div class="page4 page" ng-show="page == 4">
+		<p>被告，是指被诉称侵犯了原告的民事权益，或者与原告发生了民事权益争执，而依法被人民法院传唤应诉的人。</p>
+		<div class="plaintiff-box margin-top-15">
+			<div class="plaintiff-list" ng-init="type1 = 1">
+				<span ng-class="{'active':type1 == 1}" ng-click="type1 = 1">绑定案件 <b></b></span>
+				<span ng-class="{'active':type1 == 2}" ng-click="type1 = 2">举证/质证 <b></b></span>
+				<span ng-class="{'active':type1 == 3}" ng-click="type1 = 3">庭前调解 <b></b></span>
+			</div>
+			<!--绑定案件-->
+			<div class="plaintiff1" ng-show="type1 == 1">
+				<p>对于首次登录的用户，用户需要输入“流水号/案号”“手机号码”“手机验证码”才能绑定案件到该账号，绑定后的案件会在“进行中的”列表中显示</p>
+				<img src="views/images/help_page4_1.png" alt="">
+			</div>
+			<!--举证/质证-->
+			<div class="plaintiff3" ng-show="type1 == 2">
+				<p>在“进行中的案件”列表里，点击“流水号”文字链接进入到详情，</p>
+				<img src="views/images/help_page3_3_1.png" alt="">
+				<p>进入到详情后，点击“查看证据”链接，进入到证据界面；作为被告有查看证据、举证和质证功能。</p>
+				<img src="views/images/help_page3_3_2.png" alt="">
+
+				<div class="step-box1">
+					<div class="step"><b>1</b>第一步：查看证据</div>
+					<p>对于我（被告）的举证，原告需要进行质证；质证后，法官可以就证据的相关信息给予回复。</p>
+					<img src="views/images/help_page3_3_3.png" alt="">
+					<div class="step"><b>2</b>第二步：我要举证</div>
+					<p>我要举证:：提供新的证据信息</p>
+					<p>举证环节：需要填写证据名称、证据描述、证据分类</p>
+					<img src="views/images/help_page3_3_4.png" alt="">
+					<div class="step"><b>3</b>第三步：我要质证</div>
+					<p>我要质证：是针对原告提供的证据进行核对；质证主要从真实性、合法性、关联性三方面进行核对</p>
+					<img src="views/images/help_page3_3_5.png" alt="">
+					<img src="views/images/help_page3_3_6.png" alt="">
+
+				</div>
+			</div>
+			<!--庭前调解-->
+			<div class="plaintiff3" ng-show="type1 == 3">
+				<p>庭前调解是指双方当事人在开庭前进行的一次沟通；庭前调解采取线上即时消息的方式进行沟通。如果双方达成调解，则不需要开庭；如未达成调解，下一步将进行开庭审理。</p>
+				<p>庭前调解的过程中，可申请法官介入</p>
+				<img src="views/images/help_page4_3.png" alt="">
+			</div>
+		</div>
+	</div>
+	<!--在线开庭-->
+	<div class="page5 page" ng-show="page == 5">
+		<p>在线庭审：是指通过网络视频的方式进行在线开庭。当事人只需输入“证件号”和”庭审码”，即可登录到在线法庭庭审界面</p>
+		<p>证件号：是您起诉时填写的证件号码</p>
+		<p>庭审码：会以短信的形势发送到您的手机</p>
+		<img src="views/images/help_page5_1.png" alt="">
+		<p>登录到庭审界面后，当事人有申请发言、资料共享、退出法庭等功能</p>
+		<p>> 资料共享：查看所有证据信息</p>
+		<p>> 白板：查看发送过来的证据资料</p>
+		<p>> 申请发言：庭审过程中，如果您有话想说，可以点击“申请发言”按钮</p>
+		<p>> 退出法庭：退出视频庭审界面
+		<img src="views/images/help_page5_2.png" alt="">
+
+	</div>
+</div>

@@ -1,0 +1,55 @@
+<div class="role_management_d relative_top">
+  <div class="row bg-default">
+    <div class="col-xs-12 role_management_right_d">
+      <div class="role_management_right_t_d">
+        <div class="col-xs-7 role_management_right_t_l_d no-padding">法院组织列表</div>
+        <div class="col-lg-4 col-xs-4 line-height40 margin-top-6">
+          <div class="search_box">
+            <input type="text" class="input-xs search_input" ng-model="provinceName" placeholder="法院名称">
+            <i class="iconfont icon-sousuo input-search-img"></i>
+          </div>
+        </div>
+        <div class="col-lg-1 col-xs-1 line-height40 no-padding margin-top-6">
+          <button type="button" class="btn btn-brand mar-v-3" ng-click="queryOnlineState(regionLevel, '')">搜索</button>
+        </div>
+      </div>
+      <div class="clear"></div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-hover" style="text-align: center;">
+            <thead>
+            <tr>
+              <th class="col-xs-1" style="text-align: center;">序号</th>
+              <th class="col-xs-2" style="text-align: center;">地区名称</th>
+              <th class="col-xs-2" style="text-align: center;">地区编码</th>
+              <th class="col-xs-2" style="text-align: center;">上线状态</th>
+              <th class="col-xs-1" style="text-align: center;">已上线</th>
+              <th class="col-xs-1" style="text-align: center;">建设中</th>
+              <th class="col-xs-1" style="text-align: center;">未上线</th>
+              <th class="col-xs-2" style="text-align: center;">设置</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="list in onlineStateList" >
+              <td ng-bind="$index+1" style="line-height: 35px;"></td>
+              <td style="line-height: 35px;">{{list.provinceName}}</td>
+              <td style="line-height: 35px;">{{list.provinceCode}}</td>
+              <td>
+                <select class="form-control" ng-model="list.onlineState" ng-options="x.id as x.value for x in onlineStateArray"></select>
+              </td>
+              <td><input type="text" class="onTheline_input" ng-model="list.accomplishCourtSum" ng-change="fixState(list)"/></td>
+              <td><input type="text" class="onTheline_input" ng-model="list.construction" ng-change="fixState(list)"/></td>
+              <td><input type="text" class="onTheline_input" ng-model="list.notOnline" ng-change="fixState(list)"/></td>
+              <td class="action_bar" style="line-height: 35px;">
+                <i class="iconfont icon-zuzhi1" style="font-size:18px;" ng-show="regionLevel==1" ng-click="clearProvinceName();queryOnlineState(2, list.provinceCode)" title="市级设置"></i>
+                <i class="iconfont icon-wenjianguanli" style="font-size:18px;" ng-click="saveOnlineState(list)" title="保存"></i>
+                <i class="iconfont icon-fanhui" style="font-size:18px; line-height: 35px;" ng-show="regionLevel==2" ng-click="clearProvinceName();queryOnlineState(1,'')" title="返回"></i>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

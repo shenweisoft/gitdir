@@ -1,0 +1,57 @@
+<div class="bg-default row">
+    <div class="panel-heading ">
+        <div class="row clearfix ">
+            <h4 class="col-lg-3 col-xs-2"><span class="h1_line"></span>
+                <span>算法查询</span>
+            </h4>
+            <div class="col-lg-4 col-xs-5 text-right file-type no-padding"></div>
+            <div class="col-lg-4 col-xs-4 line-height40">
+                <div class="search_box">
+                    <input type="text" class="input-xs search_input" ng-model="jyAlgorithmInfoVO.searchArea" placeholder="流水号、当事人">
+                    <i class="iconfont icon-sousuo input-search-img"></i>
+                </div>
+            </div>
+            <div class="col-lg-1 col-xs-1 line-height40 no-padding">
+                <button type="button" class="btn btn-brand mar-v-3" ng-click="searchData()">搜索</button>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body no-padding-v">
+        <table class="table table-striped-info table-fixed table-hover" ng-if="jyAlgorithmInfoList.length != 0">
+            <thead>
+                <tr>
+                    <th>流水号</th>
+                    <th>当事人</th>
+                    <th>调解金额</th>
+                    <th>调解人</th>
+                    <th>调解点</th>
+                    <th>创建时间</th>
+                    <th>状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="jyAlgorithmInfo in jyAlgorithmInfoList">
+                    <td>
+                        <a class="cur-pointer" ng-click="queryDetail(jyAlgorithmInfo)" title="点击查询详细">{{jyAlgorithmInfo.serialNo}}</a>
+                    </td>
+                    <td class=" hide-nowrap" >
+                        <span title="{{jyAlgorithmInfo.applicant}}">{{jyAlgorithmInfo.applicantArray}}</span>
+                    </td>
+                    <td>{{jyAlgorithmInfo.adjustMoney}}</td>
+                    <td>{{jyAlgorithmInfo.createName}}</td>
+                    <td>{{jyAlgorithmInfo.pointName}}</td>
+                    <td>{{jyAlgorithmInfo.createDate | stringDate | date: 'yyyy-MM-dd'}}</td>
+                    <td>{{jyAlgorithmInfo.adjustResult}}</td>
+
+                </tr>
+            </tbody>
+        </table>
+        <div ng-show="jyAlgorithmInfo.length == 0" class="text-center">
+            <img src="views/images/search_null.png" ><br>
+            抱歉，未找到相关内容！
+        </div>
+    </div>
+    <div class="text-center">
+        <pagination previous-text="<" next-text=">" first-text="<<" last-text=">>" items-per-page="jyAlgorithmInfoVO.pageSize" class="pagination-custom" total-items="jyAlgorithmInfoVO.totalPage" ng-model="jyAlgorithmInfoVO.pageNo" ng-change="pageChanged()" max-size="7" boundary-links="true" rotate="false"></pagination>
+    </div>
+</div>

@@ -1,0 +1,109 @@
+        <div class="modal-header">
+            <span ng-bind="addFlag ?'新增':'修改'"></span>
+            <i class="iconfont pull-right icon-guanbi close" ng-click="cancel()"></i>
+        </div>
+        <table class=" modal-body height_box_d" >
+            <div class="form_box" style="height:460px;">
+                 <form class="form-horizontal ng-pristine ng-valid">
+                    <div class="scroll-form-box" style="height: 460px;">
+                        <div class="form-group margin_top_popup row">
+                            <label class="col-xs-offset-1 col-xs-2"><i class="Required">*</i> 区域名称</label>
+                            <div class="col-xs-6" ng-class="{'has-error':RegionNameErr}" style="position: relative;">
+                                <input name="RegionName" type="text" class="form-control input-sm ng-pristine ng-valid" ng-model="mtCompensateStandard.regionName" ng-keydown="searchRegionName()" placeholder="请您输入区域名称">
+                                <ul class="RegionName" ng-show="regionFlag" >
+                                    <li ng-repeat="x in regionList"  ng-click="selectRegionName(x)">{{x.regionFullName}}</li>
+                                </ul>
+                            </div>
+                             <div class="error-message ng-binding" ng-bind="RegionNameErr"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"><i class="Required">*</i>标准年度</label>
+                            <div class="col-xs-6" ng-class="{'has-error':StandardYearErr}">
+                                <input name="StandardYear" type="number" class="form-control input-sm ng-pristine ng-valid" ng-model="mtCompensateStandard.standardYear" placeholder="请您输入标准年度">
+                            </div>
+                             <div class="error-message ng-binding" ng-bind="StandardYearErr"></div><span style="color:#a3a3a3; line-height: 30px; font-size: 14px;">（例：2017）</span>
+                        </div>
+                       <!--  <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"><i class="Required">*</i> 标准年度</label>
+                            <div class="col-xs-6" ng-class="{'has-error':startDateErrorMessage}">
+                                <p class="input-group">
+                                <input  type="text" class="form-control input-sm ng-pristine ng-valid" placeholder="请输入标准年度" datepicker-popup="yyyy" show-button-bar="false" ng-readonly="false" ng-model="mtCompensateStandard.standardYear"  is-open="mtCompensateStandard.calendarYear" close-text="Close" />
+                                <span class="input-group-btn">
+                                 <button  type="button" class="btn btn-default btn-default-padding" ng-click="openY($event, mtCompensateStandard)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                 </span>
+                                </p>
+                                <div class="error-message ng-binding" ng-bind="startDateErrorMessage"></div>
+                            </div>
+                        </div> -->
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"><i class="Required white">*</i>误工费</label>
+                            <div class="col-xs-6" ng-class="{'has-error':numberErrorMessageErr}">
+                                <input name="name" type="number" class="form-control input-sm ng-pristine ng-valid" ng-model="mtCompensateStandard.lostIncome" placeholder="请输入误工费">
+                            </div>
+                             <div class="error-message ng-binding" ng-bind="numberErrorMessageErr"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"><i class="Required white">*</i> 护理费</label>
+                            <div class="col-xs-6" ng-class="{'has-error':numberErrorMessageErr}">
+                                <input name="name" type="number" class="form-control input-sm ng-pristine ng-valid" ng-model="mtCompensateStandard.standardNurseFee" placeholder="请输入护理费">
+                            </div>
+                             <div class="error-message ng-binding" ng-bind="numberErrorMessageErr"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"><i class="Required white">*</i> 住院伙食补助费</label>
+                            <div class="col-xs-6" ng-class="{'has-error':numberErrorMessageErr}">
+                                <input name="name" type="number" class="form-control input-sm ng-pristine ng-valid" ng-model="mtCompensateStandard.hospitalFoodSubsidies" placeholder="请输入住院伙食补助费">
+                            </div>
+                             <div class="error-message ng-binding" ng-bind="numberErrorMessageErr"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"><i class="Required white">*</i> 营养费</label>
+                            <div class="col-xs-6" ng-class="{'has-error':numberErrorMessageErr}">
+                                <input name="name" type="number" class="form-control input-sm ng-pristine ng-valid" ng-model="mtCompensateStandard.thesePayments" placeholder="请输入营养费">
+                            </div>
+                             <div class="error-message ng-binding" ng-bind="numberErrorMessageErr"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"><i class="Required white">*</i> 交通费</label>
+                            <div class="col-xs-6" ng-class="{'has-error':numberErrorMessageErr}">
+                                <input name="name" type="number" class="form-control input-sm ng-pristine ng-valid" ng-model="mtCompensateStandard.transportationFee" placeholder="请输入交通费">
+                            </div>
+                             <div class="error-message ng-binding" ng-bind="numberErrorMessageErr"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"><i class="Required white">*</i> 住宿费</label>
+                            <div class="col-xs-6" ng-class="{'has-error':numberErrorMessageErr}">
+                                <input name="name" type="number" class="form-control input-sm ng-pristine ng-valid" ng-model="mtCompensateStandard.accommodationFee" placeholder="请输入住宿费">
+                            </div>
+                             <div class="error-message ng-binding" ng-bind="numberErrorMessageErr"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"><i class="Required white">*</i> 精神损失费</label>
+                            <div class="col-xs-6" ng-class="{'has-error':numberErrorMessageErr}">
+                                <input name="name" type="number" class="form-control input-sm ng-pristine ng-valid" ng-model="mtCompensateStandard.spiritualConsolationFee" placeholder="请输入精神损失费">
+                            </div>
+                            <div class="error-message ng-binding" ng-bind="numberErrorMessageErr"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-offset-1 col-xs-2"><i class="Required">*</i> 户口性质</label>
+                            <div class="col-xs-6" ng-class="{'has-error':AccountPropertiesErr}">
+                                <select class="form-control input-sm" name="AccountProperties"  ng-model="mtCompensateStandard.householdNature" ng-options="x.id as x.value for x in householdList" placeholder="请您选择户口性质"></select>
+                            </div>
+                            <div class="error-message ng-binding" ng-bind="AccountPropertiesErr"></div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </table>
+        <div class="modal-footer">
+             <div class="form-group">
+                <div class="col-xs-offset-5 col-xs-1">
+                    <button type="submit" class="btn btn-default " ng-click="cancel()">取消</button>
+                </div>
+                <div class=" col-xs-1">
+                    <button type="submit" class="btn btn-brand bg-brand-color" ng-click="addMtCompensateStandard()" >保存</button>
+                </div>
+                
+            </div>
+        </div>

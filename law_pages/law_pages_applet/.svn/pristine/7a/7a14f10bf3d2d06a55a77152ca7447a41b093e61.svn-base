@@ -1,0 +1,17 @@
+.icon--nongcun{
+  font-size:22px;
+  color: #cccccc;
+}
+.icon--chengzhen{
+  font-size:22px;
+  color: #cccccc;
+}
+.iocnfontActive .icon--nongcun{
+  color: #ffffff;
+}
+.iocnfontActive .icon--chengzhen{
+  color: #ffffff;
+}
+.step1_cont_list{
+  margin-bottom: 0px;
+}

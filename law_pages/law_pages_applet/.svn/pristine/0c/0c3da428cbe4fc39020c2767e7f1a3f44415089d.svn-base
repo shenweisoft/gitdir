@@ -1,0 +1,75 @@
+page{
+  height:100%;
+}
+.addGroup_bg{
+  background: #ebf3f6;
+  width: 750rpx;
+  height: 100%;
+  padding-top: 20rpx;
+}
+.input_box{
+  width: 750rpx;
+  padding: 25rpx 0rpx;
+  background: #ffffff;
+}
+.input_box input{
+  width: 620rpx;
+  margin-left: 60rpx;
+}
+.addGroup_cont{
+  background: #ffffff;
+  width: 750rpx;
+  margin-top: 20rpx;
+}
+.addGroup_cont_e{
+  width: 670rpx;
+  border-bottom: 1rpx solid #dddddd;
+  margin-left: 40rpx;
+  padding-bottom: 40rpx;
+}
+.people-msg{
+  width: 74%;
+  height: 110rpx;
+  line-height:140rpx;
+  float:right;
+}
+.lineheight65{
+  line-height: 65rpx !important;
+}
+.clearfix:after {
+    display: block;
+    content: "";
+    clear: both;
+}
+.addGroup_cont_e_bt{
+  line-height: 110rpx;
+  text-indent: 15rpx;
+  width: 670rpx;
+  height: 110rpx;
+  margin-left: 40rpx;
+}
+.all-text{
+  word-break:break-all;
+}
+.addGroup_cont_e:last-child{
+   border-bottom: none !important;
+}
+.checkbox_img{
+  width: 74rpx;
+  height: 74rpx;
+  position: relative;
+  top: 30rpx;
+  margin-left: 20rpx;
+  margin-right: 20rpx;
+}
+.addbtn{
+  width: 640rpx;
+  height: 100rpx;
+  background: #0D9DEB;
+  text-align: center;
+  line-height: 100rpx;
+  color: #ffffff;
+  border-radius: 10rpx;
+  margin-left: 55rpx;
+  margin-top: 100rpx;
+}

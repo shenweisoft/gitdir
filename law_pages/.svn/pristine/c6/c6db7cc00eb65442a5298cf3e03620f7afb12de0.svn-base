@@ -1,0 +1,5 @@
+'use strict';
+angular.module('sbAdminApp').constant('socketConfig', {
+    //公用常量
+    socketServer:'http://192.168.130.11:9098'
+});

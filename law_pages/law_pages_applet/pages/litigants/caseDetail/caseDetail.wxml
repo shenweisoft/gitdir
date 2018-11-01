@@ -1,0 +1,123 @@
+<canvas style='position: fixed; top: 0; left: 999px;' canvas-id="share"/>
+<view class='bg'></view>
+<view class='flowNumber'>流水号：{{lawCase.serialNo}}</view>
+<view class='step1_cont'>
+  <!-- 申请人 -->
+  <view class='step1_cont_list' wx:for='{{lawCase.applicantArray}}' wx:for-item='applicant' wx:if='{{applicant.personType == 0}}' wx:for-index="index">
+    <view >
+      <image class='right_top_img' src='../../../images/pic3.png' wx:if="{{lawCase.state == '2001'}}"></image>
+      <view class='step1_cont_list_e'>
+        <image class='left_img_header' src='../../../images/index_header_sqr.png'></image>
+        <view class='right_text'>
+          <view>
+            <view wx:if="{{applicant.idType == '0'}}" style='float: left;'>{{applicant.personName}}</view>
+            <view wx:if="{{applicant.idType != '0'}}" style='float: left;'>{{applicant.orgName}}</view> 
+            <view class='right_text_bt'><view class='sj'></view> 申请人</view>
+          </view>
+          <view class='clear'></view>
+          <view class='right_text_e'>身份类型：{{idTypeArr[applicant.idType]}}</view>
+          <view class='right_text_e'>手机号：{{applicant.telephone}}</view>
+          <view class='right_text_e' wx:if='{{applicant.certificatesType != 5 && applicant.idType == 0}}'>{{certificatesTypeArr[applicant.certificatesType]}}：{{applicant.idNo}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- 被申请人 -->
+  <view class='step1_cont_list' wx:for='{{lawCase.applicantArray}}' wx:for-item='respondent' wx:if='{{respondent.personType == 1}}'>
+    <view class='step1_cont_list_e'>
+      <image class='left_img_header' src='../../../images/index_header_bsqr.png'></image>
+      <view class='right_text'>
+        <view>
+<view wx:if="{{respondent.idType == '0'}}" style='float: left;'>{{respondent.personName}}</view> 
+          <view wx:if="{{respondent.idType != '0'}}" style='float: left;'>{{respondent.orgName}}</view> 
+          <view class='right_text_bt'><view class='sj'></view> 被申请人</view>
+        </view>
+        <view class='clear'></view>
+        <view class='right_text_e'>身份类型：{{idTypeArr[respondent.idType]}}</view>
+        <view class='right_text_e'>手机号：{{respondent.telephone}}</view>
+        <view class='right_text_e' wx:if='{{respondent.certificatesType != 5  && respondent.idType == 0}}'>{{certificatesTypeArr[respondent.certificatesType]}}：{{respondent.idNo}}</view>
+      </view>
+    </view>
+  </view>
+  <!-- 查看费用申请明细 -->
+  <view class='step1_cont_list' bindtap='showFeeDetail'>
+    <view class='iocn_box'><icon class='iconfont icon--jibenfeiyongxiang'></icon></view>
+    <view class='iocn_box_right_text'>{{lawCase.state >= '1002' && lawCase.state < '2000'? '查看费用赔偿明细' : '查看费用申请明细'}}</view>
+    <icon class='iconfont icon-xiangyou'></icon>
+    <view class='clear'></view>
+  </view>
+  <!-- 事实理由 -->
+  <view class='step1_cont_list'>
+    <view class='step1_cont_list_e_bt'>
+      <view class='iocn_box_bt'><icon class='iconfont icon--shishiliyou'></icon></view>事实理由
+    </view>
+    <view class='step1_cont_list_e' style='font-size:16px; line-height:28px; word-break:break-all;'>{{lawCase.factReason}}</view>
+  </view>
+  <!-- 证据信息 -->
+  <view class='step1_cont_list'>
+    <view class='step1_cont_list_e_bt'>
+      <view class='iocn_box_bt'><icon class='iconfont icon--zhengjubuchong'></icon></view>证据信息
+    </view>
+    <view>
+      <view class='step1_cont_list_e' style='font-size:16px;' wx:if='{{!lawCase.evidenceArray || lawCase.evidenceArray.length == 0}}'>暂无数据</view>
+      <view class='img_e' wx:if='{{lawCase.evidenceArray && lawCase.evidenceArray.length > 0}}' wx:for='{{lawCase.evidenceArray}}' wx:for-item='evidence'>
+        <image src='{{imageAddress+evidence.picture}}' data-src='{{imageAddress+evidence.picture}}' bindtap='bigImg'></image>
+      </view>
+      <view class='clear'></view>
+    </view>
+    
+  </view>
+</view>
+<!-- 蒙版 -->
+<view class='mask' hidden='{{isFeeDetail}}' bindtap='showFeeDetail'></view>
+<!-- 赔偿申请 -->
+<view class='applicationForCompensation' hidden='{{isFeeDetail}}' >
+  <view class='step1_cont_list_e_bt' style='padding:10px 0px;'>
+    <view style='flex:2; display: flex; color:#666666;'>
+      <view class='iocn_box_bt' style='margin-left:0px;' ><icon class='iconfont icon--anjianxiangqing-peichangfeiyongmingxi'></icon></view>赔偿申请
+    </view>
+    <view style='flex:1;text-align: right; color:#119ef0;'><icon class='iconfont icon--anjianxiangqing-peichangfeiyongmingxi'></icon>{{lawCase.state >= '1002' && lawCase.state < '2000'? lawMoney : applyTotal}}</view>
+  </view>
+
+  <view class='step1_cont_list_e_bt' wx:for='{{lawCase.feeDetail}}' wx:for-item='fee' wx:if="{{fee.applyAmount>0}}">
+    <view style='flex:2; display: flex;'>
+      <view class='iocn_box_bt' style="visibility: hidden;margin-left:0px;"></view>{{fee.value}}
+    </view>
+    <view style='flex:1;text-align: right; color:#000000;'><icon class='iconfont icon--anjianxiangqing-peichangfeiyongmingxi'></icon>{{lawCase.state >= '1002' && lawCase.state < '2000'? fee.claimAmount : fee.applyAmount}} 元</view>
+  </view>
+
+  <view class='compensation_btn_box'> 
+    <button open-type="share" class='compensation_btn'><icon class='iconfont icon--fenxiang1'></icon> 分享</button>
+    <!-- <view bindtap='saveImg' class='compensation_btn' style='float: right; background:#0e9deb;'><icon class='iconfont icon--tupian'></icon> 保存图片</view> -->
+    <view class='clear'></view>
+  </view>
+</view>
+<!-- 底部按钮 -->
+<view class='bottom_tab_btn_box'>
+  <!--证据补充-->
+ <view class='bottom_tab_btn_box_e active' wx:if="{{(lawCase.adjustResult==0 && lawCase.state!=1111) || (lawCase.adjustResult!=0 && lawCase.state != 1002)}}" data-is-active='{{lawCase.state == 1000? "false":"true"}}' bindtap='addEvidence'>
+        <icon class='iconfont icon--zhengjubuchong {{((lawCase.state == 1000) || (lawCase.state == 2000 && userType == "0"))? "":"grey-icon"}}'></icon>
+        <view class='text' style='color:#9a9a9a;'>证据补充</view>
+      </view>
+
+      <view class='bottom_tab_btn_box_e active' wx:if='{{(lawCase.adjustResult==0 && lawCase.state==1111) || (lawCase.adjustResult!=0 && lawCase.state == 1002)}}' bindtap='claims'>
+        <icon class='iconfont icon-pei'></icon><view class='text' wx:if='{{lawCase.claimState == 0}}' style='color:#9a9a9a;'>申请理赔     </view>
+        <view class='text' wx:if='{{lawCase.claimState == 1}}' style='color:#9a9a9a;'>理赔中</view>
+        <view class='text' wx:if='{{lawCase.claimState == 2}}' style='color:#9a9a9a;'>理赔详情</view>
+      </view>
+
+<view class='bottom_tab_btn_box_e {{(lawCase.state >= 1002 && lawCase.state < 2000)? "":"active"}}' data-index='{{index}}' data-id="{{lawCase.id}}" data-is-active='{{(lawCase.state >= 1002 && lawCase.state < 2000)? "false":"true"}}' data-mediator="{{lawCase.adjustPersonId}}" bindtap='chatTogeter' data-state='{{lawCase.state}}'>
+  <icon class='iconfont icon--anqinggoutong {{(lawCase.state==1000)?"":"grey-icon"}}' ></icon>
+  <view class='text' style='color:#9a9a9a;'>案情沟通</view>
+</view>
+
+  <view class='bottom_tab_btn_box_e {{(lawCase.state >= 1002 && lawCase.state < 2000)? "":"active"}}' data-id="{{lawCase.id}}"  data-state='{{lawCase.state}}' data-is-active='{{(lawCase.state >= 1002 && lilawCasest.state < 2000)? "false":"true"}}' bindtap='liveChat'>
+    <icon class='iconfont icon--shipintiaojie {{(lawCase.state==1000)?"":"grey-icon"}}'></icon>
+     <view style='color:#9a9a9a;' class='text'>视频调解</view>
+  </view>
+  
+<view class="bottom_tab_btn_box_e border0 {{lawCase.state >= '1000' && lawCase.state < '2000'? 'active':''}}" data-isDocument="{{lawCase.state >= '1000' && lawCase.state < '2000'?'true':'false'}}" bindtap="viewDocument">
+    <icon class='iconfont icon--chakanwenshu'></icon>
+    <view class='text' style='color:#9a9a9a;'>查看文书</view>
+  </view>
+</view>

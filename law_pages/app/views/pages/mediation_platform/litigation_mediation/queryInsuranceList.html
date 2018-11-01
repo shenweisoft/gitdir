@@ -1,0 +1,149 @@
+<!--保险公司及代理人信息-->
+<div class="queryInsuranceBox" style="padding: 15px;">
+    <div class="col-xs-12 boder_bottom padding_top_bottom" style="padding: 5px 0px;margin-bottom: 10px;">
+        <h4 class="col-xs-8" style="margin-left: -10px;">
+            <span class="h1_line"></span>
+            <span>保险公司信息库</span>
+        </h4>
+    </div>
+    <div class="col-xs-4 padding_top_bottom">
+        <label class="col-xs-3 control-label" style="padding: 8px 0 0;">所在地区</label>
+        <div class="col-xs-9">
+            <input class="form-control" id="regNameInput" ng-model="queryInsuranceVO.areaName" readonly/>
+            <div class="panel panel-default padding_none" id="regNamebox" style="position:absolute;left:15px;z-index:999;width:93%; display: none;">
+                <div class="panel-body">
+                    <div js-tree="treeConfig" should-apply="true" tree="treeInstance" ng-model="adminRegion" tree-events="select_node:selectAdmin" class="pre-scrollable"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-4 padding_top_bottom">
+        <label class="col-xs-3 control-label" style="padding: 8px 0 0;">总公司名称</label>
+        <div class="col-xs-9">
+            <input type="text" class="form-control" ng-focus="queryInsuranceFocus()" ng-blur="queryInsuranceBlur()" ng-model="queryInsuranceVO.parentName" placeholder="请填写承保保险公司" readonly maxlength="50">
+            <ul class="select_border position_ul" ng-show="queryInsuranceList" style="width: 130%;height: 400%;">
+                <li ng-repeat="x in insuranceList" id = "{{x.id}}" ng-click="selectedCompanyName(x)">{{x.text}}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-xs-4 line-height40 padding_top_bottom" style="padding-top: 2px;padding-left: 0">
+        <button ng-click="resetQuery()" type="button" class="btn btn-brand pull-right col-xs-3" style="margin:3px 0 0 10px;">重置搜索项</button>
+        <button ng-click="handleQueryInsurance()" type="button" class="btn btn-brand pull-right col-xs-2" style="margin-top: 3px;">搜索</button>
+        <div class="search_box pull-right col-xs-6">
+            <input type="text" class="input-xs search_input" placeholder="请输入企业名称、代理人姓名" ng-model="queryInsuranceVO.searchTxt">
+            <i class="iconfont icon-sousuo input-search-img" style="left: 22px;"></i>
+        </div>
+    </div>
+    <div style="clear: both"></div>
+
+    <div class="panel-body no-padding-v" style="padding-top: 10px;">
+        <table class="table table-striped-info table-hover table-fixed" ng-show="insuranceCompanyList.length > 0">
+            <thead>
+            <tr>
+                <th class="col-xs-1">序号</th>
+                <th class="col-xs-4">企业名称</th>
+                <th class="col-xs-3">所在地区</th>
+                <th class="col-xs-3">代理人姓名</th>
+                <th class="col-xs-1">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="insurance in insuranceCompanyList">
+                <td>{{$index+1}}</td>
+                <td>{{insurance.companyName}}</td>
+                <td>{{insurance.areaName}}</td>
+                <td>{{insurance.agentName}}</td>
+                <td>
+                    <label ng-click="checkInsuranceDetail(insurance)" class="cur-pointer" style="margin-right: 10px;"><a title="点击查询详细">查看</a></label>
+                    <label class="cur-pointer" ng-click="chooseInsurance(insurance)"><a title="点击查询详细" >选入</a></label>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div ng-show="insuranceCompanyList.length == 0" class="text-center">
+            <img src="views/images/search_null.png" ><br>
+            抱歉，未找到相关内容！
+        </div>
+        <div class="text-center" ng-show="insuranceCompanyList.length > 0">
+            <pagination previous-text="<" next-text=">" first-text="<<" last-text=">>" items-per-page="queryInsuranceVO.pageSize" class="pagination-custom" total-items="queryInsuranceVO.totalPage" ng-model="queryInsuranceVO.pageNo" max-size="7" boundary-links="true" rotate="false" ng-click="pageChanged()"></pagination>
+        </div>
+    </div>
+</div>
+
+<!--公司详情-->
+<div class="file-upload-masker" ng-show="showInsuranceDetail"></div>
+<div ng-show="showInsuranceDetail" class="insurance-detail">
+    <div class="col-xs-12 mb-10">
+        <div class="col-lg-2 col-xs-2 ng-binding text-r">企业名称</div>
+        <div class="col-lg-10 col-xs-10 ng-binding">{{insuranceInfoVO.companyName}}</div>
+    </div>
+    <div class="col-xs-12 mb-10">
+        <div class="col-lg-2 col-xs-2 ng-binding text-r">总公司</div>
+        <div class="col-lg-10 col-xs-10 ng-binding">{{insuranceInfoVO.parentName}}</div>
+    </div>
+    <div class="col-xs-12 mb-10">
+        <div class="col-lg-2 col-xs-2 ng-binding text-r">代表人类型</div>
+        <div class="col-lg-10 col-xs-10 ng-binding">{{insuranceInfoVO.legalType | id2Text: idTypeList}}</div>
+    </div>
+    <div class="col-xs-12 mb-10">
+        <div class="col-lg-2 col-xs-2 ng-binding text-r">代表人姓名</div>
+        <div class="col-lg-10 col-xs-10 ng-binding">{{insuranceInfoVO.legalName}}</div>
+    </div>
+    <div class="col-xs-12 mb-10">
+        <div class="col-lg-2 col-xs-2 ng-binding text-r">工商注册号</div>
+        <div class="col-lg-10 col-xs-10 ng-binding">{{insuranceInfoVO.registerCode}}</div>
+    </div>
+    <div class="col-xs-12 mb-10">
+        <div class="col-lg-2 col-xs-2 ng-binding text-r">电话号码</div>
+        <div class="col-lg-10 col-xs-10 ng-binding">{{insuranceInfoVO.telephone}}</div>
+    </div>
+    <div class="col-xs-12 mb-10">
+        <div class="col-lg-2 col-xs-2 ng-binding text-r">所住地址</div>
+        <div class="col-lg-10 col-xs-10 ng-binding">{{insuranceInfoVO.residence}}</div>
+    </div>
+    <div class="col-xs-12 mb-10">
+        <div class="col-lg-2 col-xs-2 ng-binding text-r">送达地址</div>
+        <div class="col-lg-10 col-xs-10 ng-binding">{{insuranceInfoVO.sendAddress}}</div>
+    </div>
+    <div class="col-xs-12 mb-10">
+        <div class="col-lg-2 col-xs-2 ng-binding text-r">代理人类型</div>
+        <div class="col-lg-10 col-xs-10 ng-binding">{{insuranceInfoVO.agentType | id2Text: agentTypeList}}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-4 mb-10">
+            <div class="col-lg-6 col-xs-6 ng-binding text-r">证件类型</div>
+            <div class="col-lg-6 col-xs-6 ng-binding">{{insuranceInfoVO.certificatesType | id2Text: certificatesTypeList}}</div>
+        </div>
+        <div class="col-xs-8 mb-10" style="padding-left: 4px;">
+            <div class="col-lg-3 col-xs-3 ng-binding text-r">证件号码</div>
+            <div class="col-lg-9 col-xs-9 ng-binding">{{insuranceInfoVO.idNo}}</div>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-4 mb-10">
+            <div class="col-lg-6 col-xs-6 ng-binding text-r">委托授权</div>
+            <div class="col-lg-6 col-xs-6 ng-binding" style="padding-right: 0;">{{insuranceInfoVO.entrustPower | id2Text: proxyPermissionConstantList}}</div>
+        </div>
+        <div class="col-xs-4 mb-10">
+            <div class="col-lg-6 col-xs-6 ng-binding text-r">代理人姓名</div>
+            <div class="col-lg-6 col-xs-6 ng-binding" style="padding-right: 0;">{{insuranceInfoVO.agentName}}</div>
+        </div>
+        <div class="col-xs-4 mb-10">
+            <div class="col-lg-6 col-xs-6 ng-binding text-r">电话号码</div>
+            <div class="col-lg-6 col-xs-6 ng-binding" style="padding-right: 0;">{{insuranceInfoVO.agentTelephone}}</div>
+        </div>
+    </div>
+    <div class="col-xs-12 mb-10">
+        <div class="col-lg-2 col-xs-2 ng-binding text-r">单位名称</div>
+        <div class="col-lg-10 col-xs-10 ng-binding">{{insuranceInfoVO.agentDomicile}}</div>
+    </div>
+    <div class="col-xs-12 mb-10">
+        <div class="col-lg-2 col-xs-2 ng-binding text-r">送达地址</div>
+        <div class="col-lg-10 col-xs-10 ng-binding">{{insuranceInfoVO.agentResidence}}</div>
+    </div>
+
+    <div class="col-xs-12" style="text-align: center;margin-top: 30px;">
+        <button type="button" class="btn btn-brand" style="margin-right: 30px;" ng-click="chooseInsurance(insuranceInfoVO)">信息带入</button>
+        <button type="button" class="btn btn-brand" ng-click="closeInsuranceDetail()">关闭</button>
+    </div>
+</div>

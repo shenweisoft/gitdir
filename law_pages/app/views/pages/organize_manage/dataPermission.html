@@ -1,0 +1,48 @@
+
+<div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel">设置数据权限 <i class="iconfont icon-guanbi close" data-dismiss="modal" ng-click="cancel()"></i></h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <div class="row row_margin" ng-class="{'has-error':regionNameMessage}">
+          <div class="col-xs-3 text-right">
+            <label class="control-label"><span class="xing">*</span>所属区域</label>
+          </div>
+          <div class="col-xs-6">
+            <input name="regionName" class="form-control" ng-focus="isShowTree=true" ng-blur="blurAdmin()" ng-model="regionName">
+          </div>
+          <span class="Prompt_message_e" ng-bind="regionNameMessage"></span>
+          <div class="col-xs-6 col-xs-offset-3">
+            <div class=" panel panel-default padding_none"  ng-show="isShowTree">
+              <div class="panel-body">
+                <div js-tree="treeConfig" should-apply="applyModelChanges()" tree="treeInstance" ng-model="adminRegion" tree-events="select_node:selectAdmin" class="pre-scrollable"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row row_margin" ng-class="{'has-error':adjustOrgMessage}">
+          <div class="col-xs-3 text-right">
+            <label class="control-label"><span class="xing">*</span>调解中心</label>
+          </div>
+          <div class="col-xs-6" ng-class="{'has-error':adjustOrgMessage}">
+            <select ng-click="selectDataPermission()" ng-model="adjustOrg" class="form-control input-sm" ng-options="x.text for x in dataPermissionList" ></select>
+          </div>
+          <div class="error-message"  ng-bind="adjustOrgMessage"></div>
+        </div>
+      </div>
+      <div class="clear"></div>
+    </form>
+</div>
+<div class="modal-footer">
+	<div class="row">
+		<div class="col-xs-3"></div>
+		<div class="col-xs-6 btn_center">
+            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">取消</button>
+            <button type="button" class="btn btn-brand" ng-click="addDataPermission()">保存</button>
+        </div>
+        <div class="col-xs-3"></div>
+    </div>
+</div>

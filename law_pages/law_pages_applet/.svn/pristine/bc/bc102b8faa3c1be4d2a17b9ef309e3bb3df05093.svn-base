@@ -1,0 +1,921 @@
+// pages/prejudge/step3/step3.js
+var app = getApp()
+const config = require('../../../config.js');
+const util = require('../../../utils/util.js');
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+    currentDate: util.formatDate(new Date()),
+    incomeEvidenceArray: ['按行业', '按本地标准'],
+    nursingTypeArray: ['短期医嘱护理', '长期康复护理', '短期医嘱护理加长期康复护理'],
+    dependentRateArray: ['100 %（完全护理依赖）', '80%（大部分护理依赖）','50%（部分护理依赖）'],
+    currentStep: 3,
+    isStep5: ''
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+    var that = this;
+    if (options.lawCase) {
+      var lawCase = JSON.parse(options.lawCase)
+
+      that.setData({
+        lawCase: lawCase,
+        isStep5: options.isStep5 == 'true' ? 'true' : 'false'
+      })
+      
+      //各项费用标准
+      that.initStandardFee();
+
+      //行业数据库
+      that.initIndustryType();
+
+      if (lawCase.caseType == '2'){//死亡，处理事故人员误工费
+        //过滤费用损失数据
+        that.filterLostIncome()
+      }
+
+      //处理展示费用项
+      that.filterFeeList();
+    }
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload: function () {
+  
+  },
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh: function () {
+  
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom: function () {
+  
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+  
+  },
+
+  /**
+   * 查询行业类型
+   */
+  initIndustryType: function(){
+    var that = this
+    var url = config.host + '/system/queryMtDictElement'
+
+    wx.request({
+      url: url,
+      method: "POST",
+      data: {},
+      success: res => {
+        let data = res.data
+        if(data.code == app.globalData.Constant.SUCCESS){
+          that.setData({
+            industryTypeArray: data.result.map((v) =>{
+              return v.dictName
+            }),
+
+            industryArray: data.result
+          })
+        }
+      },
+      fail: function () {
+        wx.showToast({
+          title: '服务器异常',
+        })
+      }
+    })
+  },
+
+  // 提示
+  opentitle: function (e) {
+    var title = e.currentTarget.dataset.title;
+    wx.showModal({
+      title: '提示',
+      content: title,
+      showCancel: false,
+      confirmText: "知道了"
+    })
+  },
+  
+  /**
+   * 费用编辑事件
+   */
+  onFeeChanged: function(e){
+    var that = this
+    var attribute = e.currentTarget.dataset.attribute
+    var id = e.currentTarget.dataset.id
+    var currentVal = e.detail.value
+
+    var lawCase = that.data.lawCase
+    var fee = lawCase.feeDetail.filter((v) => {
+      return v.id == id
+    })[0]
+
+    if (attribute == 'isFixedIncome') {//是否有固定收入
+      fee[attribute] = currentVal
+      if (currentVal){  
+        fee.incomeEvidence = "";
+        fee.industryType = "";
+
+        fee.applyPerUnit = parseFloat(lawCase.compensateStandard.lostIncome||0).toFixed(2)
+        fee.applyAmount = (parseFloat(fee.applyPerUnit) * parseFloat(fee.applyUnit)).toFixed(2)
+      }
+    } else if (attribute =='incomeEvidence'){//证明类型
+      var incomeEvidenceArray = that.data.incomeEvidenceArray
+      fee[attribute] = parseInt(currentVal) + 1
+      fee.incomeEvidenceName = incomeEvidenceArray.map((v, index) =>{
+        if (index == currentVal){
+          return v
+        }
+      })[0]
+      if (currentVal == '1'){//按照本地标准
+        fee.applyPerUnit = parseFloat(lawCase.compensateStandard.lostIncome || 0).toFixed(2)
+        fee.applyAmount = (parseFloat(fee.applyPerUnit) * parseFloat(fee.applyUnit)).toFixed(2)
+      }
+    } else if (attribute =='industryType'){//行业类型
+      var industryTypeArray = that.data.industryTypeArray
+      fee[attribute] = currentVal
+      fee.industryTypeName = industryTypeArray.map((v, index) => {
+        if (index == currentVal) {
+          return v
+        }
+      })[0]
+
+      //初始化行业标准费用
+      that.initIndustryStandardFee(currentVal, function(data){
+        fee.applyPerUnit = parseFloat(data.yearIncome / 365).toFixed(2)
+        fee.applyAmount = (parseFloat(fee.applyPerUnit || 0) * parseFloat(fee.applyUnit || 0)).toFixed(2)
+        that.setData({
+          lawCase: lawCase
+        })
+      });
+    } else if (attribute == 'applyPerUnit'){//工资收入
+      fee.applyPerUnit = currentVal
+      fee.applyAmount = (parseFloat(fee.applyPerUnit || 0) * parseFloat(fee.applyUnit || 0)).toFixed(2)
+    } else
+      fee[attribute] = currentVal
+
+    that.setData({
+      lawCase: lawCase
+    })
+  },
+
+  /**
+   * 处理展示的费用项
+   */
+  filterFeeList: function(){
+    var that = this
+    var feeArray = [];
+    var lawCase = that.data.lawCase
+
+    //分配费用标准
+    that.initStandardFee();
+
+    feeArray = lawCase.feeDetail.filter((v) =>{
+      if (lawCase.caseType == '0'){//普通受伤(无伤残)
+        if (lawCase.treatmentType == '1'){//门诊治疗,没有营养费
+          return (v.group == '1' || v.group == '2' ) && v.id != '07'
+        } else
+          return v.group == '1' || v.group == '2'
+      } else if (lawCase.caseType == '1') {//伤残
+        return v.group == '1' || v.group == '2' || v.group == '3' || v.group == '4' || v.group == '6'
+      } else if (lawCase.caseType == '2') {//死亡
+        if (lawCase.isDeadAtTheScene){//当场死亡
+          return v.group == '1' || (v.group == '3' && v.id != '06') || v.group == '5' || v.group == '6'
+        } else {//非当场死亡
+          return v.group == '1' || v.group == '2' || v.group == '3' || v.group == '5' || v.group == '6'
+        }
+      }
+    })
+
+    that.setData({
+      feeArray: feeArray
+    })
+  },
+
+  /**
+   * 分配费用标准
+   */
+  initStandardFee: function(fee){
+    var that = this
+    var lawCase = that.data.lawCase
+    lawCase.feeDetail.forEach((v) =>{
+      if (lawCase.caseType == '0') {//普通受伤(无伤残)
+        if (lawCase.treatmentType != '1') {//门诊治疗,没有营养费
+          if (v.id == '07') {//营养费
+            v.applyPerUnit = lawCase.compensateStandard.thesePayments || '0';
+            v.applyUnit = lawCase.hospitalDays
+            v.applyAmount = (parseFloat(v.applyPerUnit) * parseFloat(v.applyUnit)).toFixed(2)
+          }
+        } 
+
+        if (v.id == '06') {//住院伙食补助费
+          v.applyPerUnit = lawCase.compensateStandard.hospitalFoodSubsidies || '0';
+          v.applyUnit = lawCase.hospitalDays
+          v.applyAmount = (parseFloat(v.applyPerUnit) * parseFloat(v.applyUnit)).toFixed(2)
+        }else if (v.id == '11') {//住宿费
+          // v.applyPerUnit = lawCase.compensateStandard.accommodationFee || '0';
+          // v.applyUnit = lawCase.compensateDays
+          // v.applyAmount = (parseFloat(v.applyPerUnit) * parseFloat(v.applyUnit)).toFixed(2)
+        } else if (v.id == '08') {//误工费
+          v.isFixedIncome = false
+          v.incomeEvidence = 2
+          v.applyPerUnit = lawCase.compensateStandard.lostIncome;
+          v.applyUnit = parseInt(lawCase.compensateDays || 0) + parseInt(lawCase.applicantArray[0].outPatientTimes||0)
+          v.applyAmount = (parseFloat(v.applyPerUnit||0) * parseFloat(v.applyUnit)).toFixed(2)
+        }
+      } else if (lawCase.caseType == '1') {//伤残
+        if (v.id == '06') {//住院伙食补助费
+          v.applyPerUnit = lawCase.compensateStandard.hospitalFoodSubsidies || '0';
+          v.applyUnit = lawCase.hospitalDays
+          v.applyAmount = (parseFloat(v.applyPerUnit) * parseFloat(v.applyUnit)).toFixed(2)
+        } else if (v.id == '07') {//营养费
+          v.applyPerUnit = lawCase.compensateStandard.thesePayments || '0';
+          v.applyUnit = lawCase.hospitalDays
+          v.applyAmount = (parseFloat(v.applyPerUnit) * parseFloat(v.applyUnit)).toFixed(2)
+        } else if (v.id == '08') {//误工费
+          v.isFixedIncome = false
+          v.incomeEvidence = 2
+          v.applyPerUnit = lawCase.compensateStandard.lostIncome;
+          v.applyUnit = parseInt(lawCase.compensateDays || 0) + parseInt(lawCase.applicantArray[0].outPatientTimes || 0)
+          v.applyAmount = (parseFloat(v.applyPerUnit || 0) * parseFloat(v.applyUnit)).toFixed(2)
+        } else if (v.id == '11') {//住宿费
+          // v.applyPerUnit = lawCase.compensateStandard.accommodationFee || '0';
+          // v.applyUnit = lawCase.compensateDays
+          // v.applyAmount = (parseFloat(v.applyPerUnit) * parseFloat(v.applyUnit)).toFixed(2)
+        } else if (v.id == '12') {//残疾赔偿金
+          v.applyPerUnit = lawCase.compensateStandard ? lawCase.compensateStandard[lawCase.household].income : 0;
+          v.applyUnit = that.calculateYearOfDisabled();
+          v.applyAmount = (parseFloat(v.applyPerUnit) * parseFloat(v.applyUnit) * (parseFloat(lawCase.compensateRate) / 100)).toFixed(2);
+        } else if (v.id == '17'){//精神损害抚慰金
+          v.applyPerUnit = lawCase.compensateStandard ? lawCase.compensateStandard.spiritualConsolationFee : 0;
+          v.applyAmount = (parseFloat(v.applyPerUnit) * 10 * (parseFloat(lawCase.compensateRate) / 100)).toFixed(2);
+        }
+      } else if (lawCase.caseType == '2') {//死亡
+        if (lawCase.isDeadAtTheScene) {//当场死亡
+          if (v.id == '08') {//误工费
+            v.isFixedIncome = false
+            v.incomeEvidence = 2
+            v.applyPerUnit = lawCase.compensateStandard.lostIncome;
+            v.applyUnit = parseInt(lawCase.compensateDays || 0) + parseInt(lawCase.applicantArray[0].outPatientTimes || 0)
+            v.applyAmount = (parseFloat(v.applyPerUnit||0) * parseFloat(v.applyUnit)).toFixed(2)
+          } else if (v.id == '15') {//死亡赔偿金
+            v.applyPerUnit = lawCase.compensateStandard ? lawCase.compensateStandard[lawCase.household].income : 0;
+            v.applyUnit = that.calculateYearOfDisabled();
+            v.applyAmount = (parseFloat(v.applyPerUnit) * parseFloat(v.applyUnit) * (parseFloat(lawCase.compensateRate) / 100)).toFixed(2);
+          } else if (v.id == '16') {//丧葬费
+            v.applyPerUnit = ((lawCase.compensateStandard.funeralFeeStandard || '0') / 12).toFixed(2);
+            v.applyUnit = 6
+            v.applyAmount = (parseFloat(v.applyPerUnit) * parseFloat(v.applyUnit)).toFixed(2)
+          } else if (v.id == '17') {//精神损害抚慰金
+            v.applyPerUnit = lawCase.compensateStandard ? lawCase.compensateStandard.spiritualConsolationFee : 0;
+            v.applyAmount = (parseFloat(v.applyPerUnit) * 10 * (parseFloat(lawCase.compensateRate) / 100)).toFixed(2);
+          } else if (v.id == '19') {//处理事故人员误工费
+            var applyAmount = 0
+            v.personArray.forEach((m) => {
+              m.isFixedIncome = false
+              m.incomeEvidence = 2
+              m.applyPerUnit = lawCase.compensateStandard.lostIncome;
+              m.applyUnit = lawCase.compensateDays
+              m.applyAmount = parseFloat(m.applyPerUnit||0) * parseFloat(m.applyUnit||0)
+              applyAmount += m.applyAmount
+            })
+
+            v.applyAmount = applyAmount.toFixed(2)
+          }
+        } else {//非当场死亡
+          if (v.id == '06') {//住院伙食补助费
+            v.applyPerUnit = lawCase.compensateStandard.hospitalFoodSubsidies || '0';
+            v.applyUnit = lawCase.hospitalDays
+            v.applyAmount = (parseFloat(v.applyPerUnit) * parseFloat(v.applyUnit)).toFixed(2)
+          } else if (v.id == '07') {//营养费
+            v.applyPerUnit = lawCase.compensateStandard.thesePayments || '0';
+            v.applyUnit = lawCase.hospitalDays
+            v.applyAmount = (parseFloat(v.applyPerUnit) * parseFloat(v.applyUnit)).toFixed(2)
+          } else if (v.id == '08') {//误工费
+            v.isFixedIncome = false
+            v.incomeEvidence = 2
+            v.applyPerUnit = lawCase.compensateStandard.lostIncome;
+            v.applyUnit = parseInt(lawCase.compensateDays || 0) + parseInt(lawCase.applicantArray[0].outPatientTimes || 0)
+            v.applyAmount = (parseFloat(v.applyPerUnit||0) * parseFloat(v.applyUnit)).toFixed(2)
+          } else if (v.id == '11') {//住宿费
+            // v.applyPerUnit = lawCase.compensateStandard.accommodationFee || '0';
+            // v.applyUnit = lawCase.compensateDays
+            // v.applyAmount = (parseFloat(v.applyPerUnit) * parseFloat(v.applyUnit)).toFixed(2)
+          } else if (v.id == '15') {//死亡赔偿金
+            v.applyPerUnit = lawCase.compensateStandard ? lawCase.compensateStandard[lawCase.household].income : 0;
+            v.applyUnit = that.calculateYearOfDisabled();
+            v.applyAmount = (parseFloat(v.applyPerUnit)*parseFloat(v.applyUnit)*(parseFloat(lawCase.compensateRate) / 100)).toFixed(2);
+          } else if (v.id == '16') {//丧葬费
+            v.applyPerUnit = ((lawCase.compensateStandard.funeralFeeStandard || '0') / 12).toFixed(2);
+            v.applyUnit = 6
+            v.applyAmount = (parseFloat(v.applyPerUnit) * parseFloat(v.applyUnit)).toFixed(2)
+          } else if (v.id == '17') {//精神损害抚慰金
+            v.applyPerUnit = lawCase.compensateStandard ? lawCase.compensateStandard.spiritualConsolationFee : 0;
+            v.applyAmount = (parseFloat(v.applyPerUnit) * 10 * (parseFloat(lawCase.compensateRate) / 100)).toFixed(2);
+          } else if (v.id == '19') {//处理事故人员误工费
+            var applyAmount = 0
+            v.personArray.forEach((m) => {
+              m.isFixedIncome = false
+              m.incomeEvidence = 2
+              m.applyPerUnit = lawCase.compensateStandard.lostIncome;
+              m.applyUnit = lawCase.compensateDays
+              m.applyAmount = parseFloat(m.applyPerUnit||0) * parseFloat(m.applyUnit||0)
+              applyAmount += m.applyAmount
+            })
+
+            v.applyAmount = applyAmount.toFixed(2)
+          }
+        }
+      }
+
+      if (v.id == '09') {//护理费
+        v.nursingArray.forEach((nurse) =>{
+          calculateNurseFee(nurse);
+        })
+
+        //计算护理费
+        function calculateNurseFee(nurse) {
+          var standardNurseFee = lawCase.compensateStandard.standardNurseFee || 0//费用标准
+          nurse.applyPerUnit = parseFloat(nurse.applyPerUnit ? nurse.applyPerUnit:standardNurseFee).toFixed(2)
+          nurse.applyUnit = lawCase.compensateDays
+          nurse.nursingNum = 1
+          if (nurse.nursingType == '1') {//短期医嘱护理 = 医嘱护理天数*护理人数*标准
+            nurse.applyUnit = "";
+            nurse.applyAmount = (parseFloat(nurse.applyUnit || 0) * parseFloat(nurse.nursingNum || 1) * parseFloat(standardNurseFee)).toFixed(2)
+          } else if (nurse.nursingType == '2') {//长期康复护理 = 标准 * 护理依赖系数* 护理年限 *365
+            if (!nurse.isNurseIdentification) {//没有护理鉴定
+              nurse.nursingYear = that.calculateNuringYear(nurse) || 0
+            }
+            nurse.applyAmount = (parseFloat(standardNurseFee) * parseFloat(nurse.dependentRate || 0) / 100 * parseFloat(nurse.nursingYear) * 365).toFixed(2)
+          } else if (nurse.nursingType == '3') {//短期医嘱护理 + 长期康复护理 = 医嘱护理天数 * 护理人数 * 标准 + 标准 * 护理依赖系数 * 护理年限 * 365
+            if (!nurse.isNurseIdentification) {//没有护理鉴定
+              nurse.nursingYear = that.calculateNuringYear(nurse) || 0
+            }
+            nurse.applyUnit = "";
+            var shortNurseFee = parseFloat(nurse.applyUnit || 0) * parseFloat(nurse.nursingNum || 1) * parseFloat(standardNurseFee)
+            var longNurseFee = parseFloat(standardNurseFee) * parseFloat(nurse.dependentRate || 0) / 100 * parseFloat(nurse.nursingYear || 0) * 365
+            nurse.applyAmount = (shortNurseFee + longNurseFee).toFixed(2)
+          } else {//住院护理费
+            nurse.applyUnit = lawCase.hospitalDays
+            var fee = parseFloat(nurse.applyUnit || 0) * parseFloat(nurse.nursingNum || 1) * parseFloat(standardNurseFee)
+            nurse.applyAmount = fee.toFixed(2)
+          }
+        }
+      }
+
+      switch(v.template){
+        case '2': v.perUnitName = "元/天"; v.unitName = "天"; break;
+        case '3': v.perUnitName = "元/年"; v.unitName = "年"; break;
+        case '4': v.perUnitName = "元/月"; v.unitName = "月"; break;
+      }
+    })
+
+    that.setData({
+      lawCase: lawCase
+    })
+  },
+
+  /**
+   * 计算残疾/死亡赔偿年限
+   */
+  calculateYearOfDisabled: function(){
+    var that = this
+    var lawCase = that.data.lawCase;
+    var applicant = lawCase.applicantArray[0];
+
+    var deathDate
+    if (lawCase.caseType == '0'){//普通(无伤残)
+      return 0
+    } else if(lawCase.caseType == '1'){//伤残
+      deathDate = lawCase.deathDate
+    } else if (lawCase.caseType == '2'){//死亡
+      if (lawCase.isDeadAtTheScene){//当场死亡
+        deathDate = lawCase.createDate
+      }else{
+        deathDate = lawCase.deathDate
+      }
+    }
+
+    var age = Math.abs(new Date(lawCase.deathDate.replace(/-/g, '/')).getFullYear() - new Date(applicant.birthDay.replace(/-/g, '/')).getFullYear());
+
+    if(age <= 60){
+      return 20
+    } else if (age > 60 && age < 75){
+      return 20 - (age - 60)
+    }else{
+      return 5
+    }
+  },
+
+  /**
+   * 获取行业数据标准
+   */
+  initIndustryStandardFee: function(id, callback){
+    var that = this
+    var url = config.host + '/system/queryIndustryIncomeNormByNameAndDateAndTypeCode';
+    var lawCase = that.data.lawCase
+    var industryCode = that.data.industryArray.filter((v, index) => {
+      return index == id 
+    })[0].dictCode
+    var data = {
+      regionName: lawCase.regionName,
+      searchStartDate: lawCase.standardYear,
+      industryTypeCode: industryCode
+    }
+
+    wx.request({
+      url: url,
+      method: "POST",
+      data: data,
+      success: res => {
+        if (res.data.code == app.globalData.Constant.SUCCESS) {
+          callback(res.data.result)
+        }
+      },
+      fail: function (res) {
+        console.log(res)
+        wx.showToast({
+          title: '服务器异常',
+        })
+      }
+    })
+  },
+
+  /**
+   * 误工费
+   */
+  LostIncome: function () {
+    this.isFixedIncome = false
+    this.incomeEvidence = 2
+    this.industryType = ""
+    this.applyAmount = ""
+  },
+
+  /**
+   * 添加处理事故人员误工费
+   */
+  addOtherLostIncome: function(){
+    var that= this
+    var lawCase = that.data.lawCase
+    
+    var lostIncome = new that.LostIncome()
+    lostIncome.applyUnit = lawCase.compensateDays
+    lawCase.feeDetail.filter((v) =>{
+      return v.id == '19'
+    })[0].personArray.push(lostIncome)
+
+    that.setData({
+      lawCase: lawCase
+    })
+
+    that.filterLostIncome();
+  },
+
+  /**
+   * 删除处理事故人员误工费
+   */
+  delOtherLostIncome: function(e){
+    var that = this
+    var lawCase = that.data.lawCase
+    var index = e.currentTarget.dataset.index
+    
+    lawCase.feeDetail.filter((v) => {
+      return v.id == '19'
+    })[0].personArray.splice(index, 1)
+
+    that.setData({
+      lawCase: lawCase
+    })
+
+    that.filterLostIncome();
+  },
+
+  /**
+   * 处理事故人员误工费
+   */
+  onOtherLostIncomeChanged: function(e){
+    var attribute = e.currentTarget.dataset.attribute;
+    var index = e.currentTarget.dataset.index;
+    var id = e.currentTarget.dataset.id;
+    var value = e.detail.value
+
+    var that = this
+    var lawCase = that.data.lawCase
+    var fee = lawCase.feeDetail.filter((v) =>{
+      return v.id == id
+    })[0];
+
+    fee.personArray[index][attribute] = value
+    if (attribute == 'isFixedIncome'){//是否有固定收入
+      fee.personArray[index].incomeEvidence = "";
+      fee.personArray[index].industryType = "";
+    } else if (attribute == 'incomeEvidence') {//证明类型
+      fee.personArray[index][attribute] = parseInt(value) + 1
+      fee.personArray[index].incomeEvidenceIndex = value
+      
+      if (value == '1') {//按照本地标准
+        fee.personArray[index].applyPerUnit = parseFloat(lawCase.compensateStandard.lostIncome || 0).toFixed(2)
+        fee.personArray[index].applyUnit = lawCase.compensateDays || 0
+        fee.personArray[index].applyAmount = (parseFloat(fee.personArray[index].applyPerUnit) * parseFloat(fee.personArray[index].applyUnit)).toFixed(2)
+      }
+    } else if (attribute == 'industryType'){//行业
+      fee.personArray[index][attribute] = value
+
+      //初始化行业标准费用
+      that.initIndustryStandardFee(value, function(data){
+        fee.personArray[index].applyPerUnit = parseFloat(data.yearIncome / 365).toFixed(2)
+        fee.personArray[index].applyAmount = (parseFloat(fee.personArray[index].applyPerUnit) * parseFloat(fee.personArray[index].applyUnit || 0)).toFixed(2)
+
+        that.setData({
+          lawCase: lawCase
+        })
+        
+        that.filterLostIncome();
+      });
+      
+    } else if (attribute == 'applyPerUnit'){//日工资收入
+      fee.personArray[index].applyPerUnit = value
+      fee.personArray[index].applyAmount = (parseFloat(fee.personArray[index].applyPerUnit||0) * parseFloat(fee.personArray[index].applyUnit||0)).toFixed(2)
+    } else if (attribute == 'applyUnit'){
+      fee.personArray[index].applyUnit = value
+      fee.personArray[index].applyAmount = (parseFloat(fee.personArray[index].applyPerUnit || 0) * parseFloat(fee.personArray[index].applyUnit || 0)).toFixed(2)
+    }
+
+    fee.applyAmount = 0
+    fee.personArray.forEach((v) =>{
+      fee.applyAmount += parseFloat(v.applyAmount || 0)
+    })
+
+    that.setData({
+      lawCase: lawCase
+    })
+    
+    //过滤费用标准
+    that.filterLostIncome();
+  },
+
+  /**
+   * 护理费变化绑定事件
+   */
+  onNurseFeeChanged: function (e) {
+    var attribute = e.currentTarget.dataset.attribute;
+    var index = e.currentTarget.dataset.index;
+    var value = e.detail.value
+
+    var that = this
+    var lawCase = that.data.lawCase
+    var fee = lawCase.feeDetail.filter((v) => {
+      return v.id == '09'
+    })[0];
+
+    var nurse = fee.nursingArray[index]
+    nurse.applyPerUnit = nurse.applyPerUnit ? nurse.applyPerUnit :lawCase.compensateStandard.standardNurseFee
+    nurse[attribute] = value
+    if (attribute == 'incomeEvidence') {//证明类型
+      nurse[attribute] = parseInt(value) + 1
+      nurse.incomeEvidenceIndex = value
+      if (value == '1') {//按照本地标准
+        nurse.applyPerUnit = lawCase.compensateStandard.standardNurseFee
+        nurse.applyUnit = lawCase.compensateDays
+        nurse.applyAmount = (parseFloat(nurse.applyPerUnit) * parseFloat(nurse.applyUnit) * parseFloat(nurse.nursingNum || 1)).toFixed(2)
+      }
+    } else if (attribute == 'industryType') {//行业
+      nurse[attribute] = value
+
+      that.initIndustryStandardFee(value, function (data) {
+        nurse.applyPerUnit = parseFloat(data.yearIncome / 365).toFixed(2)
+        nurse.applyUnit = lawCase.compensateDays
+        nurse.applyAmount = (parseFloat(nurse.applyPerUnit) * parseFloat(nurse.applyUnit) * parseFloat(nurse.nursingNum || 1)).toFixed(2)
+
+        calculateNurseFee(nurse)
+        that.setData({
+          lawCase: lawCase
+        })
+      });
+    } else if (attribute == 'nursingNum'){//护理人数
+      nurse.nursingNum = nurse.nursingNum
+      calculateNurseFee(nurse)
+    } else if (attribute == 'nursingType'){//护理类型
+      nurse.nursingType = parseInt(value) + 1
+      calculateNurseFee(nurse)
+    } else if (attribute == 'dependentRate'){//依赖系数
+      nurse.dependentRate = value == '0' ? 100 : value == '1' ? 80 : value == '2' ? 50 : 0
+      nurse.dependentRateIndex = parseInt(value) + 1
+      calculateNurseFee(nurse)
+    } else if (attribute == 'nursingYear') {//护理年限
+      calculateNurseFee(nurse)
+    } else if (attribute == 'isNurseIdentification') {//有无护理鉴定
+      if(!value){
+        calculateNurseFee(nurse)
+      }
+    } else if (attribute =="restDays"){//医嘱护理天数
+      calculateNurseFee(nurse)
+    } else if (attribute == "applyPerUnit"){ //工资收入
+      calculateNurseFee(nurse)
+    }
+
+    fee.applyAmount = 0;
+    fee.nursingArray.forEach((v) =>{
+      fee.applyAmount += parseFloat(v.applyAmount || 0)
+    })
+
+    that.setData({
+      lawCase: lawCase
+    })
+
+    //过滤费用标准
+    that.filterLostIncome();
+
+    //计算护理费
+    function calculateNurseFee(nurse){
+      var standardNurseFee = lawCase.compensateStandard.standardNurseFee || 0//费用标准
+      if (nurse.nursingType == '1') {//短期医嘱护理 = 医嘱护理天数*护理人数*标准
+        // if (nurse.isFixedIncome){
+          // nurse.applyPerUnit = nurse.applyPerUnit ? nurse.applyPerUnit:standardNurseFee;
+          nurse.applyUnit = nurse.restDays;
+        nurse.applyAmount = (parseFloat(nurse.restDays || 0) * parseFloat(nurse.nursingNum || 1) * parseFloat(nurse.applyPerUnit ? nurse.applyPerUnit : standardNurseFee)).toFixed(2)
+        // }
+      } else if (nurse.nursingType == '2') {//长期康复护理 = 标准 * 护理依赖系数* 护理年限 *365
+        if (!nurse.isNurseIdentification){//没有护理鉴定
+          nurse.nursingYear = that.calculateNuringYear(nurse) || 0
+        }
+        nurse.applyAmount = (parseFloat(nurse.applyPerUnit ? nurse.applyPerUnit:standardNurseFee) * parseFloat(nurse.dependentRate || 0) / 100 * parseFloat(nurse.nursingYear) * 365).toFixed(2)
+      } else if (nurse.nursingType == '3') {//短期医嘱护理 + 长期康复护理 = 医嘱护理天数 * 护理人数 * 标准 + 标准 * 护理依赖系数 * 护理年限 * 365
+        if (!nurse.isNurseIdentification) {//没有护理鉴定
+          nurse.nursingYear = that.calculateNuringYear(nurse) || 0
+        }
+        nurse.applyUnit = nurse.restDays;
+        var shortNurseFee = parseFloat(nurse.restDays || 0) * parseFloat(nurse.nursingNum || 1) * parseFloat(standardNurseFee)
+        var longNurseFee = parseFloat(nurse.applyPerUnit ? nurse.applyPerUnit : standardNurseFee) * parseFloat(nurse.dependentRate || 0) / 100 * parseFloat(nurse.nursingYear || 0) * 365
+        nurse.applyAmount = (shortNurseFee + longNurseFee).toFixed(2)
+      } else {//住院护理费
+        nurse.applyUnit = lawCase.hospitalDays
+        var fee = parseFloat(nurse.applyUnit || 0) * parseFloat(nurse.nursingNum || 1) * parseFloat(nurse.applyPerUnit ? nurse.applyPerUnit:standardNurseFee)
+        nurse.applyAmount = fee.toFixed(2)
+      }
+    }
+  }, 
+
+  /**
+   * 被扶养人生活费绑定事件
+   */
+  dependentChange: function(e){
+    var that = this;
+    var attribute = e.currentTarget.dataset.attribute
+    var index = e.currentTarget.dataset.index
+    var value = e.detail.value
+
+    var lawCase = that.data.lawCase
+    var fee = lawCase.feeDetail.filter((v) =>{
+      return v.id == '14'
+    })[0]
+
+    fee.dependents.apply[index][attribute] = value
+    if (attribute == 'birthDate'){//出生日期
+      fee.dependents.apply[index].fyAge = that.calculateFyAge(value, lawCase.deathDate)//计算抚养年限
+    }
+
+    if (fee.dependents.apply.length == 1) {//单个抚养人
+      var dependent = fee.dependents.apply[index]
+      var standardFee = lawCase.compensateStandard[dependent.household].expense
+      //抚养年限x上一年度城镇居民人均年消费性支出额或者农村居民人均年生活消费支出额/共同抚养人数×伤残系数
+      var countFee = parseFloat(dependent.fyAge || 0) * parseFloat(standardFee || 0) / parseFloat(dependent.count || 1) * (parseFloat(lawCase.compensateRate) / 100)
+
+      fee.applyAmount = countFee.toFixed(2)
+      fee.dependents.apply[index].applyAmount = fee.applyAmount;
+    } else {//多个被扶养人
+
+      var dependentStandard = lawCase.compensateStandard[lawCase.household].expense
+
+      fee.dependents.apply.forEach((m, i, arr) => {
+        var tmpFee = 0;
+        var preYear = 0;
+
+        if (i != 0) {
+          preYear = arr[i - 1].fyAge;
+        }
+
+        arr.forEach((j) => {
+          tmpFee += (dependentStandard * lawCase.compensateRate / 100 / j.count);
+        })
+
+        //取标准和计算值中小的
+        tmpFee = Math.min(tmpFee, dependentStandard);
+        m.applyAmount = (tmpFee * (m.fyAge - preYear)).toFixed(2)
+      })
+      var countFee = that.countDependentFee(fee.dependents.apply);
+      fee.applyAmount = countFee
+    }
+    
+    that.setData({
+      lawCase: lawCase
+    })
+  },
+
+  /**
+   * 计算被扶养人生活费
+   */
+  countDependentFee: function(applyArray){
+    var that = this
+    var lawCase = that.data.lawCase
+    var tempClaimArray = []
+    tempClaimArray = Object.assign(tempClaimArray, applyArray)
+    tempClaimArray.sort(function (a, b) {//根据抚养年限排序，由大到小
+      return a.fyAge - b.fyAge;
+    });
+
+    var countFee = 0
+    var dependentStandard = lawCase.compensateStandard[lawCase.household].expense
+
+    tempClaimArray.forEach((m, i, arr) => {
+      var tmpFee = 0;
+      var preYear = 0;
+
+      if (i != 0) {
+        preYear = arr[i - 1].fyAge;
+      }
+
+      arr.forEach((j) => {
+        tmpFee += (dependentStandard * lawCase.compensateRate / 100 / j.count);
+      })
+
+      //取标准和计算值中小的
+      tmpFee = Math.min(tmpFee, dependentStandard);
+      m.applyAmount = (tmpFee * (m.fyAge - preYear)).toFixed(2)
+      countFee += (tmpFee * (m.fyAge - preYear));
+    })
+
+    return countFee.toFixed(2);
+  },
+
+  /**
+   * 被扶养人生活费
+   */
+  Dependent: function(){
+    this.birthDate = "";
+    this.fyAge = "";
+    this.count = 1;
+    this.household = 1;
+  },
+
+  /**
+   * 增加被扶养人生活费
+   */
+  addDepenDent: function(e){
+    var that = this;
+    var lawCase = that.data.lawCase
+    var feeDetail = lawCase.feeDetail
+
+    var fee = feeDetail.filter((v) =>{
+      return v.id == '14'//被扶养人生活费
+    })[0]
+    fee.dependents.apply.push(new that.Dependent());
+
+    that.setData({
+      lawCase: lawCase
+    })
+  },
+
+  /**
+   * 删除被扶养人生活费
+   */
+  removeDependent: function(e){
+    var that = this;
+    var index = e.currentTarget.dataset.index;
+    var lawCase = that.data.lawCase
+    var fee = lawCase.feeDetail.filter((v) => {
+      return v.id == '14'//被扶养人生活费
+    })[0]
+
+    fee.dependents.apply.splice(index, 1)
+
+    //计算
+    fee.applyAmount = that.countDependentFee(fee.dependents.apply);
+
+    that.setData({
+      lawCase: lawCase
+    })
+  },
+
+  /**
+   * 计算护理年限
+   */
+  calculateNuringYear: function(nurse){
+    var that = this
+    var lawCase = that.data.lawCase
+    var applicant = lawCase.applicantArray[0]
+
+    if (!nurse.isNurseIdentification){//没有护理鉴定
+      if (nurse.dependentRate == '100') {//护理依赖系数  100%  完全依赖
+        return 5
+      } else if (nurse.dependentRate == '80') {//护理依赖系数  80%  大部分依赖
+        if (util.getAge(applicant.birthDay, util.formatDate(new Date())) > 75) {//年龄在75周岁以上的，固定为5年
+          return 5
+        } else
+          return 10
+      } else if (nurse.dependentRate == '50') {//护理依赖系数  50%  部分依赖
+        return 10
+      }
+    }
+  },
+
+  /**
+   * 计算抚养年限
+   */
+  calculateFyAge: function (deathDate, birthDate){
+    var age = util.getAge(deathDate, birthDate)
+    if (age <= 18)
+      return 18 - age;
+    else if (age > 18 && age <= 60)
+      return 20;
+    else if (age > 60 && age< 75)
+      return 80 -age;
+    else if (age >= 75)
+      return 5;
+  },
+
+  /**
+   * 过滤处理事故人员务工费
+   */
+  filterLostIncome: function () {
+    var that = this
+    var lawCase = that.data.lawCase
+    if (lawCase.caseType == '2') {//死亡
+      var handlePersonArray = lawCase.feeDetail.filter((v) => {
+        return v.id == '19'
+      })[0].personArray
+
+      that.setData({
+        handlePersonArray: handlePersonArray
+      })
+    }
+  },
+
+  /**
+   * 上一步
+   */
+  preStep: function () {
+    var pages = getCurrentPages();
+    var currPage = pages[pages.length - 1];   //当前页面
+    var prevPage = pages[pages.length - 2];  //上一个页面
+    var lawCase = this.data.lawCase;
+    prevPage.setData({
+      lawCase: lawCase
+    })
+    wx.navigateBack({
+      delta: 1
+    })
+  },
+
+  /**
+   * 下一步
+   */
+  nextStep: function () {
+    var that = this;
+    var lawCase = that.data.lawCase
+    var nextStep = parseInt(that.data.currentStep) + 1
+    wx.navigateTo({
+      url: '../step' + nextStep + '/step' + nextStep + "?lawCase=" + JSON.stringify(lawCase) + '&isStep5=' + that.data.isStep5,
+    })
+  }
+})

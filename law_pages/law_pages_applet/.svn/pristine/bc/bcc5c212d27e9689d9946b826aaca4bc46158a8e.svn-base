@@ -1,0 +1,53 @@
+<view class="bgcolor '{{isLoading==true?'loading-bg':''}}'"></view>
+<view class='page' style='padding-bottom:150px;'>
+  <import src="/pages/template/template.wxml" />
+  <!-- 提示信息 -->
+  <template is="wetoast" data="{{content, toastType}}" wx:if="{{showToast}}"></template>
+
+  <view class="wxParse">
+      <template is="adjustAgreement"  wx-if="{{wordType=='0'}}" data="{{document, userInfo, imageAddress, lawCase, userInfoType, showSignatureWay, isLocalSignature, isAdjustSignature}}"/>
+      <template is="mediationRecord" wx-if="{{wordType=='17'}}" data="{{document, userInfo, imageAddress, lawCase, userInfoType, showSignatureWay, isLocalSignature, isAdjustSignature}}"/>
+      <template is="lawSure" wx-if="{{wordType=='1'}}" data="{{dateToCN, lawCase}}"/>
+      <template is="civilLitigation" wx-if="{{wordType=='16'}}" data="{{document, userInfo, imageAddress, lawCase, userInfoType, showSignatureWay, isLocalSignature, isAdjustSignature}}"/>
+      <template is="application" wx-if="{{wordType=='15'}}" data="{{document, userInfo, imageAddress, lawCase, userInfoType, showSignatureWay, isLocalSignature, isAdjustSignature}}"/>
+      <template is="civilBook" wx-if="{{wordType=='18'}}" data="{{document, userInfo, imageAddress, lawCase, userInfoType, showSignatureWay, isLocalSignature, isAdjustSignature}}"/>
+  </view>
+
+   <!-- 签字图片 
+  <view wx:if='{{!isSignImage || (document.remoteSign == 1)}}' style='margin:15px;'>
+    <view wx:for='{{lawCase.applicantArray}}' wx:for-item='applicant' wx:for-index='index' wx:if='{{(applicant.personType == 0 && !document.remoteSign)|| (applicant.personType == 0 && document.remoteSign == 1 && userInfoType == 0)}}'>
+      <view class='clear sign-wp'>
+        <view data-index='{{index}}' bindtap='handleSignature' class='signImage' wx:if='{{!applicant.isSignature}}'>点击此处</view>
+        <image class='signImage' wx:for='{{document.signatureList}}' wx:for-item='signature' wx:if='{{signature.applicantId == applicant.id}}' src='{{imageAddress+signature.signature}}'></image>
+        <view class='signName'>申请人签字：</view>
+      </view>
+    </view>
+    <view wx:for='{{lawCase.applicantArray}}' wx:for-item='respondent' wx:for-index='index' wx:if='{{(respondent.personType == 1 && !document.remoteSign) || (respondent.personType == 1 && document.remoteSign == 1 && userInfoType == 1)}}'>
+      <view class='clear sign-wp'>
+        <view data-index='{{index}}' bindtap='handleSignature' class='signImage' wx:if='{{!respondent.isSignature}}'>点击此处</view>
+        <image class='signImage' wx:for='{{document.signatureList}}' wx:for-item='signature' wx:if='{{signature.applicantId == respondent.id}}' src='{{imageAddress+signature.signature}}'></image>
+        <view class='signName'>被申请人签字：</view>
+      </view>
+    </view>
+    <view wx:if='{{userInfo.userType == 2}}'>
+      <view class='clear sign-wp'>
+        <view bindtap='handleSignature' class='signImage' data-index='{{index}}' wx:if='{{!userInfo.isSignature}}'>点击此处</view>
+        <image class='signImage' wx:for='{{document.signatureList}}' wx:for-item='signature' wx:if='{{signature.applicantId == userInfo.id}}' src='{{imageAddress+signature.signature}}'></image>
+        <view class='signName'>调解员签字：</view>
+      </view>
+    </view>
+  </view> -->
+</view> 
+<view class='submit_btn_box' wx:if="{{userInfo.userType == 2 && document.remoteSign != 1 && lawCase.state == '1000' && wordType != '16'}}">
+  <view class='submit_btn' bindtap='showSignature'>协议签字</view>
+</view>
+
+<!-- 蒙版 -->
+<view class='mask' wx:if='{{showSignatureWay}}'></view>
+<!-- 退回弹出框 -->
+<view class='th_alert' wx:if='{{showSignatureWay}}'>
+  <view class='bt'>请选择电子签名方式</view>
+  <view class='btn1' bindtap='authorization'>授权申请人方移动设备签字</view>
+  <view class='btn1' bindtap='toSignature'>使用本移动设备签字</view>
+  <view class='btn' bindtap='hidenSignature'>取消</view>
+</view>

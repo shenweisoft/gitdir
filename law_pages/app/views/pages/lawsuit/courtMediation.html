@@ -1,0 +1,93 @@
+<div class="row" style="margin-bottom: 60px;">
+  <!--头部详细字段-->
+	<div head-detail></div>
+
+	<div class="module-box bg-default">
+		<div class="nav-line-left">
+			<h4>
+				<span class="h1_line"></span>
+				庭前调解
+			</h4>
+		</div>
+    <div id="scrollDiv" style="width:100%;height:400px;overflow:auto;position:relative;">
+      <div ng-repeat="message in messageArray">
+        <div class="col-xs-12" ng-class="{true:'dialog-box-r',false:'dialog-box'}[userId == message.userId]">
+					<img src="views/images/yuangao.png" ng-if="message.personType == 0 || message.personType== 1">
+          <img src="views/images/faguan.png" ng-if="message.personType == 2">
+					<span ng-class="{true:'tips-box-r bg-blue',false:'tips-box bg-border'}[userId == message.userId]"><b class="pop-arrow"></b>{{message.content}}</span>
+          <div class=" font-size13 text-muted po-person">
+						<span ng-if="message.personType==0">原告：</span>
+						<span ng-if="message.personType==1">被告：</span>
+						<span ng-if="message.personType==2">法官：</span>
+						<i class="mar-ri-15">{{message.personName}}</i>
+						<span>{{message.createDate | date:'yyyy-MM-dd HH:mm:ss'}}</span>
+					</div>
+        </div>
+      </div>
+
+    </div>
+		<!--<div style="padding:10px;background:#ddd;position:absolute;right:21px;bottom:150px;border-top-left-radius: 20px;border-bottom-left-radius: 20px;">{{messageNum}}</span>条消息</div>-->
+		<div class="col-xs-12 no-padding bg-color">
+			<div class="col-xs-3 no-padding line-height2 "> <a class="cur-pointer brand-color no-underline"  ng-click="mediationPlan()">调解方案</a></div>
+			<div class="col-xs-3 no-padding line-height2"><a ng-if="law.applyJudge" class="error-color">已申请法官介入</a></div>
+			<div class="col-xs-3  line-height2"><i class="iconfont"  ng-class="{'icon--tingqiantiaojieduihao-Xhao':law.applyAgree == 0,'icon--tingqiantiaojie-duihao adjust_success':law.applyAgree == 1,'icon--tingqiantiaojie-tanhao error_color':law.applyAgree == 2}"  style="margin-right: 5px;"></i>
+				<span>原告：</span>
+				<span ng-if="law.applyAgree == 0">未响应</span>
+				<span ng-if="law.applyAgree == 1">同意调解</span>
+				<span ng-if="law.applyAgree == 2">不同意调解</span>
+			</div>
+			<div class="col-xs-3  line-height2"><i class="iconfont" ng-class="{'icon--tingqiantiaojieduihao-Xhao':law.respondentAgree == 0,'icon--tingqiantiaojie-duihao adjust_success':law.respondentAgree == 1,'icon--tingqiantiaojie-tanhao error_color':law.respondentAgree == 2}" style="margin-right: 5px;"></i>
+				<span>被告：</span>
+				<span ng-if="law.respondentAgree == 0">未响应</span>
+				<span ng-if="law.respondentAgree == 1">同意调解</span>
+				<span ng-if="law.respondentAgree == 2">不同意调解</span>
+			</div>
+
+		</div>
+		<div class="form-group clearfix bg-color padding-20" style="margin:0 -20px">
+			<div class="col-xs-11 no-padding-l">
+				<textarea  class="form-control" ng-model="saySomething" ng-keydown="keyDown(event)" placeholder="请输入内容" maxlength="250" cols="5" rows="1" style="resize: none;"></textarea>
+			</div>
+			<button class="col-xs-1 btn btn-brand" ng-click="sendMessage()">发送</button>
+		</div>
+	</div>
+	<div class="module-box bg-default"  ng-if="type.personType == 2" >
+		<div class="nav-line-left">
+			<h4>
+				<span class="h1_line"></span>
+				审批意见
+			</h4>
+		</div>
+		<div class="module-content font-size13">
+			<div>
+				<div class="row clearfix no-margin-h margin-bottom-15">
+					<textarea class="col-xs-12 text-box" name="remark"  ng-model="law.remark" placeholder="请输入审批意见"></textarea>
+				</div>
+			</div>
+			<!-- 历史记录 -->
+			<div history-record></div>
+		</div>
+	</div>
+</div>
+<div class="row footer-applicant">
+  <div class="col-xs-12 padding_top_bottom text-right">
+    <button class=" btn btn-default" onclick="javascript:history.go(-1)">返回</button>
+		<!--原告-->
+		<span ng-if="type.personType == 0">
+			<button class=" btn btn-brand" ng-click="judgeInvolved()" >申请法官介入</button>
+			<button class=" btn " ng-class="{true:'btn-success',false:'text-muted'}[law.applyAgree == 0]" ng-click="agreeMediation(law.applyAgree,1)" ng-disabled="law.applyAgree != 0">同意调解</button>
+			<button class=" btn "  ng-class="{true:'btn-danger',false:'text-muted'}[law.applyAgree == 0]"  ng-click="agreeMediation(law.applyAgree,2)" ng-disabled="law.applyAgree != 0">放弃调解</button>
+		</span>
+		<!--被告-->
+		<span ng-if="type.personType == 1">
+			<button class=" btn btn-brand" ng-click="" >申请法官介入</button>
+			<button class=" btn " ng-class="{true:'btn-success',false:'text-muted'}[law.respondentAgree == 0]" ng-click="agreeMediation(law.respondentAgree,1)"  ng-disabled="law.respondentAgree != 0">同意调解</button>
+			<button class=" btn"  ng-class="{true:'btn-danger',false:'text-muted'}[law.respondentAgree == 0]"  ng-click="agreeMediation(law.respondentAgree,2)"  ng-disabled="law.respondentAgree != 0">放弃调解</button>
+		</span>
+		<!--法官-->
+		<span ng-if="type.personType == 2">
+			<button class=" btn btn-success" ng-click="restartMediation()" >重启调解</button>
+    	<button class=" btn btn-brand" ng-click="mediationOver()">结束调解</button>
+		</span>
+	</div>
+</div>

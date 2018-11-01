@@ -1,0 +1,41 @@
+<div class="bg-default" style="margin-left: -15px; margin-right: -15px;" >
+	<div class=" panel-heading">
+		<div class="row">
+			<h4 class="col-xs-12 "><span class="h1_line"></span>转交调解员<i class="iconfont pull-right icon-guanbi close" ng-click="cancel()"></i></h4>
+		</div>
+	</div>
+
+	<div class="panel-body no-padding-v">
+		<div class="row clearfix form-row-bottom">
+			<div class=" bg-default" style="height: 200px;">
+				<div class="col-xs-12 text-center">
+					<div class="form-group col-xs-12 row ">
+						<div class="col-lg-3 col-xs-5 ">
+							<label class=" control-label" ><i style="color: red;">*</i> 选择调解点</label>
+						</div>
+						<div class="col-lg-9 col-xs-7">
+							<div class="input-group col-xs-12">
+								<select class="form-control" ng-model="law.beforeAdjustPointCode" ng-change="changePoint()" ng-options="point.deptId as point.deptName for point in adjustPersonList | pointFilter ">
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="form-group col-xs-12 row ">
+						<div class="col-lg-3 col-xs-5 ">
+							<label class=" control-label" ><i style="color: red;">*</i> 选择调解员</label>
+						</div>
+						<div class="col-lg-9 col-xs-7">
+							<div class="input-group col-xs-12">
+								<select class="form-control" ng-model="law.beforePersonnelId" ng-change="changePerson()" ng-options="point.id as point.adjustName for point in adjustPersonList | pointPersonFilter :law.beforeAdjustPointCode">
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12 text-center" style="margin-top: 100px;">
+					<button class=" btn btn-brand"  ng-click="approvalSubmit()" style="width: 80px;">转交</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

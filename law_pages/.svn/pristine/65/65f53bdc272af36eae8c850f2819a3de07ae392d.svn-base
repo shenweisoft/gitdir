@@ -1,0 +1,74 @@
+<div class="role_management_d relative_top">
+  <div class="row bg-default">
+    <div class="col-xs-12 role_management_right_d">
+      <div class="role_management_right_t_d">
+        <div class="col-xs-7 role_management_right_t_l_d no-padding">赔偿标准维护</div>
+        <div class="col-lg-4 col-xs-4 line-height40 margin-top-6">
+          <div class="search_box">
+            <input type="text" class="input-xs search_input" ng-model="mtDenizenIncomeNorm.regionName"  placeholder="区域名称" >
+            <i class="iconfont icon-sousuo input-search-img"></i>
+          </div>
+        </div>
+        <div class="col-lg-1 col-xs-1 line-height40 no-padding margin-top-6">
+          <button type="button" class="btn btn-brand mar-v-3" ng-click="getDataInfo()">搜索</button>
+        </div>
+      </div>
+      <div class="clear"></div>
+      <div class="panel-body">
+        <div class="table-responsive">
+        <div class="role_management_right_t_r_d" ng-click="newlyAdded2()"><i class="iconfont icon-tianjia"></i>  新增</div>
+          <table class="table table-hover" style="text-align: center;">
+            <thead>
+            <tr>
+              <th class="col-xs-2" style="text-align: center;">区域名称</th>
+              <th class="col-xs-1" style="text-align: center;">标准年度</th>
+              <th class="col-xs-1" style="text-align: center;">误工费</th>
+              <th class="col-xs-1" style="text-align: center;">护理费</th>
+              <th class="col-xs-1" style="text-align: center;">住院伙食补助费</th>
+              <th class="col-xs-1" style="text-align: center;">营养费</th>
+              <th class="col-xs-1" style="text-align: center;">交通费</th>
+              <th class="col-xs-1" style="text-align: center;">住宿费</th>
+              <th class="col-xs-1" style="text-align: center;">精神损失费</th>
+              <th class="col-xs-1" style="text-align: center;">户口性质</th>
+              <th class="col-xs-1" style="text-align: center;">标准类型</th>
+              <th class="col-xs-2" style="text-align: center;">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="x in deleteIndexList" >
+              <td style="line-height: 35px;">{{x.regionName}}</td>
+
+              <td style="line-height: 35px;">{{x.standardYear}}</td>
+
+              <td style="line-height: 35px;">{{x.lostIncome}}</td>
+
+              <td style="line-height: 35px;">{{x.standardNurseFee}}</td>
+
+              <td style="line-height: 35px;">{{x.hospitalFoodSubsidies}}</td>
+
+              <td style="line-height: 35px;">{{x.thesePayments}}</td>
+
+              <td style="line-height: 35px;">{{x.transportationFee}}</td>
+
+              <td style="line-height: 35px;">{{x.accommodationFee}}</td>
+
+              <td style="line-height: 35px;">{{x.spiritualConsolationFee}}</td>
+
+              <td style="line-height: 35px;">{{x.householdNature=="01"? "农村" : "城市"}}</td>
+              <td style="line-height: 35px;">{{x.levelType|id2Text:levelTypeList}}</td>
+
+              <td class="action_bar" style="line-height: 35px;">
+                <i class="iconfont icon-iconfont19" style="font-size:18px;" ng-click="deleteCompensateStandard(x)" title="删除"></i>
+                <i class="iconfont icon-wenjianguanli" style="font-size:18px;" title="修改" ng-click="newlyAdded2(x)"></i>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="text-center"  ng-if="deleteIndexList.length != 0 ">
+            <pagination previous-text="<" next-text=">" first-text="<<" last-text=">>" items-per-page="pageData.itemNum" class="pagination-custom" total-items="pageData.totalItems" ng-model="pageData.currentPage" ng-change="pageChanged()" max-size="7" boundary-links="true" rotate="false"></pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

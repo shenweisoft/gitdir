@@ -1,0 +1,197 @@
+<style type="text/css">.form-group{margin-bottom: 20px;}</style>
+<div class="applicant_cont_box background_color_d" id="{{'name' + applicant.hashIndex}}" ng-repeat="algorithmApplyerInfo in algorithmInfo.jyAlgorithmApplyerInfoVOList" >
+    <!-- 申请人标题-->
+    <div  ng-bind=""></div>
+    <div class="row background_color_d" style="padding-left: 15px; padding-right: 15px;">
+        <div class="col-xs-12 boder_bottom padding_top_bottom" style="padding: 5px 0px;">
+            <h4 class="col-xs-8" style="margin-left: -10px;"> <span class="h1_line"></span>
+                <span>申请人信息</span>
+            </h4>
+            <div class="pull-right" ng-click="removeAlgorithmApplyerInfo(algorithmApplyerInfo)" style="color: #3F65D6; line-height: 40px; cursor: pointer; margin-right: 20px;">删除申请人</div>
+        </div>
+    </div>
+    <div class="row padding_top_bottom background_color_d" >
+        <div class="col-xs-12">
+            <label class="col-xs-2 text-right line_heght control-label" style="padding-right: 40px; font-size: 13px;">
+                身份类型
+            </label>
+            <div class="col-xs-4">
+                <div class="radio" style="margin-left: -22px;" >
+                    <label ng-repeat="idType in idTypeList" style="margin-right: 20px;">
+                        <input type="radio" ng-model="algorithmApplyerInfo.personType" ng-value="idType.id" ng-checked="idType.id == algorithmApplyerInfo.personType">{{idType.value}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-xs-6 text-right line_heght control-label" style="color:#666">温馨提示：请先上传证件照片，上传小于10M大小的图片</div>
+        </div>
+    </div>
+    <!-- 公民显示内容 -->
+    <div class="row show_cont background_color_d" ng-if="algorithmApplyerInfo.personType==0">
+        <div class="row">
+            <form class="col-xs-6 form-horizontal" novalidate="">
+                <div class="col-xs-12 form-group form-group-sm">
+                    <label class="col-xs-4 control-label" >
+                        <span class="Required">*</span>
+                        <span>申请人姓名</span>
+                    </label>
+                    <div class="col-xs-8" ng-class="{'has-error':algorithmApplyerInfo.personNameError}" >
+                        <div class="col-xs-9 row"><input  type="text" class="form-control" ng-model="algorithmApplyerInfo.personName" placeholder="请填写申请人姓名" maxlength="15"></div>
+                        <label class="col-xs-3" style="line-height:30px;">
+                            <input type="checkbox" ng-model="algorithmApplyerInfo.isOwner" style="position: relative; top:2px;"  ng-checked="algorithmApplyerInfo.isOwner">车主
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-12 form-group form-group-sm">
+                    <label class="col-xs-4 control-label"><span class="Required">*</span>证件类型</label>
+                    <div class="col-xs-8">
+                        <select class="form-control" ng-model="algorithmApplyerInfo.idType" ng-options="x.id as x.value for x in certificatesTypeList"></select>
+                    </div>
+                </div>
+                <div class="col-xs-12 form-group form-group-sm">
+                    <label class="col-xs-4 control-label"><span class="Required">*</span>证件号码</label>
+                    <div class="col-xs-8" ng-class="{'has-error':algorithmApplyerInfo.idNoError}">
+                        <input type="text" class="form-control" ng-model="algorithmApplyerInfo.idNo" placeholder="请填写证件号码" ng-blur="checkIdentity(algorithmApplyerInfo)" maxlength="30">
+                    </div>
+                </div>
+                <div class="col-xs-12 form-group form-group-sm">
+                    <label class="col-xs-4 control-label">
+                        <span class="Required">*</span>
+                        <span>性别</span>
+                    </label>
+                    <div class="col-xs-8">
+                        <div class="radio" style="padding-top: 0px;">
+                            <label>
+                                <input type="radio" ng-model="algorithmApplyerInfo.sex" value="0" ng-checked ng-disabled="algorithmApplyerInfo.sex==0">男
+                            </label>
+                            <label></label>
+                            <label>
+                                <input type="radio" ng-model="algorithmApplyerInfo.sex" value="1" ng-disabled="algorithmApplyerInfo.sex==1">女
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 form-group form-group-sm">
+                    <label class="col-xs-4 control-label"><i>*</i>出生日期</label>
+                    <div class="col-xs-8" ng-class="{'has-error':algorithmApplyerInfo.birthdayError}" >
+                        <p class="input-group">
+                            <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" show-button-bar="false" ng-model="algorithmApplyerInfo.birthday" ng-readonly="true" is-open="algorithmApplyerInfo.calendarIsOpen" max-date="minDate" max-date="'2200-06-22'" datepicker-options="{startingDay: 1}" ng-required="true" close-text="Close" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default btn-default-padding" ng-disabled="algorithmApplyerInfo.idType==0" ng-click="openCalendar($event, algorithmApplyerInfo)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-xs-12 form-group form-group-sm" >
+                    <label class="col-xs-4 control-label">车牌号</label>
+                    <div class="col-xs-8" ng-class="{'has-error':algorithmApplyerInfo.plateNoError}">
+                        <input type="text" class="form-control" ng-model="algorithmApplyerInfo.plateNo" placeholder="请填写车牌号" maxlength="20">
+                    </div>
+                </div>
+            </form>
+            <div class="col-xs-6" style="margin-top: -10px;">
+                <div class="col-lg-6" ng-class="{'z-index-img':algorithmApplyerInfo.idFacePicture.indexOf(headInfo.defaultImg)==-1}">
+                    <div class="margin_top img_box_boder Front img_width">
+                        <img class="id_img" ng-src="{{algorithmApplyerInfo.idFacePicture}}" ngf-pattern="'image/*'" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" ngf-select="uploadImage($file, algorithmApplyerInfo, 'face')">
+                        <div class="img_bottom_bar">
+                            <p>证件照身份证号面<i class="iconfont icon-iconfont19" ng-click="removeAlgorithmApplyerInfoImage(algorithmApplyerInfo, 'face')"></i></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6"  ng-class="{'z-index-img':algorithmApplyerInfo.idBackPicture.indexOf(headInfo.defaultImg)==-1}">
+                    <div class=" margin_top img_box_boder Back img_width">
+                        <img class="id_img" ng-src="{{algorithmApplyerInfo.idBackPicture}}" ngf-pattern="'image/*'" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" ngf-select="uploadImage($file, algorithmApplyerInfo, 'back')">
+                        <div class="img_bottom_bar">
+                            <p><span>证件照国徽面</span><i class="iconfont icon-iconfont19"  ng-click="removeAlgorithmApplyerInfoImage(algorithmApplyerInfo, 'back')"></i></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 公民显示内容结束 -->
+    <!--法人显示内容 法人和其他组织一个VIEW，通过控制进行处理相应的字段 法人显示开始-->
+    <div class="row show_cont background_color_d" ng-if="algorithmApplyerInfo.personType==1 || algorithmApplyerInfo.personType==2"  style="overflow-x: hidden;">
+        <div class="row">
+            <form class="col-xs-6 form-horizontal">
+                <!--其它组织 显示类型 保险公司或其它组织-->
+                <div class="col-xs-12 form-group form-group-sm" ng-show="algorithmApplyerInfo.personType == 2">
+                    <label class="col-xs-4 control-label">类型</label>
+                    <div class="col-xs-8">
+                        <div class="row radio col-xs-6" ng-repeat="orgType in orgTypeList">
+                            <label>
+                                <input type="radio" ng-model="algorithmApplyerInfo.orgType" ng-value="orgType.id" >{{orgType.value}}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 form-group form-group-sm">
+                    <label class="col-xs-4 control-label">
+                        <span class="Required">*</span>
+                        <span ng-show="algorithmApplyerInfo.orgType == '2'">组织名称</span>
+                        <span ng-show="algorithmApplyerInfo.orgType != '2'">企业名称</span>
+                    </label>
+                    <div class="col-xs-8" ng-class="{'has-error':algorithmApplyerInfo.companyNameError}">
+                        <input type="text" class="form-control" ng-model="algorithmApplyerInfo.companyName" placeholder="请填写名称"  maxlength="50">
+                    </div>
+                </div>
+                <!--如果申请人为组织 并且为保险公司-->
+                <div ng-show="algorithmApplyerInfo.personType == '2' &&  algorithmApplyerInfo.orgType == '1'">
+                    <!--如果类型为保险公司-->
+                    <div class="col-xs-12 form-group form-group-sm" >
+                        <label class="col-xs-4 control-label">总公司</label>
+                        <div class="col-xs-8" style="position: relative;">
+                            <input type="text" class="form-control" ng-focus="insuranceFocus()" ng-blur="blurInsurance()" ng-model="algorithmApplyerInfo.headCompanyName" placeholder="请填写承保保险公司" readonly maxlength="50">
+                            <ul class="select_border position_ul" ng-show="insuranceShow">
+                                <li ng-repeat="x in insuranceList" id = "x.id" ng-click="selectItems(algorithmApplyerInfo, x)">{{x.text}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 form-group form-group-sm" >
+                        <label class="col-xs-4 control-label">报案号</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control" ng-model="algorithmApplyerInfo.bah" placeholder="请填写报案号"  maxlength="30">
+                        </div>
+                        <div class="col-xs-1"><i class="iconfont icon-sousuo" style="margin-left: -10px; font-size: 20px; color: #3F65D6;" ng-click="queryPeopleInjured(algorithmApplyerInfo)"></i></div>
+                    </div>
+                </div>
+                <!--不为保险公司的显示-->
+                <div ng-show="algorithmApplyerInfo.personType == '1' ||  (algorithmApplyerInfo.personType == '2' &&  algorithmApplyerInfo.orgType == '2')">
+                    <div class="col-xs-12 form-group form-group-sm">
+                        <label class="col-xs-4 control-label"><span class="Required">*</span>代表人类型</label>
+                        <div class="col-xs-8">
+                            <div class="radio col-xs-6" ng-repeat="x in legalTypeArray" style="margin-left: -14px;">
+                                <label>
+                                    <input type="radio" ng-model="algorithmApplyerInfo.representativeType" ng-value="x.id" ng-checked="x.id == algorithmApplyerInfo.representativeType">{{x.value}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 form-group form-group-sm">
+                        <label class="col-xs-4 control-label"><span class="Required">*</span>代表人姓名</label>
+                        <div class="col-xs-8" ng-class="{'has-error':algorithmApplyerInfo.representativeNameError}">
+                            <input type="text" class="form-control" ng-model="algorithmApplyerInfo.representativeName" placeholder="请填写代表人姓名"  maxlength="20">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 form-group form-group-sm">
+                        <label class="col-xs-4 control-label"><span class="Required">*</span>公司职务</label>
+                        <div class="col-xs-8" ng-class="{'has-error':algorithmApplyerInfo.jobError}">
+                            <input type="text" class="form-control" ng-model="algorithmApplyerInfo.job" placeholder="请填写公司职务"  maxlength="10">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 form-group form-group-sm" ng-show="algorithmApplyerInfo.personType == 1">
+                        <label class="col-xs-4 control-label">工商注册号</label>
+                        <div class="col-xs-8">
+                            <input type="text" class="form-control" ng-model="algorithmApplyerInfo.registerCode" placeholder="请填写工商注册号"  maxlength="20">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 form-group form-group-sm" >
+                    <label class="col-xs-4 control-label">车牌号</label>
+                    <div class="col-xs-8" ng-class="{'has-error':algorithmApplyerInfo.plateNoError}">
+                        <input type="text" class="form-control" ng-model="algorithmApplyerInfo.plateNo" placeholder="请填写车牌号" maxlength="20">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

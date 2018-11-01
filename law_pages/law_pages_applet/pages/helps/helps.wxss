@@ -1,0 +1,13 @@
+.list-wp{
+  padding: 0 60rpx;
+}
+.list{
+  position:relative;
+  border-bottom: 1px solid #E1E1E1;
+  padding: 25rpx 0;
+}
+.list .icon{
+  position:absolute;
+  top:15rpx;
+  right:0;
+}

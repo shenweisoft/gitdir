@@ -1,0 +1,154 @@
+<div class="row" style="margin-bottom: 50px;">
+  <div class="bg-default">
+    <div class="row no-margin tit_box" style="margin:0 15px;">
+      <div class="col-xs-12 padding_none">
+        <div class="col-xs-8 padding_none">
+          <div class="col-xs-3 col-lg-2 padding_none">
+            <span class="tit_personal cur-pointer padding_l_r_10" ng-class="{'tit_border':hadEvidenceShow}" ng-click="goHadEvidence()">已有证据</span>
+          </div>
+          <div class="col-xs-3 col-lg-2 padding_none">
+            <span class="tit_personal cur-pointer padding_l_r_10" ng-class="{'tit_border':co.addEvidenceShow}" ng-click="goAddEvidence()">补充证据</span>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <button class="btn btn-brand pull-right margin-top-10" ngf-multiple="true" ngf-pattern="'image/*'" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" ngf-select="addEvidence($files)"  ng-click="checkflash()" ng-show="addEvidenceBtnShow"><i class="iconfont icon-tianjia"></i> 添加证据</button>
+        </div>
+      </div>
+    </div>
+    <!--<hr style="margin:0;">-->
+    <!--已有证据-->
+    <div class="had_evidence" ng-show="hadEvidenceShow">
+      <div class="row no-margin">
+        <div class="col-xs-12">
+          <ul class="list-inline" style="line-height:40px;">
+            <li>分类：</li>
+            <li class="cur-pointer" ng-class="{font_color: collapseVar==x.id}" ng-click="feeTypeClick()">全部</li>
+            <li ng-repeat="x in feeTypeList" class="cur-pointer" ng-class="{font_color: collapseVar==x.id}" ng-click="feeTypeClick(x)">{{x.value}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row no-margin" ng-repeat="evidence in adjust.evidenceArray|filter:filterFeeType" style="border-bottom:1px dashed #dddddd; position: relative;">
+        <div class="evidence_left" style="margin-top: 30px;">
+          <a class="thumbnail margin-bottom-0" style="border: 0px;">
+            <img class="id_img cur-pointer" ng-src="{{imageAddress+evidence.picture}}" ng-click="show_big_img(evidence.picture)">
+          </a>
+        </div>
+        <div class="evidence_right" style="margin-left: 310px;">
+          <h4 style="margin-top: 30px;">申请人（{{evidence.operateName}}）举证：</h4>
+          <div class="row_margin">证据名称：<span>{{evidence.name}}</span></div>
+          <div class="row_margin">举证时间：<span>{{evidence.createDate|date:'yyyy年MM月dd日'}}</span></div>
+          <div class="row_margin">证据描述：<span>{{evidence.description}}</span></div>
+          <div class="row_margin">提交环节：<span ng-repeat="x in evidenceStateList|filter:{id:evidence.operateState}">{{x.value}}</span></div>
+          <div class="row_margin"><span style="float:left;">证据标签：</span>
+            <ul class="evidence_classify" style="float:left;margin-top:-8px;">
+              <li ng-repeat="x in evidence.chooseTagArray">{{x.value}}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--补充证据-->
+    <div ng-show="co.addEvidenceShow && (adjust.evidenceArray|filter:showTempEvidence).length==0" class="empty_evidence_list">
+      <i class="iconfont icon-renzheng"></i>
+      <span>还没有证据，请点击按钮添加证据哦！</span>
+    </div>
+    <br>
+    <div class="add_evidence" ng-show="co.addEvidenceShow">
+      <div class="row no-margin" ng-repeat="evidence in adjust.evidenceArray|filter:showTempEvidence" style="border:1px dashed #dddddd; position: relative;">
+        <progressbar ng-show="evidence.progressPercentage" value="evidence.progressPercentage" type="success" style="width: 236px; position: absolute;top: 3px;left: 39px; height: 3px;" >{{evidence.progressPercentage}}</progressbar>
+        <div class="evidence_left">
+          <div class="evidence_picture icon-duihao_box">
+            <img ng-src="{{imageAddress+evidence.picture}}" ng-click="evidence.selected = !evidence.selected">
+            <div class="evidence_picture_b">
+              <div class="evidence_picture_b_e" name="{{evidence.picture}}" imageAddress="{{imageAddress}}" arr="{{adjust.evidenceArray}}" ng-click="zoomImage(bigPictureUrl+evidence.picture,$event)"><i class="iconfont icon-sousuo"></i>查看</div>
+              <div class="evidence_picture_b_e" ng-click="co.removeEvidence(evidence)"><i class="iconfont icon-iconfont19"></i>删除</div>
+            </div>
+            <i class="iconfont icon-duihao-weixuanzhong" ng-click="evidence.selected = !evidence.selected" style="font-size: 20px;" ng-class="{'icon-duihao-weixuanzhong':!evidence.selected,'icon-tupian-xuanzhong':evidence.selected}"></i>
+          </div>
+        </div>
+        <div class="evidence_right">
+          <br>
+          <form class="form-horizontal" role="form">
+            <div class="row">
+              <div class="col-xs-2 text-right">
+                <label class="control-label">证据名称</label>
+              </div>
+              <div class="col-xs-5">
+                <input class="form-control" ng-model="evidence.name" placeholder="请输入证据名称">
+              </div>
+              <div class="col-xs-5"></div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-xs-2 text-right">
+                <label class="control-label">证据描述</label>
+              </div>
+              <div class="col-xs-10">
+                <textarea class="form-control" ng-model="evidence.description" rows="3"  placeholder="请输入证据描述"></textarea>
+              </div>
+            </div>
+            <div class="row" style="margin-top: 10px;">
+              <div class="col-xs-2 text-right">
+                <label class="control-label">证据分类</label>
+              </div>
+              <div class="col-xs-10">
+                <ul class="evidence_classify">
+                  <span ng-repeat="x in evidence.chooseTagArray">
+                      <li>{{x.value}}<i class="iconfont icon-guanbi" ng-show="evidence.tagClose" ng-click="closeTag(evidence, x.id)"></i></li>
+                  </span>
+                  <li ng-show="evidence.tagClose" class="li_tab cur-pointer" ng-click="evidence.tagClose = !evidence.tagClose">保存标签</li>
+                  <li ng-hide="evidence.tagClose" class="li_tab cur-pointer" ng-click="evidence.tagClose = !evidence.tagClose">编辑标签</li>
+                </ul>
+              </div>
+            </div>
+          </form>
+          <br>
+          <div class="row">
+            <div class="col-xs-2"></div>
+            <div class="col-xs-10" ng-show="evidence.tagClose">
+              <div class="all_classify" ng-repeat="x in feeTypeList" style="font-size: 13px;">
+                <li class="cur-pointer" ng-class="{'slide-active2':evidence.classify.indexOf(x.id) !=-1}" ng-click="addTag(evidence, x.id)">{{x.value}}</li><li>|</li>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+    </div>
+  </div>
+  <!-- 放大图片 -->
+  <div class="img_mask" ng-show="show"></div>
+  <div class="bigPicture" ng-show="show">
+    <i class="iconfont icon-x" ng-click="hide()"></i>
+    <div><img style="width: 100%;" ng-src="{{bigPicture}}"/></div>
+  </div>
+</div>
+
+<!--遮罩层-上传证据期间-->
+<div ng-show="fileUploading" class="file-upload-masker"></div>
+
+</div>
+<!-- 放大图片 -->
+<div id="big_img_box">
+  <div class="big_img_box_bj"></div>
+  <div class="big_img_box_img_box">
+    <div id="big_img_box_img_f" style="position: absolute;">
+      <div id="big_img_box_img_bar" style="width: 100%; height: 100%;" title="可以拖拽移动"></div>
+      <img id="big_img_box_img" src="imgSrc">
+    </div>
+    <div class="big_img_box_bottom">
+      <div class="big_img_box_bottom_bg"></div>
+      <i class="iconfont icon-qiepian30" onclick="rotateImg();"></i>
+      <i class="iconfont icon-iconfontfangda" onclick="enlargeimg();"></i>
+      <i class="iconfont icon-iconfontsuoxiao" onclick="narrowimg();"></i>
+    </div>
+    <i class="iconfont icon--tingqiantiaojieduihao-Xhao" onclick="hideImg();"></i>
+    <i class="iconfont icon-zuoyoujiantou-copy-copy-copy" onclick="leftImg();"></i>
+	<i class="iconfont icon-zuoyoujiantou-copy-copy" onclick="rightImg();"></i>
+  </div> 
+</div>
+<script type="text/javascript">
+    var oBox = document.getElementById("big_img_box_img_f");
+    var oBar = document.getElementById("big_img_box_img_bar");
+    startDrag(oBar, oBox);
+</script>

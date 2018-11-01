@@ -1,0 +1,33 @@
+<view class='wp'>
+  <view class='body'>
+    <view class='no-data-txt' wx:if='{{newUserList.length == 0 || !isCheckedAll}}'>
+      暂无可操作人员
+    </view>
+    <view>
+      <checkbox-group bindchange='handleChecked' data-index='{{index}}'>
+        <view class='list' wx:for='{{newUserList}}' wx:if='{{newUserList.length > 0 && !item.isChecked}}'>
+          <checkbox class='checkbox' value='{{index}}'></checkbox>
+          <!-- 被申请人 -->
+          <image class='group_box_l' wx:if="{{item.userType == '被申请人'}}" src='../../../images/index_header_bsqr.png'></image>
+          <!-- 法官 -->
+          <image class='group_box_l' wx:if="{{item.userType == '法官'}}" src='../../../images/index_header_fg.png'></image>
+          <!-- 申请人 -->
+          <image class='group_box_l' wx:if="{{item.userType == '申请人'}}" src='../../../images/index_header_sqr.png'></image>
+          <!-- 调解员 -->
+          <image class='group_box_l' wx:if="{{item.userType == '调解员'}}" src='../../../images/index_header_tjy.png'></image>
+          <view class='group_box_text max_len'>{{item.userType}}：{{item.text? item.text : item.name}}</view>
+          <view class='clear'></view>
+        </view>
+      </checkbox-group>
+    </view>
+  </view>
+  
+  <view class='btn-wp'>
+    <view class='btn' bindtap='cancel' style='background-color:#6CBDEA'>取消</view>
+    <view class='btn' bindtap='affirm' style='background-color:#0E9DEC'>确定</view>
+    <view class='clear'></view>
+  </view>
+</view>
+<loading hidden="{{hidden}}">
+  加载中...
+</loading>

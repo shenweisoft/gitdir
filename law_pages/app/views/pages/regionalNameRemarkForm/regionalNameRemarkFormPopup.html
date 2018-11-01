@@ -1,0 +1,220 @@
+        <div class="modal-header" ng-if="addFlag==true">
+            备注维护
+            <i class="iconfont pull-right icon-guanbi close"   ng-click="cancel()"></i>
+        </div>
+        <div class="modal-header" ng-if="addFlag==false">
+            修改
+            <i class="iconfont pull-right icon-guanbi close"   ng-click="cancel()"></i>
+        </div>
+        <table class=" modal-body height_box_d" >
+            <div class="form_box" style="height: 470px;"> 
+                 <form class="form-horizontal ng-pristine ng-valid">
+                    <div class="scroll-form-box">
+                        <div class="form-group margin_top_popup row">
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i> 起始时间</label>
+                            <div class="col-xs-4" ng-class="{'has-error':startDateErrorMessage}">
+                                <p class="input-group">
+                                <input  type="text" class="form-control input-sm ng-pristine ng-valid" placeholder="请选择起始时间" datepicker-popup="yyyy-MM-dd" show-button-bar="false" ng-readonly="true" ng-model="regionalNameRemarkObj.startDate"  is-open="regionalNameRemarkObj.calendarIsOpenStartDate" max-date="minDate" max-date="'2200-06-22'" datepicker-options="{startingDay: 1}" close-text="Close" />
+                                <span class="input-group-btn">
+                                 <button  type="button" class="btn btn-default btn-default-padding" ng-click="openStartDate($event, regionalNameRemarkObj)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                 </span>
+                                </p>
+                                <div class="error-message ng-binding" ng-bind="startDateErrorMessage"></div>
+                            </div>
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i> 终止时间</label>
+                            <div class="col-xs-4" ng-class="{'has-error':endDateErrorMessage}">
+                            <p class="input-group">
+                                <input  type="text" class="form-control input-sm ng-pristine ng-valid" placeholder="请选择终止时间" datepicker-popup="yyyy-MM-dd" show-button-bar="false" ng-readonly="true" ng-model="regionalNameRemarkObj.endDate"  is-open="regionalNameRemarkObj.calendarIsOpenEndDate" max-date="minDate" max-date="'2200-06-22'" datepicker-options="{startingDay: 1}" close-text="Close" />
+                                <span class="input-group-btn">
+                                 <button  type="button" class="btn btn-default btn-default-padding" ng-click="openEndDate($event, regionalNameRemarkObj)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                 </span>
+                            </p>
+                             <div class="error-message ng-binding" ng-bind="endDateErrorMessage"></div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i> 区域名称</label>
+                            <div class="col-xs-4" ng-class="{'has-error':nameErrorMessage}">
+                                <input name="regionName"  ng-model="regionalNameRemarkObj.regionName" type="text" class="form-control input-sm ng-pristine ng-valid"  ng-keydown="regionNameListShow(regionalNameRemarkObj)" placeholder="请输入区域名称">
+                                <ul class="regionName" ng-show="regionFlag" >
+                                    <li ng-repeat="x in AdminRegionList"  ng-click="selectRegionName(x)"  >{{x.regionFullName}}</li>
+                                </ul>
+                                <div class="error-message ng-binding" ng-bind="nameErrorMessage"></div>
+                            </div>
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i>  医疗费备注</label>
+                            <div class="col-xs-4">
+                                <input name="medicalFee" ng-model="regionalNameRemarkObj.medicalFee"  type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i>  后续治疗费备注</label>
+                            <div class="col-xs-4">
+                                <input name="followUpFee" ng-model="regionalNameRemarkObj.followUpFee"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i> 住院伙食补助费备注</label>
+                            <div class="col-xs-4">
+                                <input name="foodSubsidy" ng-model="regionalNameRemarkObj.foodSubsidy"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i>  营养费备注</label>
+                            <div class="col-xs-4">
+                                <input name="nutritionFee" ng-model="regionalNameRemarkObj.nutritionFee" type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i>  误工费备注</label>
+                            <div class="col-xs-4">
+                                <input name="lossOfWorking" ng-model="regionalNameRemarkObj.lossOfWorking"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i>  护理费备注</label>
+                            <div class="col-xs-4">
+                                <input name="nursingFee" ng-model="regionalNameRemarkObj.nursingFee"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i> 残疾赔偿金备注</label>
+                            <div class="col-xs-4">
+                                <input name="disabilityFee" ng-model="regionalNameRemarkObj.disabilityFee"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i>  残疾辅助器具费备注</label>
+                            <div class="col-xs-4">
+                                <input name="disabilityAids" ng-model="regionalNameRemarkObj.disabilityAids"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i>  被抚养人生活费备注</label>
+                            <div class="col-xs-4">
+                                <input name="dependentsFee" ng-model="regionalNameRemarkObj.dependentsFee"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i>  精神损害抚慰金备注</label>
+                            <div class="col-xs-4">
+                                <input name="mentalDamage" ng-model="regionalNameRemarkObj.mentalDamage"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i> 死亡赔偿金备注</label>
+                            <div class="col-xs-4">
+                                <input name="deathFee" ng-model="regionalNameRemarkObj.deathFee"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i> 丧葬费备注</label>
+                            <div class="col-xs-4">
+                                <input name="funeralExpenses" ng-model="regionalNameRemarkObj.funeralExpenses"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i> 处理事故人员误工费备注</label>
+                            <div class="col-xs-4">
+                                <input name="accidentPersonnel" ng-model="regionalNameRemarkObj.accidentPersonnel"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i> 交通费备注</label>
+                            <div class="col-xs-4">
+                                <input name="trafficExpense" ng-model="regionalNameRemarkObj.trafficExpense"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i> 住宿费备注</label>
+                            <div class="col-xs-4">
+                                <input name="hotelExpense" ng-model="regionalNameRemarkObj.hotelExpense"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i>  财产损失备注</label>
+                            <div class="col-xs-4">
+                                <input name="propertyLoss" ng-model="regionalNameRemarkObj.propertyLoss"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i> 车辆损失备注</label>
+                            <div class="col-xs-4">
+                                <input name="vehicleLoss" ng-model="regionalNameRemarkObj.vehicleLoss"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+
+                        </div>
+
+
+
+
+                        <div class="form-group row">
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i>  拖车费备注</label>
+                            <div class="col-xs-4">
+                                <input name="trailerFee" ng-model="regionalNameRemarkObj.trailerFee"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i> 施救费备注</label>
+                            <div class="col-xs-4">
+                                <input name="rescueFee" ng-model="regionalNameRemarkObj.rescueFee"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+
+                        </div>
+
+
+
+
+                        <div class="form-group row">
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i> 停车费备注</label>
+                            <div class="col-xs-4">
+                                <input name="parkingRate" ng-model="regionalNameRemarkObj.parkingRate"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i>  鉴定费备注</label>
+                            <div class="col-xs-4">
+                                <input name="appraisalFee" ng-model="regionalNameRemarkObj.appraisalFee"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label class="col-xs-2 text_align_r"><i class="Required">*</i> 其它费用备注</label>
+                            <div class="col-xs-4">
+                                <input name="otherExpenses" ng-model="regionalNameRemarkObj.otherExpenses"   type="text" class="form-control input-sm ng-pristine ng-valid"  placeholder="请输入">
+                            </div>
+
+                        </div>
+                        
+                    </div>
+
+                </form>
+            </div>
+        </table>
+        <div class="modal-footer">
+             <div class="form-group">
+                <div class="col-xs-offset-5 col-xs-1">
+                    <button type="submit" class="btn btn-default " ng-click="cancel()">取消</button>
+                </div>
+                <div class=" col-xs-1">
+                    <button type="submit" class="btn btn-brand bg-brand-color" ng-click="save()" >保存</button>
+                </div>
+                
+            </div>
+        </div>

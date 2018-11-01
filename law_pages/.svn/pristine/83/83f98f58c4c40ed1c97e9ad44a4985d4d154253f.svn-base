@@ -1,0 +1,95 @@
+<div class="statisticsBg"></div>
+<div class="col-xs-12 functionStatistics_t padding5 " style="background: #fff;">
+	<div class="col-xs-12 col-sm-12 padding5">
+		<!-- <div class="ml10"><i class="iconfont icon-shijian" style="color: #3490fd;"></i> 日期</div> -->
+		<div class="col-xs-12" style="margin-top: 10px;">
+			<div class="col-xs-5 padding0">
+				<p class="input-group">
+				  <input type="text" class="form-control" placeholder="起始时间" datepicker-popup="" ng-model="startDate" is-open="startDateOpen" datepicker-options="" date-disabled="" ng-required="" close-text="" ng-blur="getAnalysisVisitPage()" />
+				  <span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="openDate($event, 1)"><i class="glyphicon glyphicon-calendar"></i></button>
+				  </span>
+				</p>
+			</div>
+			<div class="col-xs-2 input_text_c" style="text-align: center;">到</div>
+			<div class="col-xs-5 padding0">
+				<p class="input-group">
+				  <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="endDate" is-open="endDateOpen"  datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-blur="getAnalysisVisitPage()"/>
+				  <span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="openDate($event, 2)"><i class="glyphicon glyphicon-calendar"></i></button>
+				  </span>
+				</p>
+			</div>
+		</div>
+		<div class="col-xs-12 text-center" style="padding-bottom: 15px;padding-top: 10px;">
+			<button type="button" style="margin:0 auto; width: 100px;" class="btn btn-success">查询</button>
+		</div>
+	</div>
+</div>
+
+<div class="col-xs-12 padding5">
+	<div class="col-xs-12 col-md-6 col-lg-6 ec_padding">
+		<div class="f_statistics_e">
+			<div class="col-xs-12 padding0">
+				<div class="col-xs-4 padding1">
+					<div class="col-xs-12 e_bg">
+						<div class="statistics_num green">{{totalNum}}</div>
+						<div class="statistics_text">总访问次数（ 次 ）</div>
+					</div>
+				</div>
+				<div class="col-xs-4 padding1">
+					<div class="col-xs-12 e_bg">
+						<div class="statistics_num red">{{totalUser}}</div>
+						<div class="statistics_text">总访问人数（ 人 ）</div>
+				    </div>
+				</div>
+				<div class="col-xs-4 padding1">
+					<div class="col-xs-12 e_bg">
+						<div class="statistics_num blue">{{stayTime}}</div>
+						<div class="statistics_text">次均时长（ s ）</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>	
+			<div class="col-xs-12">
+				<table class="col-xs-12 statis_table">
+					<tr>
+						<th class="tr_td">模板</th>
+						<th class="tr_td">访问次数</th>
+						<th class="tr_td">访问人数</th>
+						<th class="tr_td">次均时长</th>
+					</tr>
+					<tr ng-repeat="x in pageVisitArray">
+						<td>{{x.pagePath}}</td>
+						<td>{{x.pageVisitPv}}</td>
+						<td>{{x.pageVisitUv}}</td>
+						<td>{{x.pageStaytimePv}}s</td>
+					</tr>
+				</table>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-md-6 col-lg-6 ec_padding">
+		<div class="f_statistics_e">
+			<div class="f_statistics_e_t" ><p class="f_statistics_e_t_l">各模块访问次数及占比</p><p class="f_statistics_e_t_r">总访问次数：<span>{{totalNum}}次</span></p></div>
+			<div id="numberOfVisits"></div>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-md-6 col-lg-6 ec_padding">
+		<div class="f_statistics_e">
+			<div class="f_statistics_e_t" ><p class="f_statistics_e_t_l">各模块访问人数及占比</p><p class="f_statistics_e_t_r">总访问人数：<span style="color: #ff7573;">{{totalUser}}人</span></p></div>
+			<div id="numberOfPeople"></div>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-md-6 col-lg-6 ec_padding">
+		<div class="f_statistics_e">
+			<div class="f_statistics_e_t" ><p class="f_statistics_e_t_l">各模块次均时长</p><p class="f_statistics_e_t_r">平均停留时长：<span style="color: #ff7573;">{{stayTime}}s</span></p></div>
+			<div id="numberOfTime"></div>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>

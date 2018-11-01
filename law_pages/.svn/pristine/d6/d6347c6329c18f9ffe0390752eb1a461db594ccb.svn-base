@@ -1,0 +1,6 @@
+<!--头部详细字段-->
+<div class="row case-details-head bg-default font-size13" >
+    <div head-detail></div>
+</div>
+<!--详情-->
+<div track-detail></div>

@@ -1,0 +1,58 @@
+<div class="role_management_d relative_top">
+    <div class="row bg-default">
+        <div class="col-xs-12 role_management_right_d">
+            <div class="role_management_right_t_d">
+                <div class="col-xs-7 role_management_right_t_l_d no-padding">伤残等级表</div>
+                <div class="col-lg-4 col-xs-4 line-height40 margin-top-6">
+                    <div class="search_box">
+                        <input type="text" class="input-xs search_input" ng-model="harmGradeObj.searchText" placeholder="伤残等级">
+                        <i class="iconfont icon-sousuo input-search-img"></i>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-xs-1 line-height40 no-padding margin-top-6">
+                    <button type="button" class="btn btn-brand mar-v-3" ng-click="handleSearchBtn()">搜索</button>
+                </div>
+                <div class="role_management_right_t_r_d" ng-click="handleModalShow()"><i class="iconfont icon-tianjia"></i>  新增</div>
+            </div>
+            <div class="clear"></div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" style="text-align: center;">
+                        <thead>
+                            <tr>
+                                <th width="50" style="text-align: center;">序号</th>
+                                <th width="16%" style="text-align: center;">所属分类名称</th>
+                                <th width="8%" style="text-align: center;">等级名称</th>
+                                <!--<th width="12%" style="text-align: center;">等级代码</th>
+                                <th width="12%" style="text-align: center;">等级值</th>-->
+                                <!--<th width="8%" style="text-align: center;">排序字段</th>-->
+                                <th width="8%" style="text-align: center;">赔偿指数</th>
+                                <th width="10%" style="text-align: center;">伤残代码</th>
+                                <th width="35%" style="text-align: center;">伤残特征描述</th>
+                                <th width="10%" style="text-align: center;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in harmGradeObj.dataList">
+                                <td>{{$index+1}}</td>
+                                <td>{{data.categoryName}}</td>
+                                <td>{{data.gradeName}}</td>
+                                <!--<td>{{data.gradeOrder}}</td>-->
+                                <td>{{data.compensationIndex}}</td>
+                                <td>{{data.disabilityCode}}</td>
+                                <td>{{data.disabilityDescr}}</td>
+                                <td class="action_bar">
+                                    <i class="iconfont icon-bianji" ng-click="handleModalShow(data)"></i>
+                                    <i class="iconfont icon-iconfont19" ng-click="handleDelete(data)"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center"  ng-if="pageData.showList.length != 0 ">
+                        <pagination previous-text="<" next-text=">" first-text="<<" last-text=">>" items-per-page="pageObj.itemNum" class="pagination-custom" total-items="pageObj.totalPage" ng-model="pageObj.pageNo" ng-change="pageChanged()" max-size="7" boundary-links="true" rotate="false"></pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

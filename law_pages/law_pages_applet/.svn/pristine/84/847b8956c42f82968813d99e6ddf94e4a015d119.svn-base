@@ -1,0 +1,54 @@
+.wp{
+  background:#ebf3f6;
+  height: 100%;
+}
+.body{
+  background-color: #fff;
+  padding: 0 20rpx;
+  height: 100%;
+}
+.list{
+  border-bottom: 1rpx solid #DCDCDC;
+}
+.checkbox{
+  float: left;
+  margin-top:30rpx;
+}
+.group_box_l{
+  width: 80rpx;
+  height: 80rpx;
+  float: left;
+  margin: 20rpx;
+}
+.group_box_text{
+  float: left;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 15px;
+  margin-top: 20rpx;
+  width: 500rpx;
+}
+.max_len{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wp .no-data-txt{
+  font-size:35rpx;
+  padding:35rpx;
+}
+.wp .btn-wp{
+  background-color:#fff;
+  margin-top:15rpx;
+  padding:0 20rpx;
+  position:absolute;
+  bottom:10rpx;
+  border-top:5px solid #ebf3f6;
+}
+.wp .btn{
+  float:left;
+  color:#fff;
+  padding:20rpx 133rpx;
+  font-size:35rpx;
+  margin:15rpx 10rpx;
+}

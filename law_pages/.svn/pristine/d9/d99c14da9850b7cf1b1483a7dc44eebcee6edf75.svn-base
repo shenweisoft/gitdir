@@ -1,0 +1,13 @@
+angular.module('sbAdminApp').controller('AIOCourtSetp4Ctrl', function (PoliceConfig,PoliceService,AdminConstant,$location,$scope, $stateParams, $state, $http, $log, AlgorithmConfig, AlgorithmService, DictionaryConfig, toaster, $filter,IdentityService) {
+    //下一步
+    $scope.nextStep = function () {
+        console.log($scope.lawCase, "!!!!!!!!!");
+        $scope.calculateTotalLoss()
+        $state.go("home_page.prejudge_new.AIOCourtSetp5")
+    }
+    $scope.step.stepId = 4; 
+    //上一步
+	$scope.preveStep = function () {
+		$state.go("home_page.prejudge_new.AIOCourtSetp3")
+	}
+});

@@ -1,0 +1,15 @@
+
+angular.module('sbAdminApp').directive('leftStepLeft', ['$location', function() {
+  return {
+    templateUrl: 'views/pages/AIOCourt/AIOCourtSetpLeft.html',
+    restrict: 'EA',
+    replace: true,
+    scope: {},
+    controller: function($scope, LoginService, DictionaryConfig, $log,$stateParams) {
+      console.log(123);
+      
+    }
+  }
+
+
+}])

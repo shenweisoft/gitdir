@@ -1,0 +1,35 @@
+.detailOfTheArticle_bt_icon{
+  width: 50rpx;
+  height: 50rpx;
+  position: relative;
+  top: 12rpx;
+  margin-right: 10rpx;
+}
+.detailOfTheArticle_bt{
+  margin-left: 45rpx;
+  margin-right: 45rpx;
+  margin-top: 25rpx;
+  line-height: 50rpx;
+  font-size: 16px;
+}
+.detailOfTheArticle_time{
+  margin-left: 45rpx;
+  margin-right: 45rpx;
+  color: #999999;
+  text-indent: 52rpx;
+  font-size: 15px;
+}
+.bottom_solid{
+  margin-left: 45rpx;
+  margin-right: 45rpx;
+  border-bottom: 1rpx solid #dddddd;
+  margin-top: 15rpx;
+  margin-bottom: 15rpx;
+}
+.detailOfTheArticle .text{
+  margin-left: 45rpx;
+  margin-right: 45rpx;
+  line-height: 58rpx;
+  color:#333333;
+  font-size: 15px;
+}

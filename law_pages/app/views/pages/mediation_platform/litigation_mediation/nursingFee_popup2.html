@@ -1,0 +1,74 @@
+<div class="modal-header">
+  <i class="iconfont icon-guanbi close" ng-click="cancel()"></i>
+  <h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+</div>
+<div class="modal-body">
+  <form role="form" class="form-horizontal" >
+    <div class="row nursingFeeList_e"  ng-repeat="nursingFee in nursingFeeList" >
+      <div class="col-xs-2  margin-top-8 text_align_r">是否有固定收入：</div>
+      <div class="col-xs-2" style="height: 34px;">
+        <label class="radio-inline ng-scope ng-binding col-xs-5">
+          <input type="radio" ng-model="nursingFee.isIncome" class="ng-pristine ng-valid" value="1" ng-checked="nursingFee.isIncome == 1" ng-change="changeIsIncome(nursingFee)">是
+        </label>
+        <label class="radio-inline ng-scope ng-binding col-xs-5">
+          <input type="radio" ng-model="nursingFee.isIncome" class="ng-pristine ng-valid" value="2" ng-checked="nursingFee.isIncome == 2" ng-change="changeIsIncome(nursingFee)">否
+        </label>
+      </div>
+      <div class="col-xs-4" ng-show="nursingFee.isIncome == 1">
+        <div class="col-xs-5 margin-top-8 text_align_r">证明类型：</div>
+        <div class="col-xs-7">
+          <select class="form-control ng-pristine ng-valid" ng-model="nursingFee.proofType" ng-options="x.id as x.value for x in proofTypeList" ng-change="showFlag(nursingFee)"></select>
+        </div>
+      </div>
+      <div class="col-xs-4" ng-show="nursingFee.proofType == 1 && nursingFee.isIncome == 1">
+        <div class="col-xs-4 margin-top-8 text_align_r">行业：</div>
+        <div class="col-xs-8">
+          <select class="form-control ng-pristine ng-valid" ng-model="nursingFee.industry" ng-options="x.dictCode as x.dictName for x in industryList" ng-change="changeIndustry(nursingFee)"></select>
+        </div>
+      </div>
+      <div class="col-xs-12"></div>
+      <i class="iconfont iconfont_title icon-tishi  brand-color cur-pointer"  popover="{{nursingFee.warningText}}"  ng-show="nursingFee.standardMoney"></i>
+      <div class="col-xs-8 margin-top-8" ng-class="{'bg-danger':nursingFee.isClaimWarningFlag}">
+        <div class="col-xs-1 no-padding" > </div>
+        <div class="col-xs-2 no-padding">
+          <input type="text"  class="form-control paddingLr ng-pristine ng-valid"  placeholder="元/天" ng-model="nursingFee.perMoney" ng-change="calculateNursingFee(nursingFee,true)" float-only>
+        </div>
+        <div class="col-xs-1 no-padding line-height2 text-center text-center">×</div>
+        <div class="col-xs-2 no-padding">
+          <input type="text" class="form-control paddingLr ng-pristine ng-valid"  placeholder="天" ng-model="nursingFee.day" ng-change="calculateNursingFee(nursingFee,true)" int-only>
+        </div>
+        <span ng-show="fee.id== '09' || fee.id== '80' ">
+          <div class="col-xs-1 no-padding line-height2 text-center text-center" >×</div>
+          <div class="col-xs-2 no-padding" style="position: relative;">
+            <input type="text" class="form-control paddingLr ng-pristine ng-valid" placeholder="" ng-model="nursingFee.person" ng-change="calculateNursingFee(nursingFee,true)" int-only><span style="position: absolute; top: 8px; right: 8px;">人</span>
+          </div>
+        </span>
+        <div class="col-xs-1 no-padding line-height2 text-center text-center">=</div>
+        <div class="col-xs-2 no-padding">
+          <input type="text" class="form-control paddingLr ng-pristine ng-valid"  placeholder="元" float-only="" ng-model="nursingFee.sumMoney" ng-change="calculateNursingFee(nursingFee,false)" float-only>
+        </div>
+      </div>
+      <div  ng-show="fee.id== '09' || fee.id== '80'" class="col-xs-4 margin-top-20" style="line-height: 30px; text-align: center; text-decoration:underline; cursor: pointer; color: #0000cc;" >
+        <span ng-click="delNursingFee(nursingFee)">
+          <span ng-show="fee.id== '09'">删除护理人费用计算</span>
+          <span ng-show="fee.id== '80'">删除</span>
+        </span>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer" style="border:0px;">
+  <div class="row">
+    <div class="col-xs-3"></div>
+    <div class="col-xs-6 btn_center">
+      <button ng-show="fee.id== '09' || fee.id== '80'" type="button" class="btn btn-brand" data-dismiss="modal">
+        <span ng-click="addNursingFee()">
+          <span ng-show="fee.id== '09'">添加护理人费用计算</span>
+          <span ng-show="fee.id== '80'">添加人员</span>
+        </span>
+      </button>
+      <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">保存并关闭</button>
+    </div>
+    <div class="col-xs-3"></div>
+  </div>
+</div>

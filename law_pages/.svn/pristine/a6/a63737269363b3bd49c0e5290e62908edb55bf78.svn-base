@@ -1,0 +1,70 @@
+<div class="modal-header">
+    {{harmGradeObj.modalTitle}}
+    <i class="iconfont pull-right icon-guanbi close" ng-click="cancel()"></i>
+</div>
+<div class="modal-body">
+    <div class="form_box">
+        <form class="form-horizontal" >
+
+            <div class="form-group margin_top_popup">
+                <label  class="col-xs-offset-1 col-xs-2"> 所属分类编码</label>
+                <div class="col-xs-6">
+                    <select name="category_code" ng-model="harmGradeFormObj.categoryCode" ng-disabled="myModalData.isLock" class="form-control input-sm" placeholder="请选择所属分类编码">
+                        <option value="">请选择</option>
+                        <option ng-repeat="data in myModalData.toModalData.category" ng-selected="data.categoryName == harmGradeFormObj.categoryName" value="{{data.categoryCode}}">{{data.categoryName}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label  class="col-xs-offset-1 col-xs-2"> 等级名称</label>
+                <div class="col-xs-6" >
+                    <select name="grade_name" ng-model="harmGradeFormObj.gradeCode" ng-change="chooseGrade()" ng-disabled="myModalData.isLock" class="form-control input-sm" placeholder="请选择等级名称">
+                        <option value="">请选择</option>
+                        <option ng-repeat="data in HARMGRADE" ng-selected="data.code == harmGradeFormObj.gradeCode" value="{{data.code}}">{{data.name}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label  class="col-xs-offset-1 col-xs-2"> 赔偿指数</label>
+                <div class="col-xs-6" >
+                    <input name="compensation_index" type="text" ng-readonly="true" class="form-control input-sm" ng-model="harmGradeFormObj.compensationIndex" placeholder="赔偿指数">
+                </div>
+                <div class="col-xs-3 format-text">选择等级名称，自动显示赔偿指数</div>
+            </div>
+
+            <div class="form-group">
+                <label  class="col-xs-offset-1 col-xs-2"> 划分依据</label>
+                <div class="col-xs-6">
+                    <textarea class="form-control ng-pristine ng-valid" ng-readonly="myModalData.isLock" style="resize: none;" ng-model="harmGradeFormObj.divisionBasis" rows="5" placeholder="请输入划分依据"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label  class="col-xs-offset-1 col-xs-2"> 伤残代码</label>
+                <div class="col-xs-6">
+                    <input name="disability_code" type="text" class="form-control input-sm" ng-model="harmGradeFormObj.disabilityCode" placeholder="请输入伤残代码">
+                </div>
+                <div class="col-xs-2 format-text">格式：8.8.8.8.8</div>
+            </div>
+
+            <div class="form-group">
+                <label  class="col-xs-offset-1 col-xs-2"> 伤残特征描述</label>
+                <div class="col-xs-6">
+                    <textarea class="form-control ng-pristine ng-valid" style="resize: none;" rows="5" ng-model="harmGradeFormObj.disabilityDescr" placeholder="请输入伤残特征描述"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="form-group">
+        <div class="col-xs-offset-4 col-xs-1">
+            <button type="submit" class="btn btn-default " ng-click="cancel()">取消</button>
+        </div>
+        <div class=" col-xs-1">
+            <button type="submit" class="btn btn-brand bg-brand-color" ng-click="save()" >保存</button>
+        </div>
+    </div>
+</div>

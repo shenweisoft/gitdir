@@ -1,0 +1,363 @@
+<div class="left_top">
+    <div class="btn_style2" ng-click="nextStep()">下一步</div>
+    <div class="btn_style1" ng-click="preveStep()">上一步</div>
+    <div class="btn_style1">关闭</div>
+</div>
+
+
+<div class="AIOSetp_bt">
+    <div class="AIOSetp_bt_l"></div>医疗相关费用
+</div>
+<!-- 医疗相关费用 -->
+<div class="AIOlist">
+
+    <div class="AIOSetp2_cont1 AIOSetp_cont">
+        <div class="AIOSetp3_cont1_bt">医疗相关费用</div>
+        <div class="row" style="margin-top: 20px;" ng-repeat="fee in feeArray">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">{{fee.value}}</span>
+                </label>
+                <div class="col-xs-7 selected_relative" ng-if="fee.template == '1'|| fee.template == '0'">
+                    <input type="number" class="form-control ng-pristine ng-valid height" id="name"  ng-model="fee.applyAmount" placeholder="请输入">
+                    <div class="right_unit">元</div>
+                </div>
+                <div class="col-xs-7 selected_relative" ng-if="fee.template == '2'">
+                    <p class="AIOText">{{fee.applyAmount != 'NaN'?fee.applyAmount:'0'}}
+                        <span>{{fee.applyPerUnit}}元/天 X {{fee.applyUnit}}天</span>
+                    </p>
+                </div>
+                <div class="col-xs-7 selected_relative" ng-if="fee.template == '3'">
+                    <p class="AIOText">{{fee.applyAmount}}
+                        <span>{{fee.applyPerUnit}}元/月 X {{fee.applyUnit}}月</span>
+                    </p>
+                </div>
+                <div class="col-xs-7 selected_relative" ng-if="fee.template == '4'">
+                    <p class="AIOText">{{fee.applyAmount || '0'}}
+                        <span>{{fee.applyPerUnit}}元/年 X {{fee.applyUnit}}年</span>
+                    </p>
+                </div>
+                <div class="col-xs-7 selected_relative" ng-if="fee.template == '5'">
+                    <p class="AIOText">{{fee.applyAmount || '0'}}
+                        <span> {{fee.applyPerUnit}}元/年 X {{fee.applyUnit}}年 X {{lawCase.compensateRate}}% </span>
+                    </p>
+                </div>
+                <div class="col-xs-7 selected_relative" ng-if="fee.template == '6'">
+                    <p class="AIOText">{{fee.applyAmount || '0'}}
+                        <span>{{fee.applyPerUnit}}元/级 x 10 X {{lawCase.compensateRate}}%</span>
+                    </p>
+                </div>
+                <div class="col-xs-1">
+                    <iconfont class="iconfont icon--bangzhuqipao"></iconfont>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm"></div>
+        </div>
+    </div>
+
+</div>
+<!-- 误工费 -->
+<div class="AIOlist">
+    <div class="AIOSetp2_cont1 AIOSetp_cont">
+        <div class="AIOSetp3_cont1_bt">误工费</div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">是否有固定收入</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <div class="switchButton" ng-click="selectBxShow(fee)">
+                        <img ng-show="selectShow" src="views/images/open_new.png" class="">
+                        <img ng-hide="selectShow" src="views/images/close_new.png" class="ng-hide">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">证明类型</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height">
+                        <option value="0" selected="selected"></option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">误工费</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <input type="text" class="form-control ng-pristine ng-valid height" id="name" placeholder="请输入">
+                    <div class="right_unit">元</div>
+                </div>
+                <div class="col-xs-1"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">行业类型</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height">
+                        <option value="0" selected="selected"></option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding"></span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <p class="AIOText">
+                        <span>30元/天 x 20天</span>
+                    </p>
+                </div>
+                <div class="col-xs-1"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- 住院护理费 -->
+<div class="AIOlist">
+    <div class="AIOSetp2_cont1 AIOSetp_cont">
+        <div class="AIOSetp3_cont1_bt">住院护理费</div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">是否有固定收入</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <div class="switchButton" ng-click="selectBxShow(fee)">
+                        <img ng-show="selectShow" src="views/images/open_new.png" class="">
+                        <img ng-hide="selectShow" src="views/images/close_new.png" class="ng-hide">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">证明类型</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height">
+                        <option value="0" selected="selected"></option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">护理人数</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <input type="text" class="form-control ng-pristine ng-valid height" id="name" placeholder="请输入">
+                    <div class="right_unit">元/天</div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">住院护理费</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <p class="AIOText">600元
+                        <span>(20天 x 30元/天)</span>
+                    </p>
+                </div>
+                <div class="col-xs-1">
+                    <iconfont class="iconfont icon--bangzhuqipao"></iconfont>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- 出院护理费 -->
+<div class="AIOlist">
+    <div class="AIOSetp2_cont1 AIOSetp_cont">
+        <div class="AIOSetp3_cont1_bt">出院护理费</div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">是否有固定收入</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <div class="switchButton" ng-click="selectBxShow(fee)">
+                        <img ng-show="selectShow" src="views/images/open_new.png" class="">
+                        <img ng-hide="selectShow" src="views/images/close_new.png" class="ng-hide">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">护理类型</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height">
+                        <option value="0" selected="selected"></option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">工资收入</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height">
+                        <option value="0" selected="selected"></option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">医嘱护理天数</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <input type="text" class="form-control ng-pristine ng-valid height" id="name" placeholder="请输入">
+                    <div class="right_unit">天</div>
+                </div>
+                <div class="col-xs-1"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">护理人数</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <input type="text" class="form-control ng-pristine ng-valid height" id="name" placeholder="请输入">
+                    <div class="right_unit">元/天</div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">出院护理费</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <p class="AIOText">600元
+                        <span>(20天 x 30元/天)</span>
+                    </p>
+                </div>
+                <div class="col-xs-1">
+                    <iconfont class="iconfont icon--bangzhuqipao"></iconfont>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- 被扶养人生活费 -->
+<div class="AIOlist" style="margin-top: 15px;">
+    <div class="AIOlist_hj">
+        <div class="AIOlist_hj_l">被扶养人生活费</div>
+        <div class="AIOlist_hj_r">合计：
+            <span>10000</span>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="AIOSetp2_cont1 AIOSetp_cont">
+        <div class="AIOSetp3_cont1_bt">被扶养人生活费</div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">出生日期</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <p class="input-group height">
+                        <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" show-button-bar="false" ng-model="applicant.birthDay"
+                            ng-readonly="true" is-open="opened" max-date="minDate" max-date="'2200-06-22'" datepicker-options="{startingDay: 1}"
+                            ng-required="true" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default btn-default-padding" ng-click="open($event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">抚养年限</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <input type="text" class="form-control ng-pristine ng-valid height" id="name" placeholder="请输入">
+                    <div class="right_unit">年</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">共同抚养人数</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <select class="form-control ng-pristine ng-valid height">
+                        <option value="0" selected="selected"></option>
+                    </select>
+                    <img class="down_img" src="views/images/AIO10_new.png">
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">赔偿标准</span>
+                </label>
+                <div class="col-xs-8 selected_relative">
+                    <div class="radio_e radio_e_active">
+                        <div class="radio_village ">
+                            <iconfont class="iconfont icon-fangzi"></iconfont>
+                            <input type="radio" name="" style="display: none;">
+                        </div>
+                        <div class="radio_text">农村</div>
+                    </div>
+                    <div class="radio_e">
+                        <div class="radio_town">
+                            <iconfont class="iconfont icon-jianzhu"></iconfont>
+                            <input type="radio" name="" style="display: none;">
+                        </div>
+                        <div class="radio_text">城镇</div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">护理人数</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <input type="text" class="form-control ng-pristine ng-valid height" id="name" placeholder="请输入">
+                    <div class="right_unit">元/天</div>
+                </div>
+            </div>
+            <div class="col-xs-6 form-group form-group-sm">
+                <label class="col-xs-4 control-label text-right">
+                    <span class="ng-scope ng-binding">出院护理费</span>
+                </label>
+                <div class="col-xs-7 selected_relative">
+                    <p class="AIOText">600元
+                        <span>(20天 x 30元/天)</span>
+                    </p>
+                </div>
+                <div class="col-xs-1">
+                    <iconfont class="iconfont icon--bangzhuqipao"></iconfont>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="AIO_Add_bfyr">
+        <iconfont class="iconfont icon--tianjia"></iconfont> 添加</div>
+</div>

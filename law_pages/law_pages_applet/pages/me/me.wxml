@@ -1,0 +1,69 @@
+<view class='bg'></view>
+<view style='padding:10px 10px 0px 10px;' class="{{isLogin==1?'noPeople':''}}" bindtap='loginSyeTeam'>
+  <view class='step1_cont_list'>
+    <view class='step1_cont_list_e' style='padding:10px 0px;'>
+      <view class='header'>
+        <image src='../../images/me_header.png'></image>
+      </view>
+      <view class='header_r'>
+        <view>立即登录</view>
+        <view style='color:#9b9b9b;'>登录后可查看更多信息</view>
+      </view>
+      <view class='me_login'>我要登录</view>
+    </view>
+  </view>
+</view>
+<view style='padding:10px 10px 0px 10px;' class="{{isLogin==0?'noPeople':''}}">
+  <view class='step1_cont_list'>
+    <view class='step1_cont_list_e' style='padding:10px 0px;'>
+      <view class='header'>
+        <open-data type="userAvatarUrl"></open-data>
+      </view>
+      <view class='header_r'>
+        <view>{{userInfo.text}}</view>
+        <view style='color:#9b9b9b;'>用户名：{{userInfo.loginAccount}}</view>
+      </view>
+    </view>
+  </view>
+</view>
+ <view style='padding:0px 10px 0px 10px;' bindtap='editPass' class="{{isLogin==0?'noPeople':''}}">
+  <view class='step1_cont_list'>
+    <view class='step1_cont_list_e' style='padding:10px 0px;'>
+      <image class='phone' src='/images/iphone.png'></image>
+      <view class='phone_text'>修改手机号</view>
+      <icon class='iconfont  icon-xiangyou'></icon>
+    </view>
+  </view>
+</view> 
+
+<view style='padding:0px 10px 0px 10px;'>
+  <view class='step1_cont_list'>
+    <view class='step1_cont_list_e' style='padding:10px 0px;'>
+      <image class='phone' src='/images/kf.png'></image>
+      <view class='phone_text'>联系客服</view>
+    </view>
+    <view class='kf_box'>
+      <view class='kf_box_e' style='border-right:1rpx solid #dddddd;' bindtap='customeService'>
+        <image class='ewm' src='/images/my_img.png'></image> 
+        <button open-type="contact" class='wx_btn' >12</button>
+        <view class='ewm_bt'>微信客服</view>
+      </view>
+      <view class='kf_box_e' bindtap='phoneCall'>
+        <image class='ewm' src='/images/dh.png'></image>
+        <view style='font-size:12px;'>400-618-0508</view>
+        <view style='font-size:12px; color:#999999;'>工作日：9：00-18：00</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view style='padding:0px 10px 0px 10px;' class="{{isLogin==0?'noPeople':''}}">
+  <view class='step1_cont_list'>
+    <view class='step1_cont_list_e' style='padding:10px 0px;' bindtap="logout">
+      <image class='phone' src='/images/tc.png'></image>
+      <view class='phone_text'>退出系统</view>
+      <icon class='iconfont  icon-xiangyou'></icon>
+    </view>
+  </view>
+</view>
+

@@ -1,0 +1,15 @@
+<div id="wrapper" ng-style="{'min-width':buttSelf ? '1000px' :' 1024px'}" ng-class="{'testingEnvironment': environmentalAllocation == '1','baiduCloud': environmentalAllocation == '2', 'capitelCloud': environmentalAllocation =='3'}">
+	<!-- Navigation -->
+	
+<header ng-show="!buttSelf"></header>
+<!-- /.navbar-top-links -->
+
+
+<!-- /.navbar-static-side -->
+<div id="page-wrapper" ng-style="{'margin-left':buttSelf ? '0' :' 240px'}">
+	<div ui-view style="padding-bottom: 10px;"></div>
+</div>
+<!-- /#page-wrapper -->
+
+</div>
+<!--popup box-->

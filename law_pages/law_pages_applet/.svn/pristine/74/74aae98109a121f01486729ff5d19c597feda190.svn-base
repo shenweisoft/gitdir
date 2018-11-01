@@ -1,0 +1,119 @@
+.header{
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+  float: left;
+  margin-left: 15px;
+  margin-right: 15px; 
+}
+.noPeople{
+  display: none;
+}
+.header_r{
+  float: left;
+}
+.header_r view{
+  height: 28px;
+  line-height: 28px;
+}
+.header image{
+  width: 100%;
+  height: 100%;
+}
+.bg{
+  background: #f2f2f2;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: -1;
+}
+.phone{
+  width: 25px;
+  height: 25px;
+  margin-left: 15px;
+  float: left;
+  margin-right: 15px;
+}
+.phone_text{
+  float: left;
+  height: 25px;
+  line-height: 25px;
+  width: 550rpx;
+}
+.icon-xiangyou{
+  float: right;
+  display: block;
+  line-height: 0px;
+  margin-top: -5px;
+  font-size: 20px;
+  color: #cfcfcf;
+}
+.kf_box{
+  display: flex;
+  margin-left: 15px;
+  margin-right: 15px;
+  border-top:1rpx solid #dddddd;
+}
+.kf_box_e{
+  flex: 1;
+  height: 160px;
+  text-align: center;
+  position: relative;
+}
+.ewm{
+  width: 84px;
+  height: 84px;
+  margin-top: 25px;
+}
+.ewm_bt{
+  font-size: 16px;
+  color: #989898;
+}
+.bottom_tab_btn_box{
+  width: 100%;
+  height: 50px;
+  background: #ffffff;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  display: flex;
+}
+.bottom_tab_btn_box_e{
+  flex: 1;
+  text-align: center;
+}
+.bottom_tab_btn_box_e .iconfont{
+  font-size: 18px;
+  color: #999999;
+}
+.bottom_tab_btn_box_e .text{
+  font-size: 15px;
+  color: #999999;
+}
+.active .iconfont{
+  font-size: 18px;
+  color: #0b9be4; 
+}
+.active .text{
+  font-size: 15px;
+  color: #0b9be4;
+}
+.wx_btn{
+  height: 84px;
+  width: 84px;
+  position: absolute;
+  top: 25px;
+  left: 80rpx;
+  opacity: 0;
+}
+.me_login{
+  padding: 0px 15px;
+  height: 35px;
+  line-height: 35px;
+  color: #ffffff;
+  border-radius: 5px;
+  background: #0d9deb;
+  margin-top: 12px;
+  margin-left: 15px;
+}

@@ -1,0 +1,44 @@
+<div class="row header_e no-margin">
+	<div class="col-xs-11 no-padding">
+		<div class="col-xs-1 text-align-center">
+			<img class="Court_logo"  src="views/images/logo.png">
+		</div>
+		<!-- <p class="col-xs-11 Court_name no-padding">道路交通事故数据一体化平台<span> | </span><span>司法鉴定</span></p> -->
+	</div>
+</div>
+<div class="appraisal_cont">
+	<!-- 流程图 -->
+	<div class="appraisal_cont_top">
+		<div style="width: 605px; margin: 0 auto;">
+			<!-- circle-blue 激活状态   ，   circle-line 未激活状态    ，circle-ok完成状态 -->
+			<div class="step-circle pull-left" ng-class="{'circle-blue':co.step==1,'circle-ok':co.step > 1}"><i>1</i>
+				<span>添加鉴定信息</span>
+			</div>
+			<div class="pull-left" >
+				<div class="pull-left applicant_e" style="width: 180px;"></div>
+				<div class="step-circle pull-left " ng-class="{'circle-blue':co.step==2,'circle-ok':co.step > 2,'circle-line':co.step < 2}"><i>2</i>
+					<span>上传证据</span>
+				</div>
+			</div>
+			<div class="pull-left">
+				<div class="pull-left applicant_e" style="width: 180px;"></div>
+				<div class="step-circle pull-left" ng-class="{'circle-blue':co.step==3,'circle-ok':co.step > 3,'circle-line':co.step < 3}"><i>3</i>
+					<span class="ng-binding">选择鉴定机构</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- UI-VIEW -->
+	<div ui-view></div>
+</div>
+<!-- 底部按钮 -->
+<div class="appraisal_footer " >
+	<button type="button" class="btn btn-brand pull-right" ng-click="nextStep()">
+		<span  ng-show="co.step < 3">下一步</span>
+		<span  ng-show="co.step == 3">提交</span>
+	</button>
+	<button type="button" class="btn btn-brand pull-right"  ng-click="saveAppraisal()">保存</button>
+	<button type="button" class="btn btn-default pull-right" ng-show="co.step > 1" ng-click="preStep()">上一步</button>
+</div>
+
+

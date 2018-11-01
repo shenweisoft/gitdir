@@ -1,0 +1,36 @@
+        <div class="modal-header">
+            质证
+            <i class="iconfont pull-right icon-guanbi close" ng-click="cancel()"></i>
+        </div>
+        <div class="modal-body row">
+            <form class="form-horizontal col-xs-10 col-xs-offset-1">
+               <div class="checkbox">
+                  <label>
+                    <input type="checkbox" ng-click="isSelected($event,0)"  ng-checked="evidence.realState ==1 "> 质疑真实性
+                  </label>
+               </div>
+               <textarea maxlength="100" ng-class="{'has-error':realErrorMessage}" class="form-control" rows="3" ng-model="evidence.realDes" name="realDesName"></textarea>
+               <div class="checkbox">
+                  <label>
+                    <input type="checkbox" ng-click="isSelected($event,1)" ng-checked="evidence.legitimacyState == 1"> 质疑合法性
+                  </label>
+               </div>
+               <textarea maxlength="100" ng-class="{'has-error':legitimacyErrorMessage}"  class="form-control" rows="3" ng-model="evidence.legitimacyDes" name="legitimacyDesName"></textarea>
+               <div class="checkbox">
+                  <label>
+                    <input type="checkbox" ng-click="isSelected($event,2)"  ng-checked="evidence.relationState == 1"> 质疑关联性
+                  </label>
+               </div>
+               <textarea maxlength="100" ng-class="{'has-error':relationErrorMessage}" class="form-control" rows="3" ng-model="evidence.relationDes" name="relationDesName"></textarea>
+            </form>
+        </div>
+        <div class="modal-footer">
+             <div class="form-group">
+                <div class="col-xs-offset-5 col-xs-1">
+                    <button type="submit" class="btn btn-default " ng-click="cancel()">取消</button>
+                </div>
+                <div class=" col-xs-1">
+                    <button type="submit" class="btn btn-brand bg-brand-color" ng-click="save()" >提交</button>
+                </div>
+            </div>
+        </div>

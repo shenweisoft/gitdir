@@ -1,0 +1,25 @@
+<view class="classname">
+  <view class="litigant_bottom">
+    <view class="{{userType==2?'hidePeople':'input_box'}}">
+      <image class="icon_img" src="../../images/2r1_c1.png"></image>
+      <input class="phone" data-attribute="userName" focus='true' bindinput="userBindData" placeholder="请输入用户名" />
+    </view>
+    <view style="margin-top:20rpx;" class="{{userType==2?'hidePeople':'input_box'}}">
+      <image class="icon_img" src="../../images/2r3_c1.png"></image>
+      <input class="phone" type="password" data-attribute="password" bindinput="userBindData" placeholder="请输入密码" />
+    </view>
+    <view class="{{userType==1?'hidePeople':'input_box'}}">
+      <image class="icon_img" src="../../images/r1_c1.png"></image>
+      <input class="phone" type="number" data-attribute="telephone" focus='true' bindinput="userBindData" placeholder="请输入手机号" />
+    </view>
+    <view class="{{userType==1?'hidePeople':'input_box'}}" style="margin-top:20rpx;">
+      <image class="icon_img" src="../../images/r1_c4.png"></image>
+      <input class="phone" type="validateCode" data-attribute="code" bindinput="userBindData" placeholder="请输入验证码" />
+      <view style='font-size:14px; line-height:86rpx;color:#0D9DEB' bindtap='winCodePrev'>{{winCode}}</view>
+    </view>
+    <!-- <view class="reg {{userType==1?'hidePeople':''}}"  bindtap="doReg">注册</view> -->
+    <view class="btn" bindtap="doLogin">登录</view>
+    <view class="btn reg {{userType==1?'hidePeople':''}}" bindtap="doReg">注册</view>
+    <!-- <view class="btn_two" bindtap="scanLogin">扫描二维码登录</view> -->
+  </view>
+</view>

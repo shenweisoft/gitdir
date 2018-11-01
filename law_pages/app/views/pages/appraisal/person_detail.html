@@ -1,0 +1,39 @@
+<!-- 当事人信息 -->
+<div class="modal-content" >
+    <div class="modal-header">
+        <i class="iconfont icon-guanbi close" ng-click="cancel()"></i>
+        <h4 class="modal-title ng-binding" >当事人信息</h4>
+    </div>
+    <div class="modal-body line-height2-0" style="padding-left: 30px; padding-right: 30px; padding-bottom: 30px;">
+        <div ng-repeat="applyer in applyerArray">
+            <div class="row" ng-show="applyer.idType == '0' " style="border-bottom: 1px dashed #ddd; padding: 20px;">
+                <div class="col-xs-6">姓名：<span>{{applyer.personName}}</span></div>
+                <div class="col-xs-6">手机号码：<span>{{applyer.telephone}}</span></div>
+                <div class="col-xs-6">证件类型：<span>{{applyer.certificatesType | id2Text:certificateTypeList}}</span></div>
+                <div class="col-xs-6">证件号码：<span>{{applyer.idNo}}</span></div>
+                <div class="col-xs-6">出生日期：<span>{{applyer.birthDay | stringDate|date: 'yyyy-MM-dd'}}</span></div>
+                <div class="col-xs-6">性别：<span>{{applyer.sex | id2Text:sexList}}</span></div>
+                <div class="col-xs-12">居住地：<span>{{applyer.residence}}</span></div>
+            </div>
+            <div class="row" ng-show="applyer.idType != '0' " style="border-bottom: 1px dashed #ddd; padding: 20px;">
+                <div class="col-xs-6">法人/其它组织：<span>{{applyer.orgName}}</span></div>
+                <div class="col-xs-6">手机号码：<span>{{applyer.telephone}}</span></div>
+                <div class="col-xs-6">法人/负责人：<span>{{applyer.legalName}}</span></div>
+                <div class="col-xs-6">职务：<span>{{applyer.job}}</span></div>
+                <div class="col-xs-6">组织代码：<span>{{applyer.orgCode}}</span></div>
+                <div class="col-xs-12">单位地址：<span>{{applyer.residence}}</span></div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="modal-footer">
+        <div class="row">
+            <div class="col-xs-3"></div>
+            <div class="col-xs-6 btn_center">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">关闭</button>
+            </div>
+            <div class="col-xs-3"></div>
+        </div>
+    </div>
+</div>

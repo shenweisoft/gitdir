@@ -1,0 +1,97 @@
+<div class="panel row" style="border-radius: 0px;">
+	<div style="background: #ecf0f3; min-width: 1024px;">
+		<div class="col-xs-12 background_color_d ">
+			<div class="col-xs-12 Evidence_list_cont_r_h">
+				<div class="row">
+					<div class="col-xs-1 active"><span>证据列表</span></div>
+					<div class="col-xs-11 text-right line_heght control-label ng-scope" style="color:#666">温馨提示：支持上传doc、pdf、txt文件及图片，上传图片应小于10M</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<table class="table table-striped-info table-hover table-fixed litigant_table">
+					<thead>
+						<tr>
+							<th colspan="3" class="text-align-left" style="background: #f8f8f8;"><i class="Required">*</i> 民事上诉状、答辩状（上诉人上诉状，被上诉人答辩状）</th>
+							<th class="text-align-left" style="background: #f8f8f8;">
+								<button class="btn btn-sm btn-brand pull-right ng-pristine ng-valid" ngf-multiple="true" ngf-select="addEvidence($files, 0)" ><i class="iconfont icon-tianjia" style="font-size: 14px;"></i> 上传</button>
+							</th>
+						</tr>
+						<tr ng-if="appealEvidence.length !== 0">
+							<th>文件名称</th>
+							<th>上传时间</th>
+							<th>下载</th>
+							<th>删除</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="evidence in appealEvidence">
+							<td>
+								<img style="width: 160px; height: 120px;" ng-src="{{imageAddress+ evidence.evidencePath}}" ng-if="isImg(evidence)">
+								<p style="margin: 10px 0 0;">{{evidence.evidenceName}}</p>
+							</td>
+							<td>{{evidence.createDate | stringDate | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+							<td><a ng-href="{{downloadFile(evidence)}}"><i class="iconfont icon-xiazai"></i></a></td>
+							<td><i class="iconfont icon-guanbi" ng-click="deleteFile(evidence, $index)"></i></td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-striped-info table-hover table-fixed litigant_table">
+					<thead>
+						<tr>
+							<th colspan="3" class="text-align-left" style="background: #f8f8f8;"><i class="Required">*</i> 主体材料（上诉人、被上诉人身份证明材料，受害人死亡的需上传亲属关系证明等）</th>
+							<th class="text-align-left" style="background: #f8f8f8;">
+								<button class="btn btn-sm btn-brand pull-right ng-pristine ng-valid" ngf-multiple="true" ngf-select="addEvidence($files, 1)" ><i class="iconfont icon-tianjia" style="font-size: 14px;"></i> 上传</button>
+							</th>
+						</tr>
+						<tr ng-if="materialsEvidence.length !== 0">
+							<th>文件名称</th>
+							<th>上传时间</th>
+							<th>下载</th>
+							<th>删除</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="evidence in materialsEvidence">
+							<td>
+								<img style="width: 160px; height: 120px;" ng-src="{{imageAddress+ evidence.evidencePath}}" ng-if="isImg(evidence)">
+								<p style="margin: 10px 0 0;">{{evidence.evidenceName}}</p>
+							</td>
+							<td>{{evidence.createDate | stringDate | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+							<td><a ng-href="{{downloadFile(evidence)}}"><i class="iconfont icon-xiazai"></i></a></td>
+							<td><i class="iconfont icon-guanbi" ng-click="deleteFile(evidence, $index)"></i></td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-striped-info table-hover table-fixed litigant_table">
+					<thead>
+						<tr>
+							<th colspan="3" class="text-align-left" style="background: #f8f8f8;">其他证据材料（二审新提供的新证据等材料）</th>
+							<th class="text-align-left" style="background: #f8f8f8;">
+								<!--<button class="btn btn-sm btn-brand pull-right ng-pristine ng-valid" ngf-multiple="true" ngf-pattern="'image/*'" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" ngf-select="addEvidence($files, 2)" ><i class="iconfont icon-tianjia" style="font-size: 14px;"></i> 上传</button>-->
+								<button class="btn btn-sm btn-brand pull-right ng-pristine ng-valid" ngf-multiple="true" ngf-select="addEvidence($files, 2)" ><i class="iconfont icon-tianjia" style="font-size: 14px;"></i> 上传</button>
+							</th>
+						</tr>
+						<tr ng-if="restsEvidence.length !== 0">
+							<th>文件名称</th>
+							<th>上传时间</th>
+							<th>下载</th>
+							<th>删除</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="evidence in restsEvidence">
+							<td>
+								<img style="width: 160px; height: 120px;" ng-src="{{imageAddress+ evidence.evidencePath}}" ng-if="isImg(evidence)">
+								<p style="margin: 10px 0 0;">{{evidence.evidenceName}}</p>
+							</td>
+							<td>{{evidence.createDate | stringDate | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+							<td><a ng-href="{{downloadFile(evidence)}}"><i class="iconfont icon-xiazai"></i></a></td>
+							<td><i class="iconfont icon-guanbi" ng-click="deleteFile(evidence, $index)"></i></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+</div>

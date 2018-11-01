@@ -1,0 +1,93 @@
+<div id="mediationCtrl">
+  <!-- 流程图 -->
+  <div class="row flowChart applicant" ng-class="trafficPolice==1?'trafficPolice':''">
+    <div class="flowChart_box" ng-show="co.mainFlow">
+      <div class="col-xs-12" style="height: 70px; margin-top: 10px;">
+        <div style="width: 605px; margin: 0 auto;">
+          <div class="step-circle pull-left" ng-click="handleSkipStep('1')" ng-class="{'circle-blue-new':co.step == 1,'circle-line':co.step < 1,'circle-ok-new':(adjust.step*1) > 1}"><i>1</i>
+            <span>申请人</span>
+          </div>
+          <div class="pull-left" ng-repeat="step_e in co.stepArray">
+            <div class="pull-left applicant_e"></div>
+            <div class="step-circle pull-left" ng-click="handleSkipStep(step_e.id)" ng-class="{'circle-blue-new':co.step == step_e.id,'circle-line':co.step < step_e.id,'circle-ok-new':(adjust.step*1) >= step_e.id}"><i>{{step_e.id}}</i>
+              <span>{{step_e.value}}</span>
+            </div>
+          </div>
+          <!--<div class="ewm_icon QR_code"  ng-if="!buttSelf"><img src="views/images/2.png">
+            <div class="show_ewmimg">
+              <img class="show_ewmimg_bj" src="views/images/1(1).png">
+              <div class="ewmone">
+                &lt;!&ndash;<img class="ewm_bg" src="views/images/1(2).png"> &lt;!&ndash; 未生成二维码 &ndash;&gt;&ndash;&gt;
+                <img class="ewm hide" src="views/images/2.png">    &lt;!&ndash; 生成的二维码 &ndash;&gt;
+              </div>
+              <div class="ewmtwo">
+                <img class="ewm_bg" ng-src="{{adjust.codeFileName?codeFilePath+adjust.codeFileName:'views/images/1(2).png'}}" ng-click="mediateCode(adjust)"> &lt;!&ndash; 未生成二维码 &ndash;&gt;
+                &lt;!&ndash; <img class="ewm hide" ng-src="{{codeFileName}}">    生成的二维码 &ndash;&gt;
+              </div>
+            </div>
+          </div>-->
+        </div>
+      </div>
+      <div class="col-xs-12 applicant_cont">
+        <div class="col-xs-4"><p style="line-height: 40px;">流水号：<span>{{adjust.serialNo}}</span></p></div>
+        <div class="col-xs-4"><p style="line-height: 40px;">调解机构：<span>{{userDepart.orgName}}</span></p></div>
+        <div class="col-xs-4"><p style="line-height: 40px;">调解点：<span>{{userDepart.deptName}}</span></p></div>
+      </div>
+    </div>
+    <div class="flowChart_bottom flowChart_b1" ng-show="co.mainFlow" ng-click="co.mainFlow=!co.mainFlow">
+      <img class="flowChart_bottom_img" src="views/images/2-pre.png">
+      <img src="views/images/2-nor.png">
+    </div>
+    <div class="flowChart_bottom flowChart_b2" ng-hide="co.mainFlow" ng-click="co.mainFlow=!co.mainFlow">
+      <img class="flowChart_bottom_img" src="views/images/1-pre.png">
+      <img src="views/images/1-.png">
+    </div>
+  </div>
+  <!-- UI-VIEW -->
+  <div ui-view ng-class="trafficPolice==1?'trafficPolice':''"></div>
+  <!-- 底部按钮 -->
+  <div class="appraisal_footer" ng-class="trafficPolice==1?'trafficPolice':''">
+    <div class="col-xs-12 padding_top_bottom ">
+      <div class="col-lg-7 col-xs-7">
+        <div class="col-xs-12" ng-show="co.step == 4">
+          <h4 class="col-xs-3 flo-l icon-duihao_box cur-pointer" ng-click="co.selectAllEvidence()">
+            <i class="iconfont" ng-class="{'icon-duihao-weixuanzhong':!co.selectAllItems,'icon-tupian-xuanzhong':co.selectAllItems}"></i> 全选</h4>
+          <h4 class="col-xs-2 flo-l">已选中<span class="error_color">{{adjust.evidenceArray | selectedCount}}</span>个</h4>
+          <h4 class="col-xs-2 flo-l error_color cur-pointer" ng-show="adjust.evidenceArray | selectedCount" ng-click="co.batchRemoveEvidences()">批量删除</h4>
+          <h4 class="col-xs-2 flo-l error_color cur-pointer" ng-show="adjust.evidenceArray | selectedCount"><a style="color: #ff4646" ng-href="{{co.batchDownLoadEvidences()}}">批量下载</a></h4>
+          <h4 class="col-xs-3 flo-l error_color cur-pointer" style="position: relative;" ng-show="adjust.evidenceArray | selectedCount"><span ng-click="batchSettingTag()">批量设置证据类型</span>
+            <div class="botom_set_evidence_type" ng-show="batchSetting">
+              <div class="all_classify" style="font-size: 13px;"><i class="iconfont icon-xialajiantouxiangxia"></i>
+                <div ng-repeat="x in feeTypeList">
+                  <li class="cur-pointer"  ng-class="{'slide-active2':selectedTagStr.indexOf(x.id) !=-1}" ng-click="batchSelectTag(x)">{{x.value}}</li><li>|</li>
+                </div>
+                <div class="botom_set_evidence_type_top">
+                  <ul class="evidence_classify">
+                  <span ng-repeat="selectedTag in selectedTagList">
+                    <li class="ng-binding">{{selectedTag.value}}<i class="iconfont icon-guanbi" ng-click="removeTag(selectedTag)"></i></li>
+                  </span>
+                    <li class="li_tab cur-pointer" ng-click="batchSaveEvidenceTag()">保存标签</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </h4>
+        </div>
+      </div>
+      <div class="col-lg-5 col-xs-5">
+        <button type="submit" class="btn btn-brand pull-right" ng-show="co.step > 5 || (co.step == 5 && (adjust.adjustResult==2 || adjust.adjustResult==3))" ng-click="submitAdjust()">调解完成</button>
+        <button type="button" class="btn btn-brand pull-right" ng-show="co.step < 5 || (co.step == 5 && (adjust.adjustResult!=2 && adjust.adjustResult!=3))" ng-click="nextStep()">下一步</button>
+        <button type="button" class="btn btn-brand pull-right" ng-click="save('保存')">保存</button>
+        <button type="button" class="btn btn-default pull-right" ng-show="co.step > 1" ng-click="preStep()">上一步</button>
+        <button type="button" class="btn btn-brand pull-right" ng-show="co.step >= 4" ng-click="(!adjust.isSendAppraisal || adjust.isSendAppraisal==0)?save('鉴定'):sendAppraisal()" ng-if="!buttSelf">{{(!adjust.isSendAppraisal || adjust.isSendAppraisal==0)?'发起鉴定':'查看鉴定'}}</button>
+        <!-- <button type="button" class="btn btn-brand pull-right" ng-show="co.step == '1' || co.step == '2'" ng-click="acquireApplicantInfo()">调取信息</button> -->
+        <div class="pull-right" style="font-size: 20px;line-height: 58px;width: 40px; text-align: center;margin-right: 10px;">|</div>
+        <button type="button" class="btn btn-brand pull-right" style="background: #62b57d; border-color:#62b57d;"  ng-click="openMessageBoard()" ng-show="userType != '0'" style="margin-right: 100px;position: relative;">
+          留言板
+          <img src="views/images/icon_new.png" class="icon-new" alt="" ng-if="adjust.messageFlag == 1">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

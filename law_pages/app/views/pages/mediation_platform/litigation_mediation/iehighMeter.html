@@ -1,0 +1,127 @@
+<script type="text/javascript" src="js/camera/iecamera/icapturevideo.js"></script>
+<script type="text/javascript">	
+
+	//初始化，打开高拍仪
+	function InitOCX(){
+		try{
+			Content = document.getElementById("content");//获取文本框对象
+			Capture = document.getElementById("Capture");//根据js的脚本内容，必须先获取object对象		
+			ResSelect = document.getElementById("Resolution_Select");//获取分辨率select标签的object对象
+		}catch(err){
+			alert("未找到ICaptureVideo.ocx控件，请重新安装");
+		}
+	}
+	function onbeforeunload()   
+	{   
+		Capture.ReleaseDevice();
+		window.event.returnValue="确定要退出本页吗？"; 
+	}
+	
+	
+	$(function(){
+		//alert("dsfsdfsfd");
+		 InitOCX();
+		
+	})
+</script>
+
+<style type="text/css">
+	.modal-lg{
+		width: 100% !important;
+		height: 100% !important;
+	}
+	.modal-dialog{
+		margin:0 !important;
+		width: 100% !important;
+		height: 100% !important;
+	}
+	.modal{
+		
+	}
+	.modal-content{
+		height: 100% !important;
+		background: #000000;
+		/*position: absolute;*/
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		z-index: 99999999991;
+		overflow:auto;
+	}
+	.highMeter_img{
+		width:700px; 
+		margin-top:80px; 
+		position: relative; 
+		left:50%;
+		margin-left:-350px; 
+		text-align:center;
+		background-color:rgba(0,0,0,0.5)
+	}
+	.highMeter_img .iconfont{
+		color: #fff;
+		position:relative;
+		top:5px;
+		right: -365px;
+		font-size: 28px;
+	}
+</style>
+</style>
+<link href="js/camera/iecamera/SpryAssets/SpryTabbedPanels.css" rel="stylesheet" type="text/css" />
+<link href="js/camera/iecamera/SpryAssets/SpryValidationRadio.css" rel="stylesheet" type="text/css" />
+<link href="js/camera/iecamera/SpryAssets/SpryCollapsiblePanel.css" rel="stylesheet" type="text/css" /><style type="text/css">.文件 {font-size: 12px}
+</style>
+<script type="text/javascript" FOR="Capture" EVENT="InitializationCompleted()" >
+	CatchInitFinishedMessage();
+	//InitializationCompleted 是控件的事件，表示控件加载完成
+</script>
+	<div class="header_e" ng-hide="isSelf== '1'">
+		<div class="col-xs-11">
+			<div class="col-xs-1 text-align-center">
+				<img class="Court_logo" src="views/images/logo.png">
+			</div>
+		</div>
+	</div>
+	<div class="img_big_box" >
+		<object id="Capture" ng-hide="show=='2'" type="application/ZCaptureVideo" style ="width: 100%;height: 550px; position: relative; " align="middle">
+		    </object>
+
+		<!-- <img id="streamimage" class="xform" /> -->
+		<div class="img_big_box_b">
+		
+			<img   src="views/images/xiangji.png"  ng-click="ietakecareof()">
+			 <!-- <img id="snapshot" src="" alt="This is a static snapshot" />	 -->
+			
+			 <div class="xuanzhuan_btn" onclick="SetDeviceRotation()"><iconfont class="iconfont icon-xuanzhuan"></iconfont> 旋转</div>
+		 
+	
+			
+		</div>
+	</div>
+
+	<div class="cont_img_list_box">
+		<div class="cont_img_list_box_bt">
+			<div class="icon_box"><iconfont class="iconfont icon-xiangji1"></iconfont></div>
+			<div class="cont_img_list_box_bt_text">已拍摄(0)</div>
+			 <!--<div class="cont_img_list_box_btn" ng-click="uploadbase64img()"><iconfont class="iconfont icon-shuruzhengque"></iconfont> 完成</div> -->
+			 <div class="cont_img_list_box_btn" ng-click="uploadbase64imgmult()"><iconfont class="iconfont icon-shuruzhengque"></iconfont> 完成</div> 
+			<div class="cont_img_list_box_btn margin-right-20" ng-click="closeTheWindow()"><iconfont class="iconfont icon-guanbi"></iconfont> 关闭</div>
+
+
+		</div>
+		<div class="cont_img_list_box_c">
+
+		</div>
+	</div>
+	<div id="result"></div>
+	<div id="fileLink"></div>
+
+<script type="text/javascript">
+$(function(){
+	// alert("打开摄像头1");
+	timeout = setTimeout("StartDevice('"+0+"')",1000); 
+		//alert("打开摄像头2");
+		SetResIndex();
+})
+
+
+</script>

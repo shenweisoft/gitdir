@@ -1,0 +1,35 @@
+<div>
+    <!--头部tab按钮-->
+    <div class="row flowChart applicant">
+        <ul class="police-info-tab-wp">
+            <li ng-show="co.stateParams == 'case' || co.stateParams == 'inspect' || co.stateParams == 'insurance'">
+                <span ng-click="handleTabFlag('case')" ng-class="{'active': co.tabFlag == 'case'}">事故信息</span>
+            </li>
+            <li ng-show="co.stateParams == 'case' || co.stateParams == 'inspect' || co.stateParams == 'insurance'">
+                <span ng-click="handleTabFlag('parties')" ng-class="{'active': co.tabFlag == 'parties'}">当事人登记信息</span>
+            </li>
+            <li ng-show="co.stateParams == 'case'">
+                <span ng-click="handleTabFlag('accident')" ng-class="{'active': co.tabFlag == 'accident'}">事故责任认定书信息</span>
+            </li>
+            <li ng-show="co.stateParams == 'case'">
+                <span ng-click="handleTabFlag('health')" ng-class="{'active': co.tabFlag == 'health'}">卫生、工伤信息</span>
+            </li>
+        </ul>
+    </div>
+    <!-- UI-VIEW -->
+    <div ui-view></div>
+    <!-- 底部按钮 -->
+    <div class="row applicant_footer padding_top_bottom button_box background_color_d bottom_btn_fixed">
+        <div class="col-lg-12 col-xs-12">
+            <button ng-show="co.stateParams == 'insurance' && !isReported" style="margin-right: 20px;" type="button" class="btn btn-brand pull-right" ng-click="save(true)">补充完成</button>
+            <button ng-show="(co.stateParams == 'injuryInfoSupplement' || co.stateParams == 'healthInfoSupplement') && !isSupplement && !isInjury" style="margin-right: 20px;" type="button" class="btn btn-brand pull-right" ng-click="save(true)">完成补录</button>
+            <button ng-show="(co.tabFlag == 'case' && co.stateParams == 'inspect') && !isIdentify" style="margin-right: 20px;" type="button" class="btn btn-brand pull-right" ng-click="save(true)">完成鉴定</button>
+            <button style="margin-right: 20px;" type="button" class="btn btn-brand pull-right" ng-click="save()" ng-hide="co.tabFlag  == 'accident' || isInspectReported || isIdentify || isSupplement || isReported || isInjury" >保存</button>
+            <button ng-show="co.stateParams == 'insurance' && !isReported"  style="margin-right: 20px;" type="button" class="btn btn-brand pull-right" ng-click="queryPeopleInjured()">报案号提取</button>
+            <button ng-show="co.tabFlag == 'case' && co.stateParams == 'inspect' && !co.stateParamsId" style="margin-right: 20px;" type="button" class="btn btn-brand pull-right">返回</button>
+            <button ng-show="co.tabFlag == 'parties' && co.stateParams == 'case'" type="button" class="btn btn-brand pull-right" ng-click="co.addJpoliceVehicVO()">
+                <span style="font-size: 12px;" class="glyphicon glyphicon-plus"></span>添加人员信息
+            </button>
+        </div>
+    </div>
+</div>
