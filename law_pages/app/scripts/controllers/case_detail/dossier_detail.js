@@ -86,6 +86,8 @@ angular.module('sbAdminApp').controller('DossierDetailCtrl', function($scope, $s
   //从上级参数中获取调解信息
   $scope.adjustInfo = $stateParams.adjustInfo;
 
+  //shenwei is very good
+
   //身份类型
   $scope.idTypeList = DictionaryConfig.idTypeConstant;
   //证件类型
