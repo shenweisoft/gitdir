@@ -1,7 +1,0 @@
-<div style="background: #fff; width: 100%;height: 100%;">
-	<div class="center-block" style="width:867px; padding-top: 50px;">
-		<!-- <img src="views/images/404_03.png"> -->
-		<img src="views/images/500_03.png">
-	</div>
-	<div class="center-block ReturnToPage" >返回上一页</div>
-</div>

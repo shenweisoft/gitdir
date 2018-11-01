@@ -1,6 +1,0 @@
-<div class="AIO" style="height: 100%; overflow: hidden;" role="navigation">
-	<!-- 背景 -->
-	<img class="AIOCourtIndex_bj" src="views/images/AIOCourtIndex_bj.jpg">
-	<left-step-left></left-step-left>
-	<div ui-view class="AIOCourtSetpRight"></div>
-</div>

@@ -1,9 +1,0 @@
-<div >
-	<i class="iconfont icon-guanbi close" ng-click="cancel()" style="margin-right: -20px; color: #fff"></i>
-	<div class="mask-title">{{vedio.name}}</div>
-	<video  controls="controls" class="border-default" style="width: 100%; ">
-		<source ng-src="{{vedio.path | stringCon}}" type="video/mp4" />
-		您的浏览器不支持 video 标签。
-	</video>
-</div>
-
