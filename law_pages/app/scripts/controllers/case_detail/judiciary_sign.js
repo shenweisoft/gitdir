@@ -29,6 +29,8 @@ angular.module('sbAdminApp').controller('DossierDetailCtrl', function($scope,Log
     "litigationState":"2",//诉讼阶段
     "handlingState":"3"//办案阶段
   };
+
+  //shenwei
   //调解结果
   $scope.ajustResultArray = DictionaryConfig.adjustResultList;
   //主表头信息详细查询Service
@@ -44,6 +46,7 @@ angular.module('sbAdminApp').controller('DossierDetailCtrl', function($scope,Log
 
   $scope.getDocumentFileSerivce = AdjustService.getDocumentFile;
 
+  //shenwei is very good!
 
   function Image() {
     this.id = '';
