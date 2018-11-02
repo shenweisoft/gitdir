@@ -30,6 +30,9 @@ angular.module('sbAdminApp').controller('DossierDetailCtrl', function($scope,Log
     "handlingState":"3"//办案阶段
   };
 
+
+  //shenwei is very good git
+
   //shenwei
   //调解结果
   $scope.ajustResultArray = DictionaryConfig.adjustResultList;
